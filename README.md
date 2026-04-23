@@ -1,12 +1,12 @@
 # PP1 2026 — Proyecto Integrador
 
-**Grupo**: [Nombre del grupo]  
-**Proyecto**: [Nombre del proyecto elegido]  
+**Grupo**: [GRUPO 5]  
+**Proyecto**: [PEDIDOS]  
 **Integrantes**:
-- [Nombre y Apellido 1]
-- [Nombre y Apellido 2]
-- [Nombre y Apellido 3]
-- [Nombre y Apellido 4]
+- [LUCA ROBERTO]
+- [PEDRO CLAVERIA]
+- [GONZALO ALIENDO]
+- [TOMAS ZILLI]
 
 ---
 
