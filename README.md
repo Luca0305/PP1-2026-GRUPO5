@@ -1,13 +1,13 @@
 # PP1 2026 — Proyecto Integrador
 
-**Grupo**: [GRUPO 5]  
+**Grupo**: [GRUPO_5]  
 **Proyecto**: [PEDIDOS]  
 **Integrantes**:
 - [LUCA ROBERTO]
-- [PEDRO CLAVERIA]
 - [GONZALO ALIENDO]
+- [PEDRO CLAVERIA]
 - [TOMAS ZILLI]
-
+aaaaa
 ---
 
 ## Estructura del repositorio
