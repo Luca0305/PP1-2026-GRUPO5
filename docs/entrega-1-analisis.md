@@ -4,17 +4,18 @@
 **Proyecto**: [Sistema de pedidos]  
 **Fecha de entrega**: 30/04/2026
 
----
 
 ## 1. Identificación de Actores
 
-Después de analizar cómo se maneja la empresa actualmente, identificamos estos roles clave:
+=======
+| Actor | Rol / Función en el sistema | Tipo (usuario final, sistema externo, etc.) |
+|-------|-----------------------------|---------------------------------------------|
+|   Empleado    |      Consulta el menu y realiza su pedido de almuerzo                      |        Usuario final                                          |
+| Coordinador   | Supervisa pedidos, controla informacion y controla el sistema              | Administrador                                  |
+| Proveedor     | Publica el menu y recibe la lista consolidada de pedidos                   | Sistema externo                                        |
+| Sistema       | Procesa pedidos, consolida informacion y envia resultados                  | Sistema interno                                        |
+| Servicio de email | Envia recordatorios a empleados | Sistema externo  |
 
-| Actor | Rol / Función en el sistema | Tipo |
-|-------|-----------------------------|------|
-| **Empleado** | Es quien elige su comida. También tiene que avisar si no va a estar (vacaciones/licencias) para que no le pidan vianda al divino botón. | Usuario final |
-| **Proveedor (Cocina)** | El que carga qué hay para comer y necesita saber temprano cuántas viandas cocinar para no mandar de más. | Usuario final |
-| **Coordinador** | La persona que hoy pierde tiempo contando mails y armando el Excel a mano. Solo supervisa que todo cierre. | Usuario final |
 
 ## 2. Requisitos Funcionales
 
