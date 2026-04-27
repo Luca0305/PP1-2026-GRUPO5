@@ -10,7 +10,11 @@
 
 | Actor | Rol / Función en el sistema | Tipo (usuario final, sistema externo, etc.) |
 |-------|-----------------------------|---------------------------------------------|
-|       |                             |                                             |
+|   Empleado    |      Consulta el menu y realiza su pedido de almuerzo                      |        Usuario final                                          |
+| Coordinador   | Supervisa pedidos, controla informacion y controla el sistema              | Administrador                                  |
+| Proveedor     | Publica el menu y recibe la lista consolidada de pedidos                   | Sistema externo                                        |
+| Sistema       | Procesa pedidos, consolida informacion y envia resultados                  | Sistema interno                                        |
+| Servicio de email | Envia recordatorios a empleados | Sistema externo  |
 
 ## 2. Requisitos Funcionales
 
