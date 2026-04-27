@@ -20,8 +20,11 @@
 
 | ID    | Descripción | Actor | HU relacionada |
 |-------|-------------|-------|----------------|
-| RF-01 |             |       |                |
-| RF-02 |             |       |                |
+| *RF-01* | El sistema debe dejar que el Proveedor suba el menú antes de que termine el día anterior. | Proveedor | HU-03 |
+| *RF-02* | El sistema debe permitir al Empleado elegir su plato antes de las 10:00 AM (horario de corte). | Empleado | HU-01 |
+| *RF-03* | El sistema debe bloquear el pedido si el usuario tiene cargada una licencia o vacaciones. | Sistema | HU-01 |
+| *RF-04* | El sistema tiene que mandar la lista total a la cocina de forma automática a las 10:05 AM. | Sistema | HU-03 |
+| *RF-05* | El sistema debe permitir al Coordinador filtrar y ver los gastos mensuales por sector o empleado. | Coordinador | HU-02 |
 
 > Cada requisito debe describir una acción concreta: "El sistema debe permitir que [actor] [acción]..."
 
