@@ -1,7 +1,7 @@
 # Entrega 1 — Análisis del Sistema
 
-**Grupo**: [Nombre del grupo]  
-**Proyecto**: [Nombre del proyecto elegido]  
+**Grupo**: [Grupo5]  
+**Proyecto**: [Sistema de pedidos]  
 **Fecha de entrega**: 30/04/2026
 
 ---
