@@ -4,10 +4,10 @@
 **Proyecto**: [Sistema de pedidos]  
 **Fecha de entrega**: 30/04/2026
 
+---
 
 ## 1. Identificación de Actores
 
-=======
 | Actor | Rol / Función en el sistema | Tipo (usuario final, sistema externo, etc.) |
 |-------|-----------------------------|---------------------------------------------|
 |   Empleado    |      Consulta el menu y realiza su pedido de almuerzo                      |        Usuario final                                          |
@@ -15,7 +15,6 @@
 | Proveedor     | Publica el menu y recibe la lista consolidada de pedidos                   | Sistema externo                                        |
 | Sistema       | Procesa pedidos, consolida informacion y envia resultados                  | Sistema interno                                        |
 | Servicio de email | Envia recordatorios a empleados | Sistema externo  |
-
 
 ## 2. Requisitos Funcionales
 
@@ -37,9 +36,9 @@
 
 | ID    | Como...       | Quiero...                  | Para...                            |
 |-------|---------------|----------------------------|------------------------------------|
-| HU-01 | [rol/actor]   | [acción o funcionalidad]   | [beneficio o resultado esperado]   |
-| HU-02 |               |                            |                                    |
-
+| HU-01 | Empleado,| pedir mi almuerzo desde una web,| no depender de un Excel compartido y asegurarme de que mi vianda llegue bien.|
+| HU-02 | Coordinador,|ver cuánto se gasta por mes en almuerzos,| controlar el presupuesto de la empresa de forma fácil.|
+| HU-03 | Proveedor,| recibir el total de pedidos consolidado,| cocinar la cantidad justa y no desperdiciar comida ni plata.|
 ## 5. Diagrama de Casos de Uso
 
 > Insertar imagen del diagrama exportado desde Draw.io, Lucidchart, StarUML o similar.  
