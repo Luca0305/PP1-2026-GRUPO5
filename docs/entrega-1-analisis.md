@@ -32,8 +32,9 @@
 
 | ID     | Categoría (rendimiento, seguridad, usabilidad, etc.) | Descripción |
 |--------|------------------------------------------------------|-------------|
-| RNF-01 |                                                      |             |
-| RNF-02 |                                                      |             |
+| *RNF-01* | *Usabilidad* | El pedido se tiene que poder hacer en menos de 1 minuto; tiene que ser algo rápido y sencillo. |
+| *RNF-02* | *Rendimiento* | La plataforma tiene que bancarse a los 80 usuarios entrando todos juntos a las 9:55 AM. |
+| *RNF-03* | *Seguridad* | Los reportes de costos y la gestión de usuarios son solo para el rol de Coordinador. |
 
 ## 4. Historias de Usuario
 
