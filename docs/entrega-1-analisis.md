@@ -64,10 +64,12 @@
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El empleado ingresa al sistema | |
-| 2. El sistema muestra el menú disponible | |
+| 1. El empleado ingresa al sistema | 1.1 Error de acceso → no puede ingresar |
+| 2. Solicita ver el menú | |
+| 3. El sistema muestra el menú | 3.1 No hay menú cargado → se informa al usuario |
 
 ### CU-02 — Realizar pedido de almuerzo
+
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Empleado |
@@ -77,92 +79,90 @@
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El empleado consulta el menú | |
-| 2. Selecciona una opción | |
-| 3. Confirma el pedido | |
-| 4. El sistema guarda el pedido | 3.1 Si no confirma → no se registra |
-
+| 1. El empleado ingresa al sistema | |
+| 2. Consulta el menú | |
+| 3. Selecciona una opción | 3.1 No hay opciones disponibles → no puede seleccionar |
+| 4. Confirma el pedido | 4.1 No confirma → el pedido no se registra |
+| 5. El sistema guarda el pedido | 5.1 Error al guardar → se notifica al usuario |
 ### CU-03 — Publicar menú
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Proveedor |
-| *Descripción* | El proveedor carga el menú del día |
-| *Precondiciones* | El proveedor tiene acceso al sistema |
-| *Postcondiciones (criterios de aceptación)* | El menú queda disponible para los empleados |
+| *Descripción* | El proveedor carga el menú |
+| *Precondiciones* | El proveedor tiene acceso |
+| *Postcondiciones (criterios de aceptación)* | El menú queda disponible |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El proveedor ingresa al sistema | |
-| 2. Carga el menú | |
-| 3. El sistema guarda el menú | |
-
+| 1. El proveedor ingresa al sistema | 1.1 Error de acceso → no puede ingresar |
+| 2. Carga el menú | 2.1 Datos incompletos → no se guarda |
+| 3. El sistema guarda el menú | 3.1 Error del sistema → no se publica |
 ### CU-04 — Consolidar información
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Sistema |
-| *Descripción* | El sistema reúne todos los pedidos realizados |
-| *Precondiciones* | Existen pedidos cargados |
-| *Postcondiciones (criterios de aceptación)* | Se genera una lista consolidada |
+| *Descripción* | El sistema reúne los pedidos |
+| *Precondiciones* | Hay pedidos cargados |
+| *Postcondiciones (criterios de aceptación)* | Lista consolidada generada |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El sistema recopila pedidos | |
+| 1. El sistema obtiene los pedidos | 1.1 No hay pedidos → no se genera lista |
 | 2. Agrupa la información | |
-| 3. Genera lista consolidada | |
+| 3. Genera lista consolidada | 3.1 Error de procesamiento |
 
 ### CU-05 — Recibir lista de pedidos
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Proveedor |
-| *Descripción* | El proveedor recibe la lista de pedidos |
-| *Precondiciones* | La lista fue generada |
-| *Postcondiciones (criterios de aceptación)* | El proveedor obtiene la lista correctamente |
+| *Descripción* | El proveedor recibe la lista |
+| *Precondiciones* | Lista generada |
+| *Postcondiciones (criterios de aceptación)* | Lista recibida correctamente |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El sistema envía la lista | |
-| 2. El proveedor la recibe | |
+| 1. El sistema envía la lista | 1.1 Error de envío |
+| 2. El proveedor recibe la lista | 2.1 No recibe → reintento |
 
 ### CU-06 — Supervisar pedidos
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Coordinador |
-| *Descripción* | El coordinador controla los pedidos realizados |
-| *Precondiciones* | Existen pedidos en el sistema |
-| *Postcondiciones (criterios de aceptación)* | Los pedidos son visualizados correctamente |
+| *Descripción* | Controla pedidos realizados |
+| *Precondiciones* | Existen pedidos |
+| *Postcondiciones (criterios de aceptación)* | Pedidos visualizados |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El coordinador ingresa al sistema | |
-| 2. Visualiza los pedidos | |
+| 1. El coordinador ingresa | 1.1 Error de acceso |
+| 2. Consulta pedidos | 2.1 No hay pedidos disponibles |
 
 ### U-07 — Controlar sistema
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Coordinador |
-| *Descripción* | El coordinador administra el sistema |
-| *Precondiciones* | El coordinador tiene permisos |
-| *Postcondiciones (criterios de aceptación)* | Cambios aplicados correctamente |
+| *Descripción* | El coordinador administra y configura el sistema |
+| *Precondiciones* | El coordinador tiene permisos de administrador |
+| *Postcondiciones (criterios de aceptación)* | Los cambios se guardan correctamente en el sistema |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. Accede a configuración | |
-| 2. Realiza cambios | |
-| 3. El sistema guarda cambios | |
-
+| 1. El coordinador ingresa al sistema | 1.1 Error de acceso → no puede ingresar |
+| 2. Accede a la configuración | |
+| 3. Realiza cambios en el sistema | 3.1 Datos inválidos → no se aplican cambios |
+| 4. El sistema guarda los cambios | 4.1 Error al guardar → se notifica |
 ### CU-08 — Enviar recordatorios
 | Campo | Detalle |
 |------|---------|
 | *Actor principal* | Sistema |
-| *Descripción* | El sistema envía recordatorios a empleados |
-| *Precondiciones* | Existen empleados sin pedido |
-| *Postcondiciones (criterios de aceptación)* | Recordatorios enviados correctamente |
+| *Descripción* | Envía recordatorios a empleados |
+| *Precondiciones* | Hay empleados sin pedido |
+| *Postcondiciones (criterios de aceptación)* | Recordatorios enviados |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El sistema detecta faltantes | |
-| 2. Envía recordatorio | |
-| 3. El servicio de email lo entrega | 2.1 Error en envío |
-
+| 1. El sistema detecta empleados sin pedido | |
+| 2. Envía recordatorio | 2.1 Error en envío → se registra error |
+| 3. El servicio de email entrega el mensaje | 3.1 Fallo del servicio → reintento |
 > Repetir la ficha completa para cada caso de uso del diagrama.
 > Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
