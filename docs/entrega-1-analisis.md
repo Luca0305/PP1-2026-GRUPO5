@@ -39,9 +39,16 @@
 
 | ID    | Como...       | Quiero...                  | Para...                            |
 |-------|---------------|----------------------------|------------------------------------|
-| HU-01 | Empleado,| pedir mi almuerzo desde una web,| no depender de un Excel compartido y asegurarme de que mi vianda llegue bien.|
-| HU-02 | Coordinador,|ver cuánto se gasta por mes en almuerzos,| controlar el presupuesto de la empresa de forma fácil.|
-| HU-03 | Proveedor,| recibir el total de pedidos consolidado,| cocinar la cantidad justa y no desperdiciar comida ni plata.|
+| HU-01 | Empleado, | configurar mis días de asistencia semanal en el sistema, | que el sistema solo me muestre el menú de los días que voy a ir a la oficina y no me pida pedir almuerzo cuando tengo licencia o vacaciones. |
+| HU-02 | Empleado, | consultar el menú semanal con las opciones disponibles para cada día que asisto, | poder planificar mis almuerzos con anticipación y elegir la opción que prefiero. |
+| HU-03 | Empleado, | registrar mi pedido de almuerzo para el día, | asegurarme de que mi vianda esté preparada y no quedarme sin almuerzo. |
+| HU-04 | Empleado, | modificar mi pedido antes del horario de corte, | poder cambiar mi elección si me arrepiento o si cambian mis planes. |
+| HU-05 | Empleado, | cancelar mi pedido antes del horario de corte, | no generar una vianda que no voy a consumir si decido no almorzar ese día. |
+| HU-06 | Empleado, | agregar un comentario a mi pedido indicando preferencias o restricciones alimentarias, | que la cocina tenga en cuenta mis necesidades sin tener que contactar a nadie por separado. |
+| HU-07 | Administrador, | publicar y administrar el menú semanal con las opciones de almuerzo para cada día, | que los empleados puedan consultarlo y realizar sus pedidos con antelación. |
+| HU-08 | Administrador, | generar y acceder al consolidado de pedidos del día, | enviárselo al proveedor y tener el control de cuántas viandas se necesitan por opción. |
+| HU-09 | Administrador, | gestionar los usuarios del sistema (altas, bajas y modificaciones), | mantener actualizado el listado de empleados habilitados para usar el sistema. |
+| HU-10 | Empleado, | recibir un recordatorio antes del horario de corte si todavía no hice mi pedido, | no olvidarme de registrarlo y evitar quedarme sin almuerzo. |
 ## 5. Diagrama de Casos de Uso
 
 > Insertar imagen del diagrama exportado desde Draw.io, Lucidchart, StarUML o similar.  
