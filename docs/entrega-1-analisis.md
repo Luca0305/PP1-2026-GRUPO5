@@ -17,11 +17,20 @@
 
 | ID    | Descripción | Actor | HU relacionada |
 |-------|-------------|-------|----------------|
-| *RF-01* | El sistema debe dejar que el Proveedor suba el menú antes de que termine el día anterior. | Proveedor | HU-03 |
-| *RF-02* | El sistema debe permitir al Empleado elegir su plato antes de las 10:00 AM (horario de corte). | Empleado | HU-01 |
-| *RF-03* | El sistema debe bloquear el pedido si el usuario tiene cargada una licencia o vacaciones. | Sistema | HU-01 |
-| *RF-04* | El sistema tiene que mandar la lista total a la cocina de forma automática a las 10:05 AM. | Sistema | HU-03 |
-| *RF-05* | El sistema debe permitir al Coordinador filtrar y ver los gastos mensuales por sector o empleado. | Coordinador | HU-02 |
+| *RF-01* | El sistema debe permitir al Empleado configurar su asistencia semanal indicando los días que concurrirá a la oficina. | Empleado | HU-01 |
+| *RF-02* | El sistema debe mostrar al Empleado únicamente el menú de los días que configuró como asistencia. | Empleado | HU-02 |
+| *RF-03* | El sistema debe permitir al Empleado registrar su pedido de almuerzo para un día determinado antes de las 10:00 AM. | Empleado | HU-03 |
+| *RF-04* | El sistema debe permitir al Empleado modificar su pedido siempre que no haya vencido el horario de corte (10:00 AM). | Empleado | HU-04 |
+| *RF-05* | El sistema debe permitir al Empleado cancelar su pedido antes del horario de corte. | Empleado | HU-05 |
+| *RF-06* | El sistema debe permitir al Empleado agregar un comentario o aclaración a su pedido . | Empleado | HU-06 |
+//ej: sin sal, alergia, etc.
+| *RF-07* | El sistema debe bloquear la posibilidad de realizar pedidos si el Empleado tiene registrada una licencia o vacaciones para ese día. | Empleado | HU-01 |
+| *RF-08* | El sistema debe permitir al Administrador publicar el menú semanal con las opciones de almuerzo disponibles para cada día. | Administrador | HU-07 |
+| *RF-09* | El sistema debe permitir al Administrador modificar o eliminar un menú ya publicado antes de que comience el día correspondiente. | Administrador | HU-07 |
+| *RF-10* | El sistema debe permitir al Administrador generar el consolidado de pedidos del día, agrupado por opción de menú. | Administrador | HU-08 |
+| *RF-11* | El sistema debe permitir al Administrador gestionar los usuarios del sistema (alta, baja y modificación de empleados). | Administrador | HU-09 |
+| *RF-12* | El sistema debe enviar automáticamente a las 10:05 AM el consolidado de pedidos al Servicio de Notificaciones para su distribución. | Administrador | HU-08 |
+| *RF-13* | El sistema debe enviar un recordatorio al Empleado a través del Servicio de Notificaciones cuando no haya registrado su pedido antes de las 9:45 AM. | Servicio de Notificaciones | HU-10 |
 
 > Cada requisito debe describir una acción concreta: "El sistema debe permitir que [actor] [acción]..."
 
