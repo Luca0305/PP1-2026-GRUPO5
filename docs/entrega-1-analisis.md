@@ -10,12 +10,9 @@
 
 | Actor | Rol / Función en el sistema | Tipo (usuario final, sistema externo, etc.) |
 |-------|-----------------------------|---------------------------------------------|
-|   Empleado    |      Consulta el menu y realiza su pedido de almuerzo                      |        Usuario final                                   |
-| Coordinador   | Supervisa pedidos, controla informacion y controla el sistema              | Administrador                                          |
-| Proveedor     | Publica el menu y recibe la lista consolidada de pedidos                   | Sistema externo                                        |
-| Sistema       | Procesa pedidos, consolida informacion y envia resultados                  | Sistema interno                                        |
-| Servicio de email | Envia recordatorios a empleados | Sistema externo  |
-
+| Empleado | Configura su asistencia semanal, consulta el menú disponible para los días que asiste y registra, modifica o cancela su pedido de almuerzo. | Usuario final |
+| Administrador | Publica y administra los menús semanales, gestiona los usuarios del sistema y genera el consolidado de pedidos. | Administrador |
+| Servicio de Notificaciones | Envía recordatorios y avisos a los empleados cuando no realizaron su pedido o cuando hay cambios en el menú. | Sistema externo |
 ## 2. Requisitos Funcionales
 
 | ID    | Descripción | Actor | HU relacionada |
