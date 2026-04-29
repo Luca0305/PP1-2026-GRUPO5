@@ -7,7 +7,6 @@
 - [GONZALO ALIENDO]
 - [PEDRO CLAVERIA]
 - [TOMAS ZILLI]
-aaaaa
 ---
 
 ## Estructura del repositorio
