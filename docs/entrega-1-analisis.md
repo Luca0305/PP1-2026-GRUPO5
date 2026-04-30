@@ -257,5 +257,3 @@
 | 3. El sistema envía la lista al Servicio de Notificaciones. | 3.1 El servicio no responde → el sistema reintenta 2 veces con 1 minuto de espera. Si persiste, registra el error. |
 | 4. El Servicio de Notificaciones envía el recordatorio a cada empleado. | 4.1 Un empleado no puede recibir la notificación → se registra el error y se continúa con el resto. |
 | 5. El sistema registra el envío exitoso con fecha y hora. | |
-> Repetir la ficha completa para cada caso de uso del diagrama.
-> Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
