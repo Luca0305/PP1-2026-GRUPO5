@@ -106,22 +106,18 @@
 | 4. El empleado navega entre los días y visualiza las opciones de cada uno. | |
 
 ### CU-03 — Registrar pedido del día
-
 | Campo | Detalle |
 |------|---------|
 | Actor principal | Empleado |
-| Descripción | El empleado selecciona una opción del menú y registra su pedido de almuerzo para un día determinado. Solo es posible antes del horario de corte (10:00 AM). |
-| Precondiciones | El empleado está autenticado. Existe menú publicado para el día. El empleado tiene asistencia registrada para ese día. El horario actual es anterior a las 10:00 AM. El empleado no tiene licencia ni vacaciones para ese día. |
-| Postcondiciones (criterios de aceptación) | El pedido queda registrado en el sistema. El empleado recibe una confirmación visual. |
+| Incluye | *CU-12 (Validar pedido)* |
+| Precondiciones | Autenticado, asistencia registrada y menú publicado. |
+| Postcondiciones | Pedido guardado y confirmado visualmente. |
 
-| Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
-|--------------------------------|----------------------------|
-| 1. El empleado accede al menú del día y selecciona "Pedir almuerzo". | 1.1 El horario de corte ya pasó → el sistema informa que no es posible realizar pedidos. |
-| 2. El sistema muestra las opciones del menú del día. | 2.1 El empleado tiene licencia o vacaciones ese día → el sistema informa que no puede realizar el pedido. |
-| 3. El empleado selecciona una opción de almuerzo. | 3.1 No hay opciones disponibles → el sistema informa que el menú no tiene opciones cargadas. |
-| 4. El empleado puede opcionalmente agregar un comentario (ver CU-06). | |
-| 5. El empleado confirma el pedido. | 5.1 El empleado no confirma → el pedido no se registra y el sistema vuelve al menú. |
-| 6. El sistema guarda el pedido y muestra confirmación con el resumen. | 6.1 Error al guardar → el sistema notifica el error y sugiere reintentar. |
+| Secuencia Normal | Excepciones |
+|------------------|-------------|
+| 1. El empleado selecciona una opción del menú. | 1.1 Ya pasó el horario de corte (10 AM) -> Fin de CU. |
+| 2. Se invoca *CU-12 (Validar pedido)*. | 2.1 Validación falla -> Se informa el motivo. |
+| 3. El sistema registra el pedido. | |
 
 ### CU-04 — Modificar pedido
 
@@ -172,14 +168,11 @@
 | 3. El empleado guarda el pedido con el comentario incluido. | |
 | 4. El sistema almacena el comentario asociado al pedido y muestra confirmación. | 4.1 Error al guardar → el sistema notifica el error. |
 
-### CU-07 — Publicar menú semanal
-
+### CU-07 — Administrar menú semanal (CRUD)
 | Campo | Detalle |
 |------|---------|
 | Actor principal | Administrador |
-| Descripción | El administrador carga y publica las opciones de almuerzo para cada día de la semana. Una vez publicado, el menú es visible para los empleados con asistencia registrada. |
-| Precondiciones | El administrador está autenticado. La semana objetivo aún no comenzó o el menú de esa semana no fue publicado. |
-| Postcondiciones (criterios de aceptación) | El menú queda publicado y disponible para que los empleados puedan consultarlo y realizar sus pedidos. |
+| Descripción | Permite cargar, editar o borrar opciones de menú en estado *Borrador*. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
@@ -190,14 +183,11 @@
 | 5. El sistema publica el menú y lo hace visible para los empleados. | 5.1 Error al publicar → el sistema notifica y mantiene el estado anterior. |
 | 6. El sistema notifica a los empleados que el menú está disponible. | 6.1 Fallo en el Servicio de Notificaciones → el menú queda publicado igual, se registra el error. |
 
-### CU-08 — Administrar menús
-
+### CU-08 — Publicar menú semanal
 | Campo | Detalle |
 |------|---------|
 | Actor principal | Administrador |
-| Descripción | El administrador modifica o elimina un menú ya publicado para uno o más días, siempre que el día correspondiente no haya comenzado. |
-| Precondiciones | El administrador está autenticado. Existe al menos un menú publicado. El día a modificar aún no comenzó. |
-| Postcondiciones (criterios de aceptación) | El menú queda actualizado. Los empleados con pedidos sobre opciones eliminadas son notificados. |
+| Descripción | Cambia el estado del menú de *Borrador* a *Publicado*, haciéndolo visible para los empleados. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
@@ -209,13 +199,10 @@
 | 6. Si hay pedidos afectados, el sistema notifica a los empleados correspondientes. | 6.1 Fallo en notificaciones → se registra el error, los cambios se guardan igual. |
 
 ### CU-09 — Generar consolidado de pedidos
-
 | Campo | Detalle |
 |------|---------|
-| Actor principal | Administrador |
-| Descripción | El administrador genera el resumen total de pedidos del día agrupado por opción de menú. El sistema también lo genera automáticamente a las 10:05 AM. |
-| Precondiciones | El administrador está autenticado. Existe al menos un pedido registrado para el día. El horario de corte (10:00 AM) ya fue alcanzado. |
-| Postcondiciones (criterios de aceptación) | El consolidado queda generado y disponible para descarga o distribución. Los pedidos del día quedan cerrados para modificaciones. |
+| Actor principal | Sistema / Administrador |
+| Descripción | A las 10:05 AM el sistema agrupa pedidos y los envía al Servicio de Notificaciones (Proveedor). |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
@@ -246,13 +233,10 @@
 | 5. El sistema aplica los cambios. En alta, envía credenciales al nuevo empleado. | 5.1 Error al guardar → el sistema notifica el error. |
 
 ### CU-11 — Enviar recordatorio a empleados
-
 | Campo | Detalle |
 |------|---------|
 | Actor principal | Servicio de Notificaciones |
-| Descripción | El sistema detecta automáticamente a las 9:45 AM los empleados con asistencia registrada que aún no realizaron su pedido y dispara un recordatorio a través del Servicio de Notificaciones. |
-| Precondiciones | Son las 9:45 AM de un día hábil. Existen empleados con asistencia registrada sin pedido confirmado. El Servicio de Notificaciones está operativo. |
-| Postcondiciones (criterios de aceptación) | Los empleados sin pedido reciben el recordatorio. El sistema registra el envío. |
+| Descripción | A las 9:45 AM se envía un aviso automático a quienes tienen asistencia pero no realizaron su pedido. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
@@ -261,5 +245,19 @@
 | 3. El sistema envía la lista al Servicio de Notificaciones. | 3.1 El servicio no responde → el sistema reintenta 2 veces con 1 minuto de espera. Si persiste, registra el error. |
 | 4. El Servicio de Notificaciones envía el recordatorio a cada empleado. | 4.1 Un empleado no puede recibir la notificación → se registra el error y se continúa con el resto. |
 | 5. El sistema registra el envío exitoso con fecha y hora. | |
+
+### CU-12 — Validar pedido (Reutilizable)
+| Campo | Detalle |
+|------|---------|
+| Actor principal | Sistema |
+| Descripción | Valida que el pedido cumpla las reglas de negocio antes de impactar la base de datos. |
+
+| Verificaciones Secuenciales |
+|-----------------------------|
+| 1. ¿El horario actual es anterior a las 10:00 AM? |
+| 2. ¿El empleado tiene asistencia confirmada para el día seleccionado? |
+| 3. ¿El empleado se encuentra en un periodo de licencia o vacaciones? |
+| 4. ¿La opción elegida tiene disponibilidad de stock (si aplica)? |
+
 > Repetir la ficha completa para cada caso de uso del diagrama.
 > Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
