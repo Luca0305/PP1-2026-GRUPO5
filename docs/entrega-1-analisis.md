@@ -8,11 +8,14 @@
 
 ## 1. Identificación de Actores
 
-| Actor | Rol / Función en el sistema | Tipo (usuario final, sistema externo, etc.) |
-|-------|-----------------------------|---------------------------------------------|
-| Empleado | Configura su asistencia semanal, consulta el menú disponible para los días que asiste y registra, modifica o cancela su pedido de almuerzo. | Usuario final |
-| Administrador | Publica y administra los menús semanales, gestiona los usuarios del sistema y genera el consolidado de pedidos. | Administrador |
-| Servicio de Notificaciones | Envía recordatorios y avisos a los empleados cuando no realizaron su pedido o cuando hay cambios en el menú. | Sistema externo |
+## 1. Identificación de Actores
+
+| Actor | Rol / Función en el sistema | Tipo |
+|-------|-----------------------------|------|
+| Empleado | Configura su asistencia, consulta el menú y gestiona sus pedidos de almuerzo. | Usuario final |
+| Administrador | Gestiona el catálogo de menús, usuarios y genera el reporte para el proveedor. | Administrador |
+| Servicio de Notificaciones | Sistema externo que envía alertas y el consolidado final al proveedor. | Sistema externo |
+
 ## 2. Requisitos Funcionales
 
 | ID    | Descripción | Actor | HU relacionada |
@@ -257,3 +260,5 @@
 | 3. El sistema envía la lista al Servicio de Notificaciones. | 3.1 El servicio no responde → el sistema reintenta 2 veces con 1 minuto de espera. Si persiste, registra el error. |
 | 4. El Servicio de Notificaciones envía el recordatorio a cada empleado. | 4.1 Un empleado no puede recibir la notificación → se registra el error y se continúa con el resto. |
 | 5. El sistema registra el envío exitoso con fecha y hora. | |
+> Repetir la ficha completa para cada caso de uso del diagrama.
+> Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
