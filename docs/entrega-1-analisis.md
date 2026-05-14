@@ -38,14 +38,14 @@
 
 ## 3. Requisitos No Funcionales
 
-| ID     | Categoría (rendimiento, seguridad, usabilidad, etc.) | Descripción |
-|--------|------------------------------------------------------|-------------|
-| RNF-01 | Usabilidad | El flujo completo de registro de pedido debe poder completarse en menos de 60 segundos por un usuario sin capacitación previa. |
-| RNF-02 | Rendimiento | El sistema debe soportar al menos 80 usuarios concurrentes sin degradación, manteniendo tiempos de carga inferiores a 3 segundos por pantalla. |
-| RNF-03 | Seguridad | Toda comunicación entre el cliente y el servidor debe realizarse mediante HTTPS con certificados TLS 1.2 o superior. |
-| RNF-04 | Seguridad | Las contraseñas deben almacenarse con hash seguro (bcrypt o equivalente) y tener mínimo 8 caracteres con al menos una mayúscula y un número. |
-| RNF-05 | Disponibilidad | El sistema debe estar disponible al menos el 99% del tiempo en días hábiles, con mantenimiento planificado fuera del horario laboral (07:00–18:00). |
-| RNF-06 | Portabilidad | El sistema debe ser accesible desde navegadores modernos (Chrome, Firefox, Edge, Safari) en sus versiones de los últimos 2 años, sin instalar software adicional. |
+| ID | Categoría | Descripción |
+|--------|----------------|-------------|
+| RNF-01 | Usabilidad | El flujo de registro de pedido debe completarse en un máximo de 3 pasos (clics). |
+| RNF-02 | Rendimiento | Soporte de 80 usuarios concurrentes con tiempos de respuesta menores a 3 segundos. |
+| RNF-03 | Seguridad | Comunicación cifrada mediante protocolo HTTPS con certificados TLS 1.2 o superior. |
+| RNF-04 | Seguridad | Almacenamiento de contraseñas mediante hashing seguro con algoritmo BCrypt. |
+| RNF-05 | Disponibilidad | Disponibilidad del 99.9% durante la ventana crítica de pedidos (07:00 a 11:00 AM). |
+| RNF-06 | Portabilidad | Acceso desde Chrome, Firefox, Edge y Safari en versiones de los últimos 2 años. |
 ## 4. Historias de Usuario
 
 | ID    | Como...       | Quiero...                  | Para...                            |
