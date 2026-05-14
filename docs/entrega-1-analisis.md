@@ -8,8 +8,6 @@
 
 ## 1. Identificación de Actores
 
-## 1. Identificación de Actores
-
 | Actor | Rol / Función en el sistema | Tipo |
 |-------|-----------------------------|------|
 | Empleado | Configura su asistencia, consulta el menú y gestiona sus pedidos de almuerzo. | Usuario final |
