@@ -8,6 +8,8 @@
 
 ## 1. Identificación de Actores
 
+## 1. Identificación de Actores
+
 | Actor | Rol / Función en el sistema | Tipo |
 |-------|-----------------------------|------|
 | Empleado | Configura su asistencia, consulta el menú y gestiona sus pedidos de almuerzo. | Usuario final |
@@ -104,18 +106,23 @@
 | 4. El empleado navega entre los días y visualiza las opciones de cada uno. | |
 
 ### CU-03 — Registrar pedido del día
-| Campo | Detalle |
-|------|---------|
-| Actor principal | Empleado |
-| Incluye | *CU-12 (Validar pedido)* |
-| Precondiciones | Autenticado, asistencia registrada y menú publicado. |
-| Postcondiciones | Pedido guardado y confirmado visualmente. |
 
-| Secuencia Normal | Excepciones |
-|------------------|-------------|
-| 1. El empleado selecciona una opción del menú. | 1.1 Ya pasó el horario de corte (10 AM) -> Fin de CU. |
-| 2. Se invoca *CU-12 (Validar pedido)*. | 2.1 Validación falla -> Se informa el motivo. |
-| 3. El sistema registra el pedido. | |
+| Campo | Detalle |
+|-------|---------|
+| Actor principal | Empleado |
+| Incluye | CU-12 (Validar pedido) |
+| Descripción | El empleado selecciona una opción del menú para el día. El pedido queda en estado Borrador hasta que el empleado lo confirme (CU-13). |
+| Precondiciones | El empleado está autenticado, tiene asistencia registrada para el día y el menú fue publicado. El horario actual es anterior a las 10:00 AM. |
+| Postcondiciones | El pedido queda guardado en estado Borrador. El empleado puede revisarlo antes de confirmarlo. |
+
+| Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
+|--------------------------------|----------------------------|
+| 1. El empleado accede a la sección "Menú del día". | 1.1 Ya pasó el horario de corte (10:00 AM) → el sistema informa que no es posible registrar pedidos y finaliza el caso de uso. |
+| 2. El sistema muestra las opciones del menú disponibles para el día. | 2.1 No hay menú publicado para el día → el sistema informa "Menú no disponible" y finaliza. |
+| 3. El empleado selecciona una opción de almuerzo. | |
+| 4. El empleado puede agregar un comentario opcional (ver CU-06). | |
+| 5. El sistema guarda el pedido en estado Borrador y muestra un resumen para revisión. | 5.1 Error al guardar → el sistema notifica el error y solicita reintentar. |
+| 6. El sistema redirige al empleado a CU-13 para confirmar el pedido. | |
 
 ### CU-04 — Modificar pedido
 
