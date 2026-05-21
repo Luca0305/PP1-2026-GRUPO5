@@ -65,7 +65,7 @@
 
 ## 5. Diagrama de Casos de Uso
 
-![Diagrama de Casos de Uso](./Diagrama.png)
+![Diagrama de Casos de Uso](./diagrama.png)
 
 
 
