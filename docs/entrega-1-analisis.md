@@ -8,8 +8,6 @@
 
 ## 1. Identificación de Actores
 
-## 1. Identificación de Actores
-
 | Actor | Rol / Función en el sistema | Tipo |
 |-------|-----------------------------|------|
 | Empleado | Configura su asistencia, consulta el menú y gestiona sus pedidos de almuerzo. | Usuario final |
@@ -174,19 +172,23 @@
 | 4. El sistema almacena el comentario asociado al pedido y muestra confirmación. | 4.1 Error al guardar → el sistema notifica el error. |
 
 ### CU-07 — Administrar menú semanal (CRUD)
+
 | Campo | Detalle |
-|------|---------|
+|-------|---------|
 | Actor principal | Administrador |
-| Descripción | Permite cargar, editar o borrar opciones de menú en estado *Borrador*. |
+| Descripción | El administrador crea, edita o elimina opciones del menú semanal. El menú permanece en estado Borrador y no es visible para los empleados hasta que se publique mediante CU-08. |
+| Precondiciones | El administrador está autenticado. El menú de la semana está en estado Borrador o no existe aún. |
+| Postcondiciones | Los cambios quedan guardados en estado Borrador. El menú no es visible para los empleados. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El administrador accede a "Gestión de menús" y selecciona "Nuevo menú semanal". | 1.1 Ya existe un menú publicado para esa semana → el sistema ofrece la opción de editarlo (ver CU-08). |
-| 2. El sistema muestra el formulario con los días de la semana. | |
-| 3. El administrador carga al menos una opción de almuerzo para cada día. | 3.1 Algún día queda sin opciones → el sistema alerta y solicita completarlo o marcarlo como "Sin servicio". |
-| 4. El administrador revisa el menú completo y selecciona "Publicar". | 4.1 El administrador cancela → el menú se guarda como borrador sin publicar. |
-| 5. El sistema publica el menú y lo hace visible para los empleados. | 5.1 Error al publicar → el sistema notifica y mantiene el estado anterior. |
-| 6. El sistema notifica a los empleados que el menú está disponible. | 6.1 Fallo en el Servicio de Notificaciones → el menú queda publicado igual, se registra el error. |
+| 1. El administrador accede a "Gestión de menús". | |
+| 2. El sistema muestra el listado de menús con su estado actual. | |
+| 3a. Alta: El administrador selecciona "Nuevo menú semanal" y carga las opciones para cada día. | 3a.1 Ya existe un menú para esa semana → el sistema alerta y ofrece editarlo en su lugar. |
+| 3b. Modificación: El administrador selecciona un menú en borrador y edita sus opciones. | 3b.1 El menú ya fue publicado → el sistema informa que debe usar CU-08 para modificarlo. |
+| 3c. Baja: El administrador elimina una opción del menú. | 3c.1 La opción tiene pedidos en borrador asociados → el sistema alerta y solicita confirmación. |
+| 4. El administrador confirma los cambios. | 4.1 El administrador cancela → no se realizan cambios. |
+| 5. El sistema guarda los cambios en estado Borrador. | 5.1 Error al guardar → el sistema notifica el error y mantiene el estado previo. |
 
 ### CU-08 — Publicar menú semanal
 | Campo | Detalle |
