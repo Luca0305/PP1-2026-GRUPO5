@@ -191,19 +191,22 @@
 | 5. El sistema guarda los cambios en estado Borrador. | 5.1 Error al guardar → el sistema notifica el error y mantiene el estado previo. |
 
 ### CU-08 — Publicar menú semanal
+
 | Campo | Detalle |
-|------|---------|
+|-------|---------|
 | Actor principal | Administrador |
-| Descripción | Cambia el estado del menú de *Borrador* a *Publicado*, haciéndolo visible para los empleados. |
+| Descripción | El administrador cambia el estado del menú de *Borrador* a *Publicado*, haciéndolo visible para los empleados. A partir de este momento los empleados pueden consultar el menú y registrar pedidos. |
+| Precondiciones | El administrador está autenticado. Existe un menú en estado *Borrador* para la semana. Todos los días tienen al menos una opción cargada o están marcados como "Sin servicio". |
+| Postcondiciones | El menú queda en estado *Publicado* y visible para los empleados. El Servicio de Notificaciones informa a los empleados que el menú está disponible. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El administrador accede a "Gestión de menús" y selecciona el menú a modificar. | 1.1 El día ya comenzó → el sistema informa que no es posible modificar ese día. |
-| 2. El sistema muestra el menú actual del día seleccionado. | |
-| 3. El administrador modifica, agrega o elimina opciones. | 3.1 Elimina una opción con pedidos activos → el sistema alerta cuántos pedidos están afectados y solicita confirmación. |
-| 4. El administrador confirma los cambios. | 4.1 El administrador cancela → no se realizan cambios. |
-| 5. El sistema guarda los cambios y actualiza el menú visible. | 5.1 Error al guardar → el sistema notifica y mantiene el estado previo. |
-| 6. Si hay pedidos afectados, el sistema notifica a los empleados correspondientes. | 6.1 Fallo en notificaciones → se registra el error, los cambios se guardan igual. |
+| 1. El administrador accede a "Gestión de menús" y selecciona el menú en borrador a publicar. | 1.1 No existe ningún menú en borrador → el sistema informa que primero debe crear uno (CU-07). |
+| 2. El sistema muestra el resumen completo del menú para revisión. | |
+| 3. El administrador verifica el contenido y selecciona "Publicar". | 3.1 Algún día no tiene opciones ni está marcado como "Sin servicio" → el sistema alerta e impide publicar hasta completarlo. |
+| 4. El administrador confirma la publicación. | 4.1 El administrador cancela → el menú permanece en estado *Borrador*. |
+| 5. El sistema cambia el estado del menú a *Publicado*. | 5.1 Error al publicar → el sistema notifica y mantiene el estado *Borrador*. |
+| 6. El sistema notifica a los empleados via Servicio de Notificaciones que el menú está disponible. | 6.1 Fallo en el Servicio de Notificaciones → el menú queda publicado igual, se registra el error. |
 
 ### CU-09 — Generar consolidado de pedidos
 | Campo | Detalle |
