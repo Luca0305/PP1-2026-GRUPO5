@@ -269,5 +269,24 @@
 | 3. ¿El empleado se encuentra en un periodo de licencia o vacaciones? |
 | 4. ¿La opción elegida tiene disponibilidad de stock (si aplica)? |
 
+### CU-13 — Confirmar pedido
+
+| Campo | Detalle |
+|-------|---------|
+| Actor principal | Empleado |
+| Incluye | *CU-12 (Validar pedido)* |
+| Descripción | El empleado revisa el pedido en estado *Borrador* y lo confirma. Recién en este momento se invoca la validación de reglas de negocio y el pedido queda registrado definitivamente. |
+| Precondiciones | El empleado está autenticado. Existe un pedido en estado *Borrador* para el día. El horario actual es anterior a las 10:00 AM. |
+| Postcondiciones | El pedido queda en estado *Confirmado*. El empleado recibe confirmación visual. El pedido queda disponible para el consolidado del día. |
+
+| Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
+|--------------------------------|----------------------------|
+| 1. El sistema muestra el resumen del pedido en estado *Borrador*. | 1.1 No existe pedido en borrador → el sistema redirige a CU-03. |
+| 2. El empleado revisa el resumen (opción elegida y comentario si lo hay). | |
+| 3. El empleado selecciona "Confirmar pedido". | 3.1 El empleado cancela → el pedido permanece en estado *Borrador* sin cambios. |
+| 4. Se invoca *CU-12 (Validar pedido)*. | 4.1 La validación falla → el sistema informa el motivo (horario vencido, sin stock, sin asistencia) y no confirma el pedido. |
+| 5. El sistema cambia el estado del pedido a *Confirmado*. | 5.1 Error al guardar → el sistema notifica el error y el pedido permanece en *Borrador*. |
+| 6. El sistema muestra confirmación visual al empleado. | |
+
 > Repetir la ficha completa para cada caso de uso del diagrama.
 > Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
