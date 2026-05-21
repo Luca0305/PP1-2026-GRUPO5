@@ -104,18 +104,23 @@
 | 4. El empleado navega entre los días y visualiza las opciones de cada uno. | |
 
 ### CU-03 — Registrar pedido del día
-| Campo | Detalle |
-|------|---------|
-| Actor principal | Empleado |
-| Incluye | *CU-12 (Validar pedido)* |
-| Precondiciones | Autenticado, asistencia registrada y menú publicado. |
-| Postcondiciones | Pedido guardado y confirmado visualmente. |
 
-| Secuencia Normal | Excepciones |
-|------------------|-------------|
-| 1. El empleado selecciona una opción del menú. | 1.1 Ya pasó el horario de corte (10 AM) -> Fin de CU. |
-| 2. Se invoca *CU-12 (Validar pedido)*. | 2.1 Validación falla -> Se informa el motivo. |
-| 3. El sistema registra el pedido. | |
+| Campo | Detalle |
+|-------|---------|
+| Actor principal | Empleado |
+| Incluye | CU-12 (Validar pedido) |
+| Descripción | El empleado selecciona una opción del menú para el día. El pedido queda en estado Borrador hasta que el empleado lo confirme (CU-13). |
+| Precondiciones | El empleado está autenticado, tiene asistencia registrada para el día y el menú fue publicado. El horario actual es anterior a las 10:00 AM. |
+| Postcondiciones | El pedido queda guardado en estado Borrador. El empleado puede revisarlo antes de confirmarlo. |
+
+| Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
+|--------------------------------|----------------------------|
+| 1. El empleado accede a la sección "Menú del día". | 1.1 Ya pasó el horario de corte (10:00 AM) → el sistema informa que no es posible registrar pedidos y finaliza el caso de uso. |
+| 2. El sistema muestra las opciones del menú disponibles para el día. | 2.1 No hay menú publicado para el día → el sistema informa "Menú no disponible" y finaliza. |
+| 3. El empleado selecciona una opción de almuerzo. | |
+| 4. El empleado puede agregar un comentario opcional (ver CU-06). | |
+| 5. El sistema guarda el pedido en estado Borrador y muestra un resumen para revisión. | 5.1 Error al guardar → el sistema notifica el error y solicita reintentar. |
+| 6. El sistema redirige al empleado a CU-13 para confirmar el pedido. | |
 
 ### CU-04 — Modificar pedido
 
@@ -167,34 +172,41 @@
 | 4. El sistema almacena el comentario asociado al pedido y muestra confirmación. | 4.1 Error al guardar → el sistema notifica el error. |
 
 ### CU-07 — Administrar menú semanal (CRUD)
+
 | Campo | Detalle |
-|------|---------|
+|-------|---------|
 | Actor principal | Administrador |
-| Descripción | Permite cargar, editar o borrar opciones de menú en estado *Borrador*. |
+| Descripción | El administrador crea, edita o elimina opciones del menú semanal. El menú permanece en estado Borrador y no es visible para los empleados hasta que se publique mediante CU-08. |
+| Precondiciones | El administrador está autenticado. El menú de la semana está en estado Borrador o no existe aún. |
+| Postcondiciones | Los cambios quedan guardados en estado Borrador. El menú no es visible para los empleados. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El administrador accede a "Gestión de menús" y selecciona "Nuevo menú semanal". | 1.1 Ya existe un menú publicado para esa semana → el sistema ofrece la opción de editarlo (ver CU-08). |
-| 2. El sistema muestra el formulario con los días de la semana. | |
-| 3. El administrador carga al menos una opción de almuerzo para cada día. | 3.1 Algún día queda sin opciones → el sistema alerta y solicita completarlo o marcarlo como "Sin servicio". |
-| 4. El administrador revisa el menú completo y selecciona "Publicar". | 4.1 El administrador cancela → el menú se guarda como borrador sin publicar. |
-| 5. El sistema publica el menú y lo hace visible para los empleados. | 5.1 Error al publicar → el sistema notifica y mantiene el estado anterior. |
-| 6. El sistema notifica a los empleados que el menú está disponible. | 6.1 Fallo en el Servicio de Notificaciones → el menú queda publicado igual, se registra el error. |
+| 1. El administrador accede a "Gestión de menús". | |
+| 2. El sistema muestra el listado de menús con su estado actual. | |
+| 3a. Alta: El administrador selecciona "Nuevo menú semanal" y carga las opciones para cada día. | 3a.1 Ya existe un menú para esa semana → el sistema alerta y ofrece editarlo en su lugar. |
+| 3b. Modificación: El administrador selecciona un menú en borrador y edita sus opciones. | 3b.1 El menú ya fue publicado → el sistema informa que debe usar CU-08 para modificarlo. |
+| 3c. Baja: El administrador elimina una opción del menú. | 3c.1 La opción tiene pedidos en borrador asociados → el sistema alerta y solicita confirmación. |
+| 4. El administrador confirma los cambios. | 4.1 El administrador cancela → no se realizan cambios. |
+| 5. El sistema guarda los cambios en estado Borrador. | 5.1 Error al guardar → el sistema notifica el error y mantiene el estado previo. |
 
 ### CU-08 — Publicar menú semanal
+
 | Campo | Detalle |
-|------|---------|
+|-------|---------|
 | Actor principal | Administrador |
-| Descripción | Cambia el estado del menú de *Borrador* a *Publicado*, haciéndolo visible para los empleados. |
+| Descripción | El administrador cambia el estado del menú de *Borrador* a *Publicado*, haciéndolo visible para los empleados. A partir de este momento los empleados pueden consultar el menú y registrar pedidos. |
+| Precondiciones | El administrador está autenticado. Existe un menú en estado *Borrador* para la semana. Todos los días tienen al menos una opción cargada o están marcados como "Sin servicio". |
+| Postcondiciones | El menú queda en estado *Publicado* y visible para los empleados. El Servicio de Notificaciones informa a los empleados que el menú está disponible. |
 
 | Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
 |--------------------------------|----------------------------|
-| 1. El administrador accede a "Gestión de menús" y selecciona el menú a modificar. | 1.1 El día ya comenzó → el sistema informa que no es posible modificar ese día. |
-| 2. El sistema muestra el menú actual del día seleccionado. | |
-| 3. El administrador modifica, agrega o elimina opciones. | 3.1 Elimina una opción con pedidos activos → el sistema alerta cuántos pedidos están afectados y solicita confirmación. |
-| 4. El administrador confirma los cambios. | 4.1 El administrador cancela → no se realizan cambios. |
-| 5. El sistema guarda los cambios y actualiza el menú visible. | 5.1 Error al guardar → el sistema notifica y mantiene el estado previo. |
-| 6. Si hay pedidos afectados, el sistema notifica a los empleados correspondientes. | 6.1 Fallo en notificaciones → se registra el error, los cambios se guardan igual. |
+| 1. El administrador accede a "Gestión de menús" y selecciona el menú en borrador a publicar. | 1.1 No existe ningún menú en borrador → el sistema informa que primero debe crear uno (CU-07). |
+| 2. El sistema muestra el resumen completo del menú para revisión. | |
+| 3. El administrador verifica el contenido y selecciona "Publicar". | 3.1 Algún día no tiene opciones ni está marcado como "Sin servicio" → el sistema alerta e impide publicar hasta completarlo. |
+| 4. El administrador confirma la publicación. | 4.1 El administrador cancela → el menú permanece en estado *Borrador*. |
+| 5. El sistema cambia el estado del menú a *Publicado*. | 5.1 Error al publicar → el sistema notifica y mantiene el estado *Borrador*. |
+| 6. El sistema notifica a los empleados via Servicio de Notificaciones que el menú está disponible. | 6.1 Fallo en el Servicio de Notificaciones → el menú queda publicado igual, se registra el error. |
 
 ### CU-09 — Generar consolidado de pedidos
 | Campo | Detalle |
@@ -256,6 +268,25 @@
 | 2. ¿El empleado tiene asistencia confirmada para el día seleccionado? |
 | 3. ¿El empleado se encuentra en un periodo de licencia o vacaciones? |
 | 4. ¿La opción elegida tiene disponibilidad de stock (si aplica)? |
+
+### CU-13 — Confirmar pedido
+
+| Campo | Detalle |
+|-------|---------|
+| Actor principal | Empleado |
+| Incluye | *CU-12 (Validar pedido)* |
+| Descripción | El empleado revisa el pedido en estado *Borrador* y lo confirma. Recién en este momento se invoca la validación de reglas de negocio y el pedido queda registrado definitivamente. |
+| Precondiciones | El empleado está autenticado. Existe un pedido en estado *Borrador* para el día. El horario actual es anterior a las 10:00 AM. |
+| Postcondiciones | El pedido queda en estado *Confirmado*. El empleado recibe confirmación visual. El pedido queda disponible para el consolidado del día. |
+
+| Secuencia Normal (Camino feliz) | Excepciones / Alternativas |
+|--------------------------------|----------------------------|
+| 1. El sistema muestra el resumen del pedido en estado *Borrador*. | 1.1 No existe pedido en borrador → el sistema redirige a CU-03. |
+| 2. El empleado revisa el resumen (opción elegida y comentario si lo hay). | |
+| 3. El empleado selecciona "Confirmar pedido". | 3.1 El empleado cancela → el pedido permanece en estado *Borrador* sin cambios. |
+| 4. Se invoca *CU-12 (Validar pedido)*. | 4.1 La validación falla → el sistema informa el motivo (horario vencido, sin stock, sin asistencia) y no confirma el pedido. |
+| 5. El sistema cambia el estado del pedido a *Confirmado*. | 5.1 Error al guardar → el sistema notifica el error y el pedido permanece en *Borrador*. |
+| 6. El sistema muestra confirmación visual al empleado. | |
 
 > Repetir la ficha completa para cada caso de uso del diagrama.
 > Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
