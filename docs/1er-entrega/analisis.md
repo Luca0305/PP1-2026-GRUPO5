@@ -1,7 +1,7 @@
 # Entrega 1 — Análisis del Sistema
 
-**Grupo**: [Grupo5]  
-**Proyecto**: [Sistema de pedidos]  
+**Grupo**: [GRUPO-5]  
+**Proyecto**: [SistemaPedidos]  
 **Fecha de entrega**: 30/04/2026
 
 ---
@@ -13,6 +13,7 @@
 | Empleado | Configura su asistencia, consulta el menú y gestiona sus pedidos de almuerzo. | Usuario final |
 | Administrador | Gestiona el catálogo de menús, usuarios y genera el reporte para el proveedor. | Administrador |
 | Servicio de Notificaciones | Sistema externo que envía alertas y el consolidado final al proveedor. | Sistema externo |
+
 
 ## 2. Requisitos Funcionales
 
@@ -32,7 +33,6 @@
 | RF-12 | Enviar un recordatorio a las 9:45 AM a los empleados que aún no realizaron su pedido. | Servicio de Notificaciones | HU-10 |
 | RF-13 | Permitir al Administrador gestionar usuarios (alta, baja y modificación). | Administrador | HU-09 |
 
-> Cada requisito debe describir una acción concreta: "El sistema debe permitir que [actor] [acción]..."
 
 ## 3. Requisitos No Funcionales
 
@@ -44,6 +44,8 @@
 | RNF-04 | Seguridad | Almacenamiento de contraseñas mediante hashing seguro con algoritmo BCrypt. |
 | RNF-05 | Disponibilidad | Disponibilidad del 99.9% durante la ventana crítica de pedidos (07:00 a 11:00 AM). |
 | RNF-06 | Portabilidad | Acceso desde Chrome, Firefox, Edge y Safari en versiones de los últimos 2 años. |
+
+
 ## 4. Historias de Usuario
 
 | ID | Como... | Quiero... | Para... |
@@ -60,12 +62,12 @@
 | HU-09 | Administrador | gestionar los usuarios del sistema | mantener actualizada la nómina de empleados habilitados. |
 | HU-10 | Empleado | recibir un recordatorio antes del corte | no olvidarme de pedir mi almuerzo. |
 
+
 ## 5. Diagrama de Casos de Uso
 
-> Insertar imagen del diagrama exportado desde Draw.io, Lucidchart, StarUML o similar.  
-> Guardar la imagen en esta misma carpeta (`docs/`) y referenciarla abajo.
+![Diagrama de Casos de Uso](./Diagrama.png)
 
-![Diagrama de Casos de Uso](./diagrama-casos-de-uso.png)
+
 
 ## 6. Especificación de Casos de Uso
 
@@ -287,6 +289,3 @@
 | 4. Se invoca *CU-12 (Validar pedido)*. | 4.1 La validación falla → el sistema informa el motivo (horario vencido, sin stock, sin asistencia) y no confirma el pedido. |
 | 5. El sistema cambia el estado del pedido a *Confirmado*. | 5.1 Error al guardar → el sistema notifica el error y el pedido permanece en *Borrador*. |
 | 6. El sistema muestra confirmación visual al empleado. | |
-
-> Repetir la ficha completa para cada caso de uso del diagrama.
-> Las excepciones se numeran ligadas al paso del que se desvían (ej: 4.1 en la misma fila que el paso 4).
