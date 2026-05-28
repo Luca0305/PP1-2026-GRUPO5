@@ -15,11 +15,11 @@
 ## 2. Trazabilidad pantalla ↔ E1
 | Pantalla | CU(s) | HU(s) | Actor |
 |----------|-------|-------|-------|
-| 01 — Login | | | |
-| 02 — [Nombre] | | | |
-| 03 — [Nombre] | | | |
-| 04 — [Nombre] | | | |
-| 05 — [Nombre] | | | |
+| 01 — Login / Registro | — | — | Empleado / Administrador |
+| 02 — Configurar asistencia | CU-01 | HU-01, HU-10 | Empleado |
+| 03 — Menú + Registrar pedido | CU-02, CU-03 | HU-02, HU-03, HU-06 | Empleado |
+| 04 — Mis pedidos | CU-05, CU-06, CU-07 | HU-04, HU-05 | Empleado |
+| 05 — Generar consolidado | CU-10 | HU-08 | Administrador |
 ---
 ## 3. Decisiones técnicas y observaciones
 > Documentar acá las decisiones de diseño y desarrollo del grupo, organizadas por
