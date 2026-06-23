@@ -27,11 +27,11 @@ pantalla.
 > Esta sección es clave para la defensa oral del 25/06.
 ### Pantalla 01 — Login
 ![Pantalla 01 – Login](pantalla1.png)
-### Pantalla 02 — [Mi Asistencia Semanal]
+### Pantalla 02 — Mi Asistencia Semanal
 ![Pantalla 02 – Mi Asistencia Semanal](pantalla2.png)
-### Pantalla 03 — [ Menú + registrar pedido]
+### Pantalla 03 —  Menú + registrar pedido
 ![Pantalla 03 - Menú + registrar pedido](pantalla3.png)
-### Pantalla 04 — [Nombre]
-- (Pendiente)
+### Pantalla 04 — Mis pedidos
+![Pantalla 04 - Mis pedidos](pantalla4.png)
 ### Pantalla 05 — [Nombre]
 - (Pendiente)
