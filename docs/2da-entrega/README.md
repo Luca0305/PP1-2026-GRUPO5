@@ -30,7 +30,7 @@ pantalla.
 ### Pantalla 02 — [Mi Asistencia Semanal]
 ![Pantalla 02 – Mi Asistencia Semanal](pantalla2.png)
 ### Pantalla 03 — [ Menú + registrar pedido]
-![Pantalla 03 - Menú + registrar pedido](pantalla3.png) 
+![Pantalla 03 - Menú + registrar pedido](pantalla3.png)
 ### Pantalla 04 — [Nombre]
 - (Pendiente)
 ### Pantalla 05 — [Nombre]
