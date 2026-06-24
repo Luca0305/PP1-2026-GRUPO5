@@ -150,3 +150,99 @@ aside {
   font-size: 0.85rem;
   color: #92400e;
 }
+
+/* ── Pantalla 04 — Mis pedidos ── */
+
+header nav {
+  display: flex;
+  gap: 16px;
+}
+
+.lista-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.pedido {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.pedido-borrador  { background-color: #fffbeb; border-color: #fbbf24; }
+.pedido-confirmado { background-color: #f0fdf4; border-color: #86efac; }
+.pedido-cancelado  { background-color: #f9fafb; border-color: #d1d5db; color: #9ca3af; }
+
+.pedido-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.pedido-encabezado h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.estado-borrador   { background-color: #fbbf24; color: #78350f; }
+.estado-confirmado { background-color: #22c55e; color: #14532d; }
+.estado-cancelado  { background-color: #9ca3af; color: #1f2937; }
+
+.pedido-dias {
+  list-style: none;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.pedido-comentario {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.pedido-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pedido-acciones button {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-confirmar {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.btn-modificar {
+  background-color: #ffffff;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.btn-cancelar {
+  background-color: #ffffff;
+  color: #dc2626;
+  border-color: #dc2626;
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>SistemaPedidos — Mis pedidos</title>
+</head>
+<body>
+
+  <header>
+    <h1>SistemaPedidos</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="menu-pedido.html">Menú</a>
+      <a href="mis-pedidos.html">Mis pedidos</a>
+    </nav>
+    <p>Empleado Activo</p>
+  </header>
+
+  <main>
+    <h2>Mis pedidos</h2>
+    <p>Consultá, confirmá, modificá o cancelá tus pedidos antes del horario de corte.</p>
+
+    <section class="lista-pedidos">
+
+      <!-- Pedido en BORRADOR — coherente con pantalla 3 -->
+      <article class="pedido pedido-borrador">
+        <div class="pedido-encabezado">
+          <strong class="badge estado-borrador">Borrador</strong>
+          <h3>Semana del 23/06/2025</h3>
+        </div>
+        <ul class="pedido-dias">
+          <li>Lunes 23/06 → Milanesa con puré</li>
+          <li>Martes 24/06 → Sin selección</li>
+          <li>Jueves 26/06 → Sin selección</li>
+        </ul>
+        <p class="pedido-comentario">Comentario: sin sal</p>
+        <div class="pedido-acciones">
+          <button type="button" class="btn-confirmar">Confirmar</button>
+          <button type="button" class="btn-modificar">Modificar</button>
+          <button type="button" class="btn-cancelar">Cancelar</button>
+        </div>
+      </article>
+
+      <!-- Pedido CONFIRMADO -->
+      <article class="pedido pedido-confirmado">
+        <div class="pedido-encabezado">
+          <strong class="badge estado-confirmado">Confirmado</strong>
+          <h3>Semana del 16/06/2025</h3>
+        </div>
+        <ul class="pedido-dias">
+          <li>Lunes 16/06 → Pollo al limón</li>
+          <li>Martes 17/06 → Pasta al pesto</li>
+          <li>Jueves 19/06 → Cazuela de pollo</li>
+        </ul>
+        <p class="pedido-comentario">Comentario: sin TACC</p>
+        <div class="pedido-acciones">
+          <button type="button" class="btn-modificar">Modificar</button>
+          <button type="button" class="btn-cancelar">Cancelar</button>
+        </div>
+      </article>
+
+      <!-- Pedido CANCELADO -->
+      <article class="pedido pedido-cancelado">
+        <div class="pedido-encabezado">
+          <strong class="badge estado-cancelado">Cancelado</strong>
+          <h3>Semana del 09/06/2025</h3>
+        </div>
+        <ul class="pedido-dias">
+          <li>Lunes 09/06 → Tarta de verduras</li>
+          <li>Martes 10/06 → Locro vegetal</li>
+          <li>Jueves 12/06 → Revuelto gramajo</li>
+        </ul>
+        <p class="pedido-comentario">Cancelado por el empleado el 08/06 antes del corte.</p>
+      </article>
+
+    </section>
+
+    <aside>
+      <p>ℹ️ Podés confirmar, modificar o cancelar hasta las 10:00 hs del día correspondiente.</p>
+    </aside>
+
+  </main>
+
+  <footer>
+    <small>© 2026 SistemaPedidos</small>
+  </footer>
+
+</body>
+</html>
