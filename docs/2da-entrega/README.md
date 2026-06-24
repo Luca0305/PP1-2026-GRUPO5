@@ -29,6 +29,22 @@ pantalla.
 ![Pantalla 01 – Login](pantalla1.png)
 ### Pantalla 02 — Mi Asistencia Semanal
 ![Pantalla 02 – Mi Asistencia Semanal](pantalla2.png)
+1- Para el layout elegimos una columna única donde cada día ocupa su propia 
+fila con el nombre a la izquierda y los botones "Asisto" / "No asisto" a la 
+derecha. Lo elegimos así porque hace muy fácil ver de un vistazo qué días 
+vas y cuáles no, sin tener que buscar nada.
+
+2- Agregamos una nota de aviso abajo de los días que dice "Los cambios 
+impactan sobre el menú de la próxima semana", para que el empleado entienda 
+por qué esta pantalla importa antes de confirmar.
+
+3- Dejamos afuera los atajos rápidos ("Presencial 100%", "Híbrido típico"), 
+el historial de configuraciones previas y la sección de observaciones. 
+Preferimos arrancar simple y no sobrecargar la pantalla — si hace falta, 
+se pueden agregar después.
+
+4- Cubre el CU-01 — "Configurar asistencia semanal", que corresponde a 
+la HU-01 del Empleado.
 ### Pantalla 03 —  Menú + registrar pedido
 ![Pantalla 03 - Menú + registrar pedido](pantalla3.png)
 ### Pantalla 04 — Mis pedidos
