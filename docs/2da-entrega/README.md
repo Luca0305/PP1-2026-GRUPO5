@@ -45,7 +45,30 @@ se pueden agregar después.
 
 4- Cubre el CU-01 — "Configurar asistencia semanal", que corresponde a 
 la HU-01 del Empleado.
-### Pantalla 03 —  Menú + registrar pedido
+### Pantalla 03 — Menú + Registrar Pedido
+
+1- Usamos Grid para los 3 días del menú (una columna por día) 
+porque así se comparan fácil las opciones de cada jornada. 
+El resto de la pantalla queda en una sola columna: comentarios, 
+resumen y botón, de arriba a abajo.
+
+2- Agregamos el campo de comentarios/preferencias alimentarias 
+para que el empleado pueda indicar restricciones como alergias 
+o dieta, y un aviso del plazo de corte (10:00 hs) para que 
+sepa hasta cuándo puede pedir.
+
+3- Dejamos afuera el indicador de stock y el precio por opción 
+porque esa información depende de lógica del backend que todavía 
+no tenemos — lo dejamos para el Bloque 3.
+
+4- Cubre dos casos de uso: CU-02 "Consultar menú semanal" 
+y CU-03 "Registrar pedido del día". El de registrar incluye 
+al de consultar (<<include>>), por eso van en la misma pantalla.
+
+5- El botón dice "Guardar pedido" y no "Confirmar" porque en 
+nuestro modelo el pedido queda en estado Borrador al guardarse. 
+La confirmación definitiva es un paso aparte (CU-13). 
+Así el empleado puede revisar su selección antes de confirmar.
 ![Pantalla 03 - Menú + registrar pedido](pantalla3.png)
 ### Pantalla 04 — Mis pedidos
 ![Pantalla 04 - Mis pedidos](pantalla4.png)

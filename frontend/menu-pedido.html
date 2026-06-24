@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>SistemaPedidos — Menú + Registrar Pedido</title>
+</head>
+<body>
+
+  <header>
+    <h1>SistemaPedidos</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Menú + Registrar pedido</h2>
+    <p>Seleccioná una opción por cada día que asistís. El pedido quedará en borrador.</p>
+
+    <form>
+
+     <section class="menu-semana">
+  <h3>Menú de la semana — días de asistencia</h3>
+
+        <article>
+          <h4>Lunes <time datetime="2025-06-23">23/06/2025</time></h4>
+
+          <label>
+            <input type="radio" name="lunes" value="milanesa" required>
+            Milanesa con puré
+            <em>Ternera · puré · ensalada</em>
+          </label>
+
+          <label>
+            <input type="radio" name="lunes" value="pollo">
+            Pollo al limón
+            <em>Grillado · arroz · zanahorias</em>
+          </label>
+
+          <label>
+            <input type="radio" name="lunes" value="tarta">
+            Tarta de verduras
+            <em>Vegetal · espinaca · queso</em>
+          </label>
+        </article>
+
+        <article>
+          <h4>Martes <time datetime="2025-06-24">24/06/2025</time></h4>
+
+          <label>
+            <input type="radio" name="martes" value="pasta" required>
+            Pasta al pesto
+            <em>Fideos · pesto · cherry</em>
+          </label>
+
+          <label>
+            <input type="radio" name="martes" value="carne">
+            Carne al horno
+            <em>Con papas y verduras</em>
+          </label>
+
+          <label>
+            <input type="radio" name="martes" value="locro">
+            Locro vegetal
+            <em>Sin carne · zapallo · porotos</em>
+          </label>
+        </article>
+
+        <article>
+          <h4>Jueves <time datetime="2025-06-26">26/06/2025</time></h4>
+
+          <label>
+            <input type="radio" name="jueves" value="cazuela" required>
+            Cazuela de pollo
+            <em>Con arroz y caldo</em>
+          </label>
+
+          <label>
+            <input type="radio" name="jueves" value="revuelto">
+            Revuelto gramajo
+            <em>Papas · jamón · huevo</em>
+          </label>
+
+          <label>
+            <input type="radio" name="jueves" value="ensalada">
+            Ensalada completa
+            <em>Vegetal · proteína de soja</em>
+          </label>
+        </article>
+
+      </section>
+
+      <section>
+        <label for="comentarios">Comentarios / preferencias alimentarias (opcional)</label>
+        <textarea 
+          id="comentarios" 
+          name="comentarios" 
+          placeholder="Ej: sin sal, sin TACC, alergia al maní..."
+          maxlength="200">
+        </textarea>
+      </section>
+
+      <section class="resumen">
+  <h3>Resumen del pedido</h3>
+  <p>Lunes 23/06 ............... <em>Sin selección</em></p>
+  <p>Martes 24/06 .............. <em>Sin selección</em></p>
+  <p>Jueves 26/06 .............. <em>Sin selección</em></p>
+</section>
+
+      <aside>
+        <p>Plazo para registrar el pedido: hasta las 10:00 hs de cada día.</p>
+      </aside>
+
+      <button type="submit">Guardar pedido</button>
+
+    </form>
+
+  </main>
+
+  <footer>
+    <small>© 2026 SistemaPedidos</small>
+  </footer>
+
+</body>
+</html>
