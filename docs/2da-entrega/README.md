@@ -33,5 +33,5 @@ pantalla.
 ![Pantalla 03 - Menú + registrar pedido](pantalla3.png)
 ### Pantalla 04 — Mis pedidos
 ![Pantalla 04 - Mis pedidos](pantalla4.png)
-### Pantalla 05 — [Nombre]
-- (Pendiente)
+### Pantalla 05 — Consolidado
+![Pantalla 05 - Consolidado](pantalla5.png)
