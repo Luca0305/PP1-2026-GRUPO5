@@ -1,29 +1,179 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <title>SistemaPedidos — Inicio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - SistemaPedidos</title>
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .hero {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            color: #bdc3c7;
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro-text h2 {
+            color: #2c3e50;
+        }
+
+        /* Grilla de accesos */
+        .grid-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card-link {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            border-top: 4px solid #0d6efd;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Colores de borde distintos por rol para que quede más pro */
+        .card-emp { border-top-color: #0d6efd; }
+        .card-adm { border-top-color: #198754; }
+        .card-pub { border-top-color: #6c757d; }
+
+        .card-link h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+
+        .card-link p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin: 10px 0 20px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+
+        .badge-emp { background-color: #e7f1ff; color: #0d6efd; }
+        .badge-adm { background-color: #e8f5e9; color: #198754; }
+        .badge-pub { background-color: #f8f9fa; color: #6c757d; }
+
+        .btn-go {
+            color: #0d6efd;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: auto;
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <h1>SistemaPedidos</h1>
-  </header>
+    <header class="hero">
+        <h1>SistemaPedidos</h1>
+        <p>Entrega 2 — Prototipo HTML/CSS Estático</p>
+    </header>
 
-  <main>
-    <h2>Pantallas disponibles</h2>
-    <ul>
-  <li><a href="login.html">Login</a></li>
-  <li><a href="asistencia.html">Configurar Asistencia</a></li>
-  <li><a href="menu-pedido.html">Menú + Registrar Pedido</a></li>
-  <li><a href="mis-pedidos.html">Mis pedidos</a></li>
-</ul>
-  </main>
+    <main class="main-content">
+        <div class="intro-text">
+            <h2>Panel de Navegación del Proyecto</h2>
+            <p>Seleccioná cualquiera de las pantallas desarrolladas para revisar su diseño y maquetación estática.</p>
+        </div>
 
-  <footer>
-    <small>Grupo [N°5] — PP1 2026</small>
-  </footer>
+        <div class="grid-links">
+            <a href="login.html" class="card-link card-pub">
+                <div>
+                    <span class="badge badge-pub">Acceso</span>
+                    <h3>01. Iniciar Sesión</h3>
+                    <p>Pantalla de login unificada con validación visual para el ingreso de usuarios al sistema.</p>
+                </div>
+                <div class="btn-go">Ver pantalla →</div>
+            </a>
+
+            <a href="asistencia.html" class="card-link card-emp">
+                <div>
+                    <span class="badge badge-emp">Empleado</span>
+                    <h3>02. Asistencia Semanal</h3>
+                    <p>Interfaz para que el personal declare los días que trabajará presencialmente en la oficina.</p>
+                </div>
+                <div class="btn-go">Ver pantalla →</div>
+            </a>
+
+            <a href="menu-pedido.html" class="card-link card-emp">
+                <div>
+                    <span class="badge badge-emp">Empleado</span>
+                    <h3>03. Registrar Pedido</h3>
+                    <p>Menú del día interactivo que permite seleccionar platos y añadir aclaraciones culinarias.</p>
+                </div>
+                <div class="btn-go">Ver pantalla →</div>
+            </a>
+
+            <a href="mis-pedidos.html" class="card-link card-emp">
+                <div>
+                    <span class="badge badge-emp">Empleado</span>
+                    <h3>04. Mis Pedidos</h3>
+                    <p>Historial y gestión de viandas reservadas, permitiendo modificaciones antes del horario límite.</p>
+                </div>
+                <div class="btn-go">Ver pantalla →</div>
+            </a>
+
+            <a href="consolidado.html" class="card-link card-adm">
+                <div>
+                    <span class="badge badge-adm">Administrador</span>
+                    <h3>05. Generar Consolidado</h3>
+                    <p>Panel de control para agrupar las viandas solicitadas y despachar el reporte al proveedor.</p>
+                </div>
+                <div class="btn-go">Ver pantalla →</div>
+            </a>
+        </div>
+    </main>
 
 </body>
 </html>
