@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Consolidado - SistemaPedidos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
+        <div class="user-info">
+            <span>Admin</span>
+            <a href="login.html" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <h2>Generar consolidado</h2>
+            <p>Revisá los pedidos confirmados del día para enviarlos al proveedor.</p>
+
+            <div class="filter-section">
+                <label for="fecha-consolidado">Fecha:</label>
+                <input type="date" id="fecha-consolidado" value="2026-06-25">
+                <button class="btn btn-primary">Buscar</button>
+            </div>
+
+            <table class="table-consolidado">
+                <thead>
+                    <tr>
+                        <th>Plato / Opción</th>
+                        <th>Cantidad Total</th>
+                        <th>Aclaraciones / Comentarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Menú 1: Milanesa con puré</td>
+                        <td>14</td>
+                        <td>- 2 sin sal<br>- 1 puré de calabaza</td>
+                    </tr>
+                    <tr>
+                        <td>Menú 2: Tarta de verdura</td>
+                        <td>8</td>
+                        <td>- 1 masa integral</td>
+                    </tr>
+                    <tr>
+                        <td>Menú 3: Ensalada completa</td>
+                        <td>5</td>
+                        <td>- Sin aderezo</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total de viandas:</strong></td>
+                        <td colspan="2"><strong>27</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="actions-footer">
+                <button class="btn btn-secondary">Descargar PDF</button>
+                <button class="btn btn-success">Enviar al Proveedor</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
