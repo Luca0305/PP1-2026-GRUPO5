@@ -246,3 +246,103 @@ header nav {
   color: #dc2626;
   border-color: #dc2626;
 }
+
+/* ── Pantalla 00 — Página de inicio (index.html) ── */
+
+.hero {
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.2rem;
+  color: #ffffff;
+}
+
+.hero p {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #bdc3c7;
+}
+
+.main-content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.intro-text {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.intro-text h2 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.intro-text p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.grid-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card-link {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  border-top: 4px solid #2563eb;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card-link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+}
+
+.card-emp { border-top-color: #2563eb; }
+.card-adm { border-top-color: #16a34a; }
+.card-pub { border-top-color: #6c757d; }
+
+.card-link h3 {
+  margin: 8px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.card-link p {
+  color: #666;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+/* Insignia de rol en index.html — reusa la clase base .badge ya
+   definida arriba (línea 190) para el estado de los pedidos.
+   Estas solo agregan el color; no redefinen tamaño/forma para no
+   pisar los badges de estado-borrador/confirmado/cancelado. */
+.badge-emp { background-color: #e7f1ff; color: #2563eb; }
+.badge-adm { background-color: #e8f5e9; color: #16a34a; }
+.badge-pub { background-color: #f1f2f4; color: #6c757d; }
+
+.btn-go {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-top: auto;
+  text-align: right;
+}
