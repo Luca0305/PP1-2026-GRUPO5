@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SistemaPedidos — Administrar / Publicar menús</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <header class="navbar-admin">
+    <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
+    <div class="user-info">
+      <span>Admin</span>
+      <a href="login.html" class="btn-logout">Cerrar Sesión</a>
+    </div>
+  </header>
+
+  <main class="container-admin">
+    <h2>Administrar / Publicar menús</h2>
+    <p class="subtitulo">Cargá las opciones de cada día y publicá el menú para que los empleados puedan pedir.</p>
+
+    <section class="menu-lista">
+      <h3>Menús de la semana</h3>
+
+      <div class="menu-lista-item">
+        <div>
+          <span class="semana">Semana del 30/06 al 04/07</span>
+          <strong class="badge estado-borrador">Borrador</strong>
+        </div>
+        <div class="acciones">
+          <button type="button" class="btn-modificar">Editar</button>
+        </div>
+      </div>
+
+      <div class="menu-lista-item">
+        <div>
+          <span class="semana">Semana del 23/06 al 27/06</span>
+          <strong class="badge estado-confirmado">Publicado</strong>
+        </div>
+        <div class="acciones">
+          <button type="button" class="btn-modificar">Ver</button>
+        </div>
+      </div>
+    </section>
+
+    <form>
+
+      <div class="menu-form-header">
+        <h3>Cargar opciones — Semana del 30/06 al 04/07</h3>
+        <button type="button" class="btn-duplicar">Duplicar semana anterior</button>
+      </div>
+
+      <section class="menu-semana">
+
+        <article>
+          <h4>Lunes <time datetime="2025-06-30">30/06/2025</time></h4>
+
+          <div class="opcion">
+            <input type="text" value="Milanesa con puré" placeholder="Nombre del plato">
+            <input type="text" value="Ternera · puré · ensalada" placeholder="Descripción">
+            <div class="etiquetas">
+              <label><input type="checkbox"> Vegetariano</label>
+              <label><input type="checkbox"> Sin TACC</label>
+            </div>
+          </div>
+
+          <div class="opcion">
+            <input type="text" value="Tarta de verduras" placeholder="Nombre del plato">
+            <input type="text" value="Vegetal · espinaca · queso" placeholder="Descripción">
+            <div class="etiquetas">
+              <label><input type="checkbox" checked> Vegetariano</label>
+              <label><input type="checkbox"> Sin TACC</label>
+            </div>
+          </div>
+
+          <button type="button" class="btn-agregar-opcion">+ Agregar opción</button>
+        </article>
+
+        <article>
+          <h4>Martes <time datetime="2025-07-01">01/07/2025</time></h4>
+
+          <div class="opcion">
+            <input type="text" value="Pasta al pesto" placeholder="Nombre del plato">
+            <input type="text" value="Fideos · pesto · cherry" placeholder="Descripción">
+            <div class="etiquetas">
+              <label><input type="checkbox" checked> Vegetariano</label>
+              <label><input type="checkbox"> Sin TACC</label>
+            </div>
+          </div>
+
+          <div class="opcion">
+            <input type="text" value="Locro vegetal" placeholder="Nombre del plato">
+            <input type="text" value="Sin carne · zapallo · porotos" placeholder="Descripción">
+            <div class="etiquetas">
+              <label><input type="checkbox" checked> Vegetariano</label>
+              <label><input type="checkbox" checked> Sin TACC</label>
+            </div>
+          </div>
+
+          <button type="button" class="btn-agregar-opcion">+ Agregar opción</button>
+        </article>
+
+        <article>
+          <h4>Jueves <time datetime="2025-07-03">03/07/2025</time></h4>
+
+          <div class="opcion">
+            <input type="text" value="Cazuela de pollo" placeholder="Nombre del plato">
+            <input type="text" value="Con arroz y caldo" placeholder="Descripción">
+            <div class="etiquetas">
+              <label><input type="checkbox"> Vegetariano</label>
+              <label><input type="checkbox" checked> Sin TACC</label>
+            </div>
+          </div>
+
+          <button type="button" class="btn-agregar-opcion">+ Agregar opción</button>
+        </article>
+
+      </section>
+
+      <aside>
+        <p>Un menú queda en <strong>Borrador</strong> hasta que lo publiqués. Recién ahí lo ven los empleados en la pantalla de pedidos.</p>
+      </aside>
+
+      <div class="actions-footer">
+        <button type="button" class="btn btn-secondary">Guardar borrador</button>
+        <button type="submit" class="btn btn-success">Publicar menú</button>
+      </div>
+
+    </form>
+  </main>
+
+</body>
+</html>
