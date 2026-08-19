@@ -346,3 +346,159 @@ header nav {
   margin-top: auto;
   text-align: right;
 }
+
+/* ── Panel Administrador — navbar y contenedor compartidos ── */
+
+.navbar-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 30px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 40px;
+}
+
+.navbar-admin .logo { font-weight: 700; font-size: 1.2rem; }
+.navbar-admin .logo span { color: #666; font-weight: 400; }
+
+.navbar-admin .user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navbar-admin .btn-logout {
+  color: #dc2626;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.container-admin {
+  max-width: 900px;
+  margin: 0 auto 40px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.container-admin h2 { margin-bottom: 6px; color: #2c3e50; }
+.container-admin > p.subtitulo { color: #666; font-size: 0.9rem; margin-bottom: 28px; }
+
+/* Lista de menús con estado (borrador / publicado) */
+
+.menu-lista { margin-bottom: 32px; }
+
+.menu-lista h3 { font-size: 1rem; margin-bottom: 12px; }
+
+.menu-lista-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  background-color: #f9fafb;
+}
+
+.menu-lista-item .semana { font-weight: 600; font-size: 0.92rem; margin-right: 10px; }
+
+.menu-lista-item .acciones { display: flex; gap: 8px; }
+ 
+.menu-lista-item .acciones button {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+/* Formulario de carga — reutiliza .menu-semana / article / label */
+
+.menu-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.menu-form-header h3 { font-size: 1rem; }
+
+.opcion {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+}
+
+.opcion input[type="text"] {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.opcion .etiquetas {
+  display: flex;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.opcion .etiquetas label {
+  background: none;
+  border: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-agregar-opcion {
+  background: none;
+  border: 1px dashed #2563eb;
+  color: #2563eb;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-duplicar {
+  background-color: #ffffff;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Botones de acción al pie (compartidos, ej. consolidado) */
+
+.actions-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.btn-secondary { background-color: #ffffff; color: #374151; border: 1px solid #d1d5db; }
+.btn-success { background-color: #16a34a; color: #ffffff; }
