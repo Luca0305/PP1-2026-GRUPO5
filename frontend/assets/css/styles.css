@@ -526,3 +526,143 @@ form > input[type="password"],
 }
 
 .resumen h3 em { font-style: normal; font-weight: 400; color: #868e96; }
+/* === Nota Explicativa (Obligatoria) === */
+.info-box {
+    background-color: #eaf3fc;
+    color: #004085;
+    padding: 15px;
+    border-radius: 2px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    border-left: 4px solid #0066cc;
+}
+
+/* === Barra de Herramientas === */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.mes-actual {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.btn-outline {
+    border: 1px solid #0066cc;
+    background: white;
+    color: #0066cc;
+    padding: 8px 15px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-outline:hover {
+    background: #f0f8ff;
+}
+
+/* === Grilla de Días === */
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjeta de Día Hábil (Por defecto) */
+.day-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tarjeta de Feriado (Diferenciación visual) */
+.day-card.holiday {
+    background-color: #fafafa;
+    border-color: #ffb3b3; 
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.day-name {
+    font-size: 1.1rem;
+    color: #0066cc;
+    margin: 0;
+}
+
+.holiday .day-name {
+    color: #cc0000;
+}
+
+.day-date {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+.badge-habil {
+    background-color: #e6f2d9;
+    color: #4d8000;
+    border: 1px solid #cce6b3;
+}
+
+.badge-feriado {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 1px solid #ffcccc;
+}
+
+/* Input de Motivo (Opcional) */
+.input-motivo {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.input-motivo:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* Botón de Acción Principal de la Tarjeta */
+.btn-action {
+    width: 100%;
+    padding: 10px;
+    background: white;
+    border: 1px solid #0066cc;
+    color: #0066cc;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+.holiday .btn-action {
+    border-color: #999;
+    color: #555;
+}
+
+.btn-action:hover {
+    background: #f9f9f9;
+}
