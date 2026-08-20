@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Feriados - SistemaPedidos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+    <!-- Navbar Obligatoria -->
+    <header>
+        <div class="brand-section">
+            <div class="logo-circle"></div>
+            <span>SistemaPedidos</span>
+        </div>
+        <div class="nav-center">
+            Panel del Administrador
+        </div>
+        <div class="nav-links">
+            <a href="#">&#9651; Inicio</a>
+            <a href="#">Menús</a>
+            <a href="#" class="active">Feriados</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Calendario de feriados</h1>
+        <p class="subtitle">Gestioná los días en los que no habrá servicio de comedor.</p>
+
+        <!-- Nota Explicativa Obligatoria -->
+        <div class="info-box">
+            En los días marcados como feriado <strong>no se publica menú ni se reciben pedidos</strong>.
+        </div>
+
+        <div class="toolbar">
+            <div class="mes-actual">Agosto 2026</div>
+            <!-- Botón Opcional -->
+            <button class="btn-outline">Cargar los feriados nacionales de una</button>
+        </div>
+
+        <div class="days-grid">
+            
+            <!-- Ejemplo 1: Día Feriado (Marcado) -->
+            <div class="day-card holiday">
+                <div class="day-header">
+                    <h3 class="day-name">Lunes</h3>
+                    <span class="badge badge-feriado">Feriado</span>
+                </div>
+                <div class="day-date">17/08/2026</div>
+                
+                <input type="text" class="input-motivo" value="Paso a la Inmortalidad del Gral. San Martín" placeholder="Motivo del feriado...">
+                
+                <button class="btn-action">Desmarcar feriado</button>
+            </div>
+
+            <!-- Ejemplo 2: Día Hábil -->
+            <div class="day-card">
+                <div class="day-header">
+                    <h3 class="day-name">Martes</h3>
+                    <span class="badge badge-habil">Día hábil</span>
+                </div>
+                <div class="day-date">18/08/2026</div>
+                
+                <input type="text" class="input-motivo" placeholder="Motivo del feriado..." disabled>
+                
+                <button class="btn-action">+ Marcar como feriado</button>
+            </div>
+
+            <!-- Ejemplo 3: Día Hábil -->
+            <div class="day-card">
+                <div class="day-header">
+                    <h3 class="day-name">Miércoles</h3>
+                    <span class="badge badge-habil">Día hábil</span>
+                </div>
+                <div class="day-date">19/08/2026</div>
+                
+                <input type="text" class="input-motivo" placeholder="Motivo del feriado..." disabled>
+                
+                <button class="btn-action">+ Marcar como feriado</button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
