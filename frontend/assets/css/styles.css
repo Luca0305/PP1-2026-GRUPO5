@@ -502,3 +502,27 @@ header nav {
 
 .btn-secondary { background-color: #ffffff; color: #374151; border: 1px solid #d1d5db; }
 .btn-success { background-color: #16a34a; color: #ffffff; }
+
+/* ── Campos sueltos de formulario (login.html, perfil.html) ── */
+
+form > label,
+.resumen label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+form > input[type="text"],
+form > input[type="email"],
+form > input[type="password"],
+.resumen input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.resumen h3 em { font-style: normal; font-weight: 400; color: #868e96; }
