@@ -658,3 +658,48 @@ form > input[type="password"],
 .btn-action:hover {
     background: #f9f9f9;
 }
+
+.form-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  text-align: left;
+}
+ 
+#menu-estado,
+#calendario-estado {
+  background-color: #f9fafb;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+ 
+#menu-estado.estado-error,
+#calendario-estado.estado-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+ 
+.lista-pedidos-registrados {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+ 
+.lista-pedidos-registrados li {
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+}
