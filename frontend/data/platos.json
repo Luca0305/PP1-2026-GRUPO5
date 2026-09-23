@@ -1,3 +1,11 @@
 [
-  
+  { "id": "p1", "dia": "Lunes",  "fecha": "2025-06-23", "nombre": "Milanesa con puré",  "descripcion": "Ternera · puré · ensalada" },
+  { "id": "p2", "dia": "Lunes",  "fecha": "2025-06-23", "nombre": "Pollo al limón",     "descripcion": "Grillado · arroz · zanahorias" },
+  { "id": "p3", "dia": "Lunes",  "fecha": "2025-06-23", "nombre": "Tarta de verduras",  "descripcion": "Vegetal · espinaca · queso" },
+  { "id": "p4", "dia": "Martes", "fecha": "2025-06-24", "nombre": "Pasta al pesto",     "descripcion": "Fideos · pesto · cherry" },
+  { "id": "p5", "dia": "Martes", "fecha": "2025-06-24", "nombre": "Carne al horno",     "descripcion": "Con papas y verduras" },
+  { "id": "p6", "dia": "Martes", "fecha": "2025-06-24", "nombre": "Locro vegetal",      "descripcion": "Sin carne · zapallo · porotos" },
+  { "id": "p7", "dia": "Jueves", "fecha": "2025-06-26", "nombre": "Cazuela de pollo",   "descripcion": "Con arroz y caldo" },
+  { "id": "p8", "dia": "Jueves", "fecha": "2025-06-26", "nombre": "Revuelto gramajo",   "descripcion": "Papas · jamón · huevo" },
+  { "id": "p9", "dia": "Jueves", "fecha": "2025-06-26", "nombre": "Ensalada completa",  "descripcion": "Vegetal · proteína de soja" }
 ]
