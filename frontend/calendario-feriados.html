@@ -18,9 +18,9 @@
             Panel del Administrador
         </div>
         <div class="nav-links">
-            <a href="#">&#9651; Inicio</a>
-            <a href="#">Menús</a>
-            <a href="#" class="active">Feriados</a>
+            <a href="index.html">&#9651; Inicio</a>
+            <a href="menu-admin.html">Menús</a>
+            <a href="calendario-feriados.html" class="active">Feriados</a>
         </div>
     </header>
 
@@ -39,49 +39,11 @@
             <button class="btn-outline">Cargar los feriados nacionales de una</button>
         </div>
 
-        <div class="days-grid">
-            
-            <!-- Ejemplo 1: Día Feriado (Marcado) -->
-            <div class="day-card holiday">
-                <div class="day-header">
-                    <h3 class="day-name">Lunes</h3>
-                    <span class="badge badge-feriado">Feriado</span>
-                </div>
-                <div class="day-date">17/08/2026</div>
-                
-                <input type="text" class="input-motivo" value="Paso a la Inmortalidad del Gral. San Martín" placeholder="Motivo del feriado...">
-                
-                <button class="btn-action">Desmarcar feriado</button>
-            </div>
+        <p id="calendario-estado" hidden></p>
 
-            <!-- Ejemplo 2: Día Hábil -->
-            <div class="day-card">
-                <div class="day-header">
-                    <h3 class="day-name">Martes</h3>
-                    <span class="badge badge-habil">Día hábil</span>
-                </div>
-                <div class="day-date">18/08/2026</div>
-                
-                <input type="text" class="input-motivo" placeholder="Motivo del feriado..." disabled>
-                
-                <button class="btn-action">+ Marcar como feriado</button>
-            </div>
-
-            <!-- Ejemplo 3: Día Hábil -->
-            <div class="day-card">
-                <div class="day-header">
-                    <h3 class="day-name">Miércoles</h3>
-                    <span class="badge badge-habil">Día hábil</span>
-                </div>
-                <div class="day-date">19/08/2026</div>
-                
-                <input type="text" class="input-motivo" placeholder="Motivo del feriado..." disabled>
-                
-                <button class="btn-action">+ Marcar como feriado</button>
-            </div>
-
-        </div>
+        <div class="days-grid" id="days-grid-contenido"></div>
     </div>
 
+    <script src="assets/js/calendario-feriados.js"></script>
 </body>
 </html>
