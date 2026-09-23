@@ -16,7 +16,9 @@
   </header>
 
   <main>
-    <form>
+    <form id="login-form" novalidate>
+
+      <p id="login-error" class="form-error" role="alert" hidden></p>
 
       <label for="email">Email</label>
       <input 
@@ -46,5 +48,6 @@
     <small>© 2026 SistemaPedidos</small>
   </footer>
 
+  <script src="assets/js/login.js"></script>
 </body>
 </html>
