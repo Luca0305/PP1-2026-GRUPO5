@@ -1,0 +1,7 @@
+[
+  { "id": "f1", "dia": "Lunes",     "fecha": "2026-08-17", "feriado": true,  "motivo": "Paso a la Inmortalidad del Gral. San Martín" },
+  { "id": "f2", "dia": "Martes",    "fecha": "2026-08-18", "feriado": false, "motivo": "" },
+  { "id": "f3", "dia": "Miércoles", "fecha": "2026-08-19", "feriado": false, "motivo": "" },
+  { "id": "f4", "dia": "Jueves",    "fecha": "2026-08-20", "feriado": false, "motivo": "" },
+  { "id": "f5", "dia": "Viernes",   "fecha": "2026-08-21", "feriado": false, "motivo": "" }
+]
