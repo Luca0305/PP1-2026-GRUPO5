@@ -30,8 +30,6 @@
  
 ## 3. Declaración de uso de IA
 
-## 3. Declaración de uso de IA
-
 **Modo:** Asistido.
 
 Se utilizó IA (Claude) como herramienta de consulta y apoyo durante el desarrollo del proyecto, principalmente para resolver dudas puntuales relacionadas con **JavaScript y el manejo de archivos JSON**, además de realizar algunas **correcciones menores y revisar posibles errores** en el código.
