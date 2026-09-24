@@ -24,7 +24,7 @@ form.addEventListener('submit', (evento) => {
 
   limpiarError();
 
-  const email = document.getElementById('email').value.trim();
+  const email = document.getElementById('email').value.trim();   //.trim para no comer espacios al principio o al final
   const password = document.getElementById('password').value.trim();
 
   if (!email || !password) {
