@@ -703,3 +703,21 @@ form > input[type="password"],
   padding: 10px 14px;
   font-size: 0.88rem;
 }
+/* Error de validación debajo de cada campo (login) */
+.campo-error {
+  display: block;
+  color: #991b1b;
+  font-size: 0.8rem;
+  margin-top: -6px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.campo-error[hidden],
+.form-error[hidden] {
+  display: none;
+}
+
+input[aria-invalid="true"] {
+  border-color: #fca5a5;
+}

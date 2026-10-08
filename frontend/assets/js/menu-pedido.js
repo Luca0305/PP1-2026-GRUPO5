@@ -7,8 +7,12 @@ const contenedorMenu = document.getElementById('menu-semana-contenido');
 const estadoMenu = document.getElementById('menu-estado');
 const form = document.getElementById('form-pedido');
 const listaPedidos = document.getElementById('pedidos-lista');
+const errorPedido = document.getElementById('pedido-error');
 
-const DIAS = ['Lunes', 'Martes', 'Jueves'];
+const ID_USUARIO = 1;       // hasta tener sesión real, el empleado logueado es el 1
+const MAX_COMENTARIO = 200;
+
+let platosCargados = [];
 const pedidosGuardados = []; // en memoria — el 05/11 esto se reemplaza por el backend
 
 // ── Estados de interfaz (Capacidad 4) ──
@@ -46,6 +50,7 @@ async function cargarMenu() {
       return;
     }
 
+    platosCargados = platos;
     dibujarMenu(platos);
     ocultarEstado();
   } catch (error) {
@@ -53,38 +58,68 @@ async function cargarMenu() {
   }
 }
 
+// Los días salen de los datos: se agrupan los platos por fecha,
+// sin una lista de días escrita a mano.
+function agruparPorDia(platos) {
+  const grupos = [];
+
+  platos.forEach((plato) => {
+    let grupo = grupos.find((g) => g.fecha === plato.fecha);
+    if (!grupo) {
+      grupo = { fecha: plato.fecha, dia: plato.dia, platos: [] };
+      grupos.push(grupo);
+    }
+    grupo.platos.push(plato);
+  });
+
+  return grupos;
+}
+
+function crearOpcionPlato(plato, nombreGrupo) {
+  const label = document.createElement('label');
+
+  const radio = document.createElement('input');
+  radio.type = 'radio';
+  radio.name = nombreGrupo;
+  radio.value = plato.id;
+
+  const descripcion = document.createElement('em');
+  descripcion.textContent = plato.descripcion;
+
+  label.append(radio, ` ${plato.nombre} `, descripcion);
+  return label;
+}
+
+function crearTarjetaDia(grupo) {
+  const article = document.createElement('article');
+
+  const titulo = document.createElement('h4');
+  const hora = document.createElement('time');
+  hora.dateTime = grupo.fecha;
+  hora.textContent = formatearFecha(grupo.fecha);
+  titulo.append(`${grupo.dia} `, hora);
+  article.appendChild(titulo);
+
+  grupo.platos.forEach((plato) => article.appendChild(crearOpcionPlato(plato, grupo.fecha)));
+  return article;
+}
+
 function dibujarMenu(platos) {
   contenedorMenu.innerHTML = '';
-
-  DIAS.forEach((dia) => {
-    const opcionesDelDia = platos.filter((plato) => plato.dia === dia);
-    if (opcionesDelDia.length === 0) return;
-
-    const fecha = opcionesDelDia[0].fecha;
-
-    const article = document.createElement('article');
-
-    const titulo = document.createElement('h4');
-    titulo.innerHTML = `${dia} <time datetime="${fecha}">${formatearFecha(fecha)}</time>`;
-    article.appendChild(titulo);
-
-    opcionesDelDia.forEach((plato) => {
-      const label = document.createElement('label');
-      label.innerHTML = `
-        <input type="radio" name="${dia.toLowerCase()}" value="${plato.id}" required>
-        ${plato.nombre}
-        <em>${plato.descripcion}</em>
-      `;
-      article.appendChild(label);
-    });
-
-    contenedorMenu.appendChild(article);
-  });
+  agruparPorDia(platos).forEach((grupo) => contenedorMenu.appendChild(crearTarjetaDia(grupo)));
 }
 
 function formatearFecha(fechaISO) {
   const [anio, mes, dia] = fechaISO.split('-');
   return `${dia}/${mes}/${anio.slice(2)}`;
+}
+
+function fechaDeHoy() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function buscarPlato(idPlato) {
+  return platosCargados.find((plato) => plato.id === idPlato);
 }
 
 // ── Capacidad 3 — registrar el pedido ──
@@ -93,48 +128,102 @@ function formatearFecha(fechaISO) {
 // memoria, el día de la conexión al backend esto pasa a ser un
 // fetch con POST y el resto del archivo no cambia.
 async function guardarPedido(pedido) {
-  pedidosGuardados.push(pedido);
+  const id = pedidosGuardados.length + 1;
+  pedidosGuardados.push({ ...pedido, id });
+}
+
+// Arma un ítem de la lista con el plato elegido, el día y el estado.
+function crearItemPedido(pedido) {
+  const plato = buscarPlato(pedido.idPlato);
+
+  const li = document.createElement('li');
+
+  const estado = document.createElement('strong');
+  estado.className = 'badge estado-borrador';
+  estado.textContent = 'Borrador';
+
+  const detalle = document.createElement('span');
+  detalle.textContent = ` ${plato.dia} ${formatearFecha(pedido.fechaPedido)} → ${plato.nombre}`;
+
+  li.append(estado, detalle);
+
+  if (pedido.comentarios) {
+    const comentario = document.createElement('small');
+    comentario.textContent = ` — Comentario: ${pedido.comentarios}`;
+    li.appendChild(comentario);
+  }
+
+  return li;
 }
 
 function renderPedidos() {
   listaPedidos.innerHTML = '';
+  pedidosGuardados.forEach((pedido) => listaPedidos.appendChild(crearItemPedido(pedido)));
+}
 
-  pedidosGuardados.forEach((pedido) => {
-    const li = document.createElement('li');
-    const comentario = pedido.comentarios ? ` — Comentario: ${pedido.comentarios}` : '';
-    li.textContent = `${pedido.dias.join(', ')} — Estado: Borrador${comentario}`;
-    listaPedidos.appendChild(li);
-  });
+function mostrarErrorPedido(mensaje) {
+  errorPedido.textContent = mensaje;
+  errorPedido.hidden = false;
+}
+
+function limpiarErrorPedido() {
+  errorPedido.textContent = '';
+  errorPedido.hidden = true;
+}
+
+// Devuelve los platos elegidos: como máximo uno por día, sin obligar a elegir todos.
+function leerPlatosElegidos(datos) {
+  return agruparPorDia(platosCargados)
+    .map((grupo) => Number(datos.get(grupo.fecha)))
+    .filter((idPlato) => idPlato)
+    .map(buscarPlato);
+}
+
+function yaTienePedidoEseDia(plato) {
+  return pedidosGuardados.some(
+    (pedido) => pedido.idUsuario === ID_USUARIO && pedido.fechaPedido === plato.fecha
+  );
 }
 
 form.addEventListener('submit', async (evento) => {
   evento.preventDefault();
+  limpiarErrorPedido();
 
-  const datosForm = new FormData(form);
-  const seleccion = {
-    lunes: datosForm.get('lunes'),
-    martes: datosForm.get('martes'),
-    jueves: datosForm.get('jueves'),
-  };
-
-  const diasSeleccionados = Object.entries(seleccion)
-    .filter(([, valor]) => valor)
-    .map(([dia]) => dia.charAt(0).toUpperCase() + dia.slice(1));
-
-  if (diasSeleccionados.length === 0) {
-    mostrarEstado('Elegí al menos una opción antes de guardar el pedido.', true);
+  if (platosCargados.length === 0) {
+    mostrarErrorPedido('El menú todavía no está disponible.');
     return;
   }
 
-  const pedido = {
-    id: Date.now(),
-    dias: diasSeleccionados,
-    seleccion,
-    comentarios: (datosForm.get('comentarios') || '').trim(),
-    estado: 'Borrador',
-  };
+  const datosForm = new FormData(form);
+  const elegidos = leerPlatosElegidos(datosForm);
+  const comentarios = (datosForm.get('comentarios') || '').trim();
 
-  await guardarPedido(pedido);
+  if (elegidos.length === 0) {
+    mostrarErrorPedido('Elegí una opción en al menos un día antes de guardar el pedido.');
+    return;
+  }
+
+  if (comentarios.length > MAX_COMENTARIO) {
+    mostrarErrorPedido(`El comentario no puede superar los ${MAX_COMENTARIO} caracteres.`);
+    return;
+  }
+
+  const repetido = elegidos.find(yaTienePedidoEseDia);
+  if (repetido) {
+    mostrarErrorPedido(`Ya tenés un pedido para el ${repetido.dia} ${formatearFecha(repetido.fecha)}.`);
+    return;
+  }
+
+  for (const plato of elegidos) {
+    await guardarPedido({
+      idUsuario: ID_USUARIO,
+      idPlato: plato.id,
+      fechaPedido: plato.fecha,
+      estado: 'BORRADOR',
+      comentarios,
+    });
+  }
+
   renderPedidos();
   form.reset();
 });

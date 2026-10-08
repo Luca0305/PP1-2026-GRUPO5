@@ -9,24 +9,23 @@
 <body>
 
     <!-- Navbar Obligatoria -->
-    <header>
-        <div class="brand-section">
-            <div class="logo-circle"></div>
-            <span>SistemaPedidos</span>
-        </div>
-        <div class="nav-center">
-            Panel del Administrador
-        </div>
-        <div class="nav-links">
-            <a href="index.html">&#9651; Inicio</a>
-            <a href="menu-admin.html">Menús</a>
-            <a href="calendario-feriados.html" class="active">Feriados</a>
+    <header class="navbar-admin">
+        <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
+        <nav>
+        <a href="index.html">Inicio</a>
+        <a href="consolidado.html">Consolidado</a>
+        <a href="menuadmin.html">Menús</a>
+        <a href="calendario-feriados.html">Feriados</a>
+    </nav>
+        <div class="user-info">
+            <span>Admin</span>
+            <a href="login.html" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
 
-    <div class="container">
-        <h1>Calendario de feriados</h1>
-        <p class="subtitle">Gestioná los días en los que no habrá servicio de comedor.</p>
+    <main class="container-admin">
+        <h2>Calendario de feriados</h2>
+        <p class="subtitulo">Gestioná los días en los que no habrá servicio de comedor.</p>
 
         <!-- Nota Explicativa Obligatoria -->
         <div class="info-box">
@@ -42,7 +41,7 @@
         <p id="calendario-estado" hidden></p>
 
         <div class="days-grid" id="days-grid-contenido"></div>
-    </div>
+    </main>
 
     <script src="assets/js/calendario-feriados.js"></script>
 </body>
