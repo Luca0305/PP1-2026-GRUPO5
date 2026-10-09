@@ -1,55 +1,42 @@
 // Capacidad 1 — Login validado
-// CU cubierto: sin CU propio en E1 (el login es transversal a todos los CU)
+// CU cubierto: CU relacionado al inicio de sesión (Login / Registro)
+// Usa notificarError() y las validaciones de assets/js/utils.js
 
 const form = document.getElementById('login-form');
-const inputEmail = document.getElementById('email');
-const inputPassword = document.getElementById('password');
-const errorEmail = document.getElementById('email-error');
-const errorPassword = document.getElementById('password-error');
-
-const PATRON_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const LARGO_MINIMO_PASSWORD = 8;
-
-// Cada validador devuelve el mensaje de error, o '' si el valor es válido.
-function validarEmail(valor) {
-  if (valor === '') return 'Ingresá tu email.';
-  if (!PATRON_EMAIL.test(valor)) return 'Ingresá un email con formato válido (ej: usuario@empresa.com).';
-  return '';
-}
-
-function validarPassword(valor) {
-  if (valor === '') return 'Ingresá tu contraseña.';
-  if (valor.length < LARGO_MINIMO_PASSWORD) {
-    return `La contraseña debe tener al menos ${LARGO_MINIMO_PASSWORD} caracteres.`;
-  }
-  return '';
-}
-
-function mostrarError(elemento, input, mensaje) {
-  elemento.textContent = mensaje;
-  elemento.hidden = mensaje === '';
-  input.setAttribute('aria-invalid', mensaje === '' ? 'false' : 'true');
-}
-
-function validarFormulario() {
-  const mensajeEmail = validarEmail(inputEmail.value.trim());
-  const mensajePassword = validarPassword(inputPassword.value); // la contraseña no se recorta
-
-  mostrarError(errorEmail, inputEmail, mensajeEmail);
-  mostrarError(errorPassword, inputPassword, mensajePassword);
-
-  return mensajeEmail === '' && mensajePassword === '';
-}
 
 form.addEventListener('submit', (evento) => {
   evento.preventDefault(); // no se envía el formulario ni se recarga la página
 
-  if (!validarFormulario()) return;
+  const email = document.getElementById('email').value.trim();   //.trim para no comer espacios al principio o al final
+  const password = document.getElementById('password').value;
 
-  // Datos válidos: sin backend se simula el inicio de sesión.
+  if (!email || !password) {
+    notificarError('Completá el email y la contraseña.');
+    return;
+  }
+
+  if (!emailValido(email)) {
+    notificarError('Ingresá un email con formato válido (ej: usuario@empresa.com).');
+    return;
+  }
+
+  const faltantes = reglasFaltantes(password);
+  if (faltantes.length > 0) {
+    notificarError('La contraseña debe tener: ' + faltantes.map((r) => r.texto.toLowerCase()).join(', ') + '.');
+    return;
+  }
+
+  const usuario = obtenerUsuarios().find((u) => u.email.toLowerCase() === email.toLowerCase());
+  if (!usuario || usuario.password !== password) {
+    notificarError('Email o contraseña incorrectos.');
+    return;
+  }
+
+  if (usuario.activo === false) {
+    notificarError('Tu cuenta está desactivada. Consultá con el administrador.');
+    return;
+  }
+
+  iniciarSesion(usuario);
   window.location.href = 'index.html';
 });
-
-// El error de un campo desaparece apenas el usuario lo corrige.
-inputEmail.addEventListener('input', () => mostrarError(errorEmail, inputEmail, ''));
-inputPassword.addEventListener('input', () => mostrarError(errorPassword, inputPassword, ''));

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SistemaPedidos — Gestión de usuarios</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-rol="admin">
+
+  <header class="navbar-admin">
+    <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
+    <div class="user-info">
+      <a href="menuadmin.html">Menús</a>
+      <a href="consolidado.html">Consolidado</a>
+      <a href="calendario-feriados.html">Feriados</a>
+      <span data-usuario></span>
+      <a href="#" data-logout class="btn-logout">Cerrar Sesión</a>
+    </div>
+  </header>
+
+  <main class="container-admin">
+    <h2>Gestión de usuarios</h2>
+    <p class="subtitulo">Dá de alta, modificá o desactivá las cuentas. Una cuenta desactivada no puede iniciar sesión.</p>
+
+    <table class="table-consolidado tabla-apilada">
+      <thead>
+        <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="usuarios-cuerpo"></tbody>
+    </table>
+
+    <form id="form-usuario" class="form-usuario" novalidate>
+      <h3 id="form-usuario-titulo">Nuevo usuario</h3>
+
+      <label for="u-nombre">Nombre completo</label>
+      <input type="text" id="u-nombre" placeholder="Nombre y apellido">
+
+      <label for="u-email">Email</label>
+      <input type="email" id="u-email" placeholder="usuario@empresa.com">
+
+      <label for="u-rol">Rol</label>
+      <select id="u-rol">
+        <option value="empleado">Empleado</option>
+        <option value="admin">Administrador</option>
+      </select>
+
+      <label for="u-password" id="u-password-label">Contraseña inicial</label>
+      <input type="password" id="u-password" autocomplete="new-password">
+      <p class="fortaleza" id="u-ayuda">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo.</p>
+
+      <div class="actions-footer">
+        <button type="button" class="btn btn-secondary" id="btn-cancelar-edicion" hidden>Cancelar edición</button>
+        <button type="submit" class="btn btn-success" id="btn-guardar-usuario">Crear usuario</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/usuarios.js"></script>
+</body>
+</html>

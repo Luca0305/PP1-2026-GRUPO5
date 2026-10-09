@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <title>SistemaPedidos — Menú + Registrar Pedido</title>
 </head>
-<body>
+<body data-rol="empleado">
 
   <header>
     <h1>SistemaPedidos</h1>
@@ -15,45 +15,38 @@
       <a href="menu-pedido.html">Menú</a>
       <a href="mis-pedidos.html">Mis pedidos</a>
       <a href="mi-perfil.html">Mi perfil</a>
-      <a href="login.html">Cerrar sesión</a>
     </nav>
-    <p>Empleado Activo</p>
+    <p><span data-usuario></span> · <a href="#" data-logout>Cerrar sesión</a></p>
   </header>
 
-  <main>
+  <main class="ancha">
     <h2>Menú + Registrar pedido</h2>
-    <p>Seleccioná una opción por cada día que asistís. El pedido quedará en borrador.</p>
+    <p>Elegí la semana y seleccioná una opción por cada día que asistís. Podés dejar un comentario por día. El pedido quedará en borrador.</p>
 
-    <form id="form-pedido">
+    <form id="form-pedido" novalidate>
 
       <section class="menu-semana-wrapper">
         <h3>Menú de la semana — días de asistencia</h3>
+
+        <div class="nav-semana">
+          <button type="button" id="semana-anterior">← Semana anterior</button>
+          <span class="semana-label" id="semana-label"></span>
+          <button type="button" id="semana-siguiente">Semana siguiente →</button>
+        </div>
 
         <p id="menu-estado" hidden></p>
 
         <section class="menu-semana" id="menu-semana-contenido"></section>
       </section>
 
-      <section>
-        <label for="comentarios">Comentarios / preferencias alimentarias (opcional)</label>
-        <textarea
-          id="comentarios"
-          name="comentarios"
-          placeholder="Ej: sin sal, sin TACC, alergia al maní..."
-          maxlength="200">
-        </textarea>
-      </section>
-
       <aside>
         <p>Plazo para registrar el pedido: hasta las 10:00 hs de cada día.</p>
       </aside>
 
-      <p id="pedido-error" class="form-error" role="alert" hidden></p>
-
       <button type="submit">Guardar pedido</button>
 
       <section class="resumen">
-        <h3>Pedidos registrados en esta sesión</h3>
+        <h3>Mis pedidos guardados</h3>
         <ul class="lista-pedidos-registrados" id="pedidos-lista"></ul>
       </section>
 
@@ -65,6 +58,7 @@
     <small>© 2026 SistemaPedidos</small>
   </footer>
 
+  <script src="assets/js/utils.js"></script>
   <script src="assets/js/menu-pedido.js"></script>
 </body>
 </html>

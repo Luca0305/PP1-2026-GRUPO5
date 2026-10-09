@@ -1,14 +1,21 @@
-// Capacidad 5 — Calendario de feriados (Administrador)
-// CU cubierto: sin CU propio en E1 (gap detectado y aceptado por el grupo)
+// Pantalla administrativa: calendario de feriados.
+// Los cambios se guardan en el navegador (hasta tener backend) y usan utils.js.
 
 const contenedorDias = document.getElementById('days-grid-contenido');
 const estadoCalendario = document.getElementById('calendario-estado');
+const btnNacionales = document.getElementById('btn-nacionales');
 
-const MAX_MOTIVO = 80;
+// Feriados nacionales de fecha fija (mes-día)
+const FERIADOS_NACIONALES = {
+  '01-01': 'Año Nuevo', '03-24': 'Día de la Memoria', '04-02': 'Día del Veterano de Malvinas',
+  '05-01': 'Día del Trabajador', '05-25': 'Revolución de Mayo', '06-20': 'Paso a la Inmortalidad del Gral. Belgrano',
+  '07-09': 'Día de la Independencia', '08-17': 'Paso a la Inmortalidad del Gral. San Martín',
+  '10-12': 'Día del Respeto a la Diversidad Cultural', '11-20': 'Día de la Soberanía Nacional',
+  '12-08': 'Inmaculada Concepción', '12-25': 'Navidad',
+};
+const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-let dias = []; // en memoria — el 05/11 esto se reemplaza por el backend
-
-// ── Estados de interfaz ──
+let dias = [];
 
 function mostrarEstado(mensaje, esError = false) {
   estadoCalendario.textContent = mensaje;
@@ -24,19 +31,11 @@ function ocultarEstado() {
   contenedorDias.hidden = false;
 }
 
-// ── Traer y dibujar los días ──
-
 async function cargarFeriados() {
   mostrarEstado('Cargando el calendario…');
 
   try {
-    const respuesta = await fetch('data/feriados.json');
-
-    if (!respuesta.ok) {
-      throw new Error('Respuesta no exitosa del servidor');
-    }
-
-    dias = await respuesta.json();
+    dias = await traerFeriados();
 
     if (dias.length === 0) {
       mostrarEstado('Todavía no hay días cargados para este mes.');
@@ -47,15 +46,22 @@ async function cargarFeriados() {
     ocultarEstado();
   } catch (error) {
     mostrarEstado('No se pudo cargar el calendario. Intentá de nuevo más tarde.', true);
+    notificarError('No se pudo cargar el calendario. Intentá de nuevo más tarde.');
   }
 }
 
 function dibujarDias() {
+  const mesIni = Number(dias[0].fecha.slice(5, 7)) - 1;
+  const mesFin = Number(dias[dias.length - 1].fecha.slice(5, 7)) - 1;
+  document.querySelector('.mes-actual').textContent = `${MESES[mesIni]}${mesFin !== mesIni ? ' / ' + MESES[mesFin] : ''} ${dias[0].fecha.slice(0, 4)}`;
   contenedorDias.innerHTML = '';
   dias.forEach((dia) => contenedorDias.appendChild(crearTarjetaDia(dia)));
 }
 
-function crearEncabezadoDia(dia) {
+function crearTarjetaDia(dia) {
+  const card = document.createElement('div');
+  card.className = dia.feriado ? 'day-card holiday' : 'day-card';
+
   const header = document.createElement('div');
   header.className = 'day-header';
 
@@ -68,82 +74,79 @@ function crearEncabezadoDia(dia) {
   badge.textContent = dia.feriado ? 'Feriado' : 'Día hábil';
 
   header.append(nombre, badge);
-  return header;
-}
 
-function crearFechaDia(dia) {
   const fecha = document.createElement('div');
   fecha.className = 'day-date';
   fecha.textContent = formatearFecha(dia.fecha);
-  return fecha;
-}
 
-function crearCampoMotivo(dia) {
   const motivo = document.createElement('input');
   motivo.type = 'text';
   motivo.className = 'input-motivo';
   motivo.placeholder = 'Motivo del feriado...';
-  motivo.maxLength = MAX_MOTIVO;
-  motivo.value = dia.motivo;
+  motivo.value = dia.motivo || '';
   motivo.disabled = !dia.feriado;
-
-  // El motivo se guarda al terminar de editarlo, no en cada tecla.
   motivo.addEventListener('change', async () => {
-    await guardarFeriado(dia.id, { motivo: motivo.value.trim() });
+    dia.motivo = motivo.value.trim();
+    await guardarCambioFeriado(dia);
   });
 
-  return motivo;
-}
-
-function crearBotonFeriado(dia) {
   const boton = document.createElement('button');
   boton.type = 'button';
   boton.className = 'btn-action';
   boton.textContent = dia.feriado ? 'Desmarcar feriado' : '+ Marcar como feriado';
   boton.addEventListener('click', () => alternarFeriado(dia.id));
-  return boton;
-}
 
-function crearTarjetaDia(dia) {
-  const card = document.createElement('div');
-  card.className = dia.feriado ? 'day-card holiday' : 'day-card';
-  card.append(
-    crearEncabezadoDia(dia),
-    crearFechaDia(dia),
-    crearCampoMotivo(dia),
-    crearBotonFeriado(dia)
-  );
+  card.append(header, fecha, motivo, boton);
   return card;
 }
-
-// ── Acción del usuario: marcar / desmarcar feriado ──
 
 async function alternarFeriado(id) {
   const dia = dias.find((d) => d.id === id);
   if (!dia) return;
 
-  const cambios = { feriado: !dia.feriado };
-  if (!cambios.feriado) cambios.motivo = ''; // al desmarcar se borra el motivo
-
-  try {
-    await guardarFeriado(id, cambios);
-    dibujarDias();
-  } catch (error) {
-    mostrarEstado('No se pudo guardar el cambio. Intentá de nuevo.', true);
+  if (dia.feriado) {
+    const ok = await confirmar({
+      titulo: 'Desmarcar feriado',
+      mensaje: `¿Volver a habilitar el ${dia.dia.toLowerCase()} ${formatearFecha(dia.fecha)}? Ese día se va a poder publicar menú y recibir pedidos.`,
+      textoConfirmar: 'Sí, desmarcar',
+    });
+    if (!ok) return;
+    dia.feriado = false;
+    dia.motivo = '';
+  } else {
+    dia.feriado = true;
   }
+
+  await guardarCambioFeriado(dia);
+  dibujarDias();
+  notificarOk(dia.feriado
+    ? `${dia.dia} ${formatearFecha(dia.fecha)} marcado como feriado. Escribí el motivo.`
+    : `${dia.dia} ${formatearFecha(dia.fecha)} vuelve a ser día hábil.`);
 }
 
-// Único punto donde se modifican los datos: aplica los cambios al día.
-// Hoy escribe en el array en memoria; el 05/11 pasa a ser un PATCH al backend.
-async function guardarFeriado(id, cambios) {
-  const dia = dias.find((d) => d.id === id);
-  if (!dia) throw new Error(`No existe el día ${id}`);
-  Object.assign(dia, cambios);
+// Hoy se guarda en el navegador; con backend esto pasa a ser un fetch con PUT.
+async function guardarCambioFeriado() {
+  guardarLocal('feriados', dias);
 }
 
-function formatearFecha(fechaISO) {
-  const [anio, mes, dia] = fechaISO.split('-');
-  return `${dia}/${mes}/${anio}`;
-}
+btnNacionales.addEventListener('click', async () => {
+  let nuevos = 0;
+  dias.forEach((dia) => {
+    const motivo = FERIADOS_NACIONALES[dia.fecha.slice(5)];
+    if (motivo && !dia.feriado) {
+      dia.feriado = true;
+      dia.motivo = motivo;
+      nuevos += 1;
+    }
+  });
+
+  if (nuevos === 0) {
+    notificarOk('Los feriados nacionales de este mes ya estaban cargados.');
+    return;
+  }
+  await guardarCambioFeriado();
+  dibujarDias();
+  notificarOk(`Se cargaron ${nuevos} feriado(s) nacional(es).`);
+});
 
 cargarFeriados();

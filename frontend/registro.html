@@ -16,7 +16,7 @@
   </header>
 
   <main>
-    <form>
+    <form id="registro-form" novalidate>
 
       <label for="nombre">Nombre completo</label>
       <input
@@ -42,7 +42,11 @@
         id="password"
         name="password"
         required
+        autocomplete="new-password"
       >
+
+      <ul class="reglas-password" id="reglas-password"></ul>
+      <p class="fortaleza" id="fortaleza" hidden></p>
 
       <label for="password-confirm">Confirmar contraseña</label>
       <input
@@ -50,7 +54,9 @@
         id="password-confirm"
         name="password-confirm"
         required
+        autocomplete="new-password"
       >
+      <p class="coincidencia" id="coincidencia" hidden></p>
 
       <aside>
         <p>Las cuentas nuevas se crean con rol Empleado. El Administrador ya tiene su acceso configurado y no se registra por acá.</p>
@@ -67,5 +73,7 @@
     <small>© 2026 SistemaPedidos</small>
   </footer>
 
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/registro.js"></script>
 </body>
 </html>

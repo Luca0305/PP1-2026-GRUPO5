@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <title>SistemaPedidos — Mi perfil</title>
 </head>
-<body>
+<body data-rol="empleado">
 
   <header>
     <h1>SistemaPedidos</h1>
@@ -15,23 +15,21 @@
       <a href="menu-pedido.html">Menú</a>
       <a href="mis-pedidos.html">Mis pedidos</a>
       <a href="mi-perfil.html">Mi perfil</a>
-      <a href="login.html">Cerrar sesión</a>
     </nav>
-    <p>Empleado Activo</p>
+    <p><span data-usuario></span> · <a href="#" data-logout>Cerrar sesión</a></p>
   </header>
 
   <main>
     <h2>Mi perfil</h2>
     <p>Consultá y actualizá tus datos personales.</p>
 
-    <form>
+    <form id="perfil-form" novalidate>
 
       <label for="nombre">Nombre completo</label>
       <input
         type="text"
         id="nombre"
         name="nombre"
-        value="Rodrigo Aliendro"
         required
       >
 
@@ -40,7 +38,6 @@
         type="email"
         id="email"
         name="email"
-        value="rodaliend@gmail.com"
         required
       >
 
@@ -71,5 +68,7 @@
     <small>© 2026 SistemaPedidos</small>
   </footer>
 
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/perfil.js"></script>
 </body>
 </html>

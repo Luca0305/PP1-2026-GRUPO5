@@ -703,21 +703,160 @@ form > input[type="password"],
   padding: 10px 14px;
   font-size: 0.88rem;
 }
-/* Error de validación debajo de cada campo (login) */
-.campo-error {
-  display: block;
-  color: #991b1b;
-  font-size: 0.8rem;
-  margin-top: -6px;
-  margin-bottom: 12px;
-  text-align: left;
+/* ── Notificaciones (toast) — iguales en todo el sistema ── */
+#toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: min(360px, calc(100vw - 32px));
+}
+.toast {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border-left: 5px solid;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 0.95rem;
+}
+.toast-error { border-color: #dc2626; color: #991b1b; background: #fef2f2; }
+.toast-ok    { border-color: #16a34a; color: #166534; background: #f0fdf4; }
+
+/* ── Diálogo de confirmación ── */
+.dialogo-confirmar {
+  border: none;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+.dialogo-confirmar::backdrop { background: rgba(0,0,0,0.4); }
+.dialogo-confirmar h3 { margin-top: 0; }
+.dialogo-acciones { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.dialogo-acciones button { padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; border: 1px solid #d1d5db; }
+.dialogo-acciones .btn-primary { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+.dialogo-acciones .btn-secondary { background: #fff; color: #374151; }
+
+/* ── Requisitos de contraseña (registro) ── */
+.reglas-password { list-style: none; padding: 0; margin: 4px 0 8px; font-size: 0.9rem; }
+.reglas-password li { color: #9ca3af; }
+.reglas-password li::before { content: '✗ '; }
+.reglas-password li.ok { color: #16a34a; }
+.reglas-password li.ok::before { content: '✓ '; }
+.fortaleza { font-size: 0.9rem; margin: 0 0 8px; font-weight: bold; }
+.fortaleza-debil { color: #dc2626; }
+.fortaleza-media { color: #d97706; }
+.fortaleza-fuerte { color: #16a34a; }
+.coincidencia { font-size: 0.9rem; margin: 4px 0 8px; font-weight: bold; }
+.coincidencia.ok { color: #16a34a; }
+.coincidencia.mal { color: #dc2626; }
+
+/* ── Ícono de cuenta (arriba a la derecha del index) ── */
+.hero { position: relative; }
+.acceso-usuario { position: absolute; top: 16px; right: 20px; }
+.acceso-usuario summary {
+  list-style: none;
+  cursor: pointer;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  font-size: 1.4rem;
+}
+.acceso-usuario summary::-webkit-details-marker { display: none; }
+.acceso-menu {
+  position: absolute; right: 0; top: 50px;
+  min-width: 170px;
+  display: flex; flex-direction: column;
+  background: #fff; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  overflow: hidden;
+  z-index: 10;
+}
+.acceso-menu a { padding: 10px 14px; color: #1f2937; text-decoration: none; }
+.acceso-menu a:hover { background: #f3f4f6; }
+
+/* ── Navegador de semanas (pedidos y consolidado) ── */
+.nav-semana { display: flex; align-items: center; gap: 12px; margin: 12px 0 20px; }
+.nav-semana button { padding: 8px 14px; border: 1px solid #d1d5db; border-radius: 4px; background: #fff; cursor: pointer; }
+.nav-semana button:disabled { opacity: 0.4; cursor: not-allowed; }
+.nav-semana .semana-label { font-weight: bold; }
+
+/* ── Comentario por día ── */
+.comentario-dia { display: block; width: 100%; margin-top: 6px; padding: 6px 8px; box-sizing: border-box; }
+
+/* ── Consolidado semanal ── */
+.table-consolidado .fila-dia td { background: #eef2ff; font-weight: bold; }
+.table-consolidado .restriccion { margin: 0; padding-left: 18px; }
+
+/* ── Estados vacíos, saludo, tabla del consolidado ── */
+.estado-vacio { background-color: #f9fafb; border: 1px solid #ddd; border-radius: 6px; padding: 14px 16px; color: #666; }
+.estado-vacio a, #menu-estado a { display: inline; }
+header p a { display: inline; }
+.acceso-menu .saludo { padding: 10px 14px; color: #6b7280; font-size: 0.85rem; border-bottom: 1px solid #eee; }
+.navbar-admin .user-info a { display: inline; }
+.table-consolidado { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.table-consolidado th, .table-consolidado td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; vertical-align: top; }
+.table-consolidado th { background-color: #f8f9fa; color: #495057; }
+.table-consolidado tfoot td { border-top: 2px solid #333; font-size: 1.05rem; }
+.filter-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+@media print { .navbar-admin, .nav-semana, .actions-footer { display: none; } }
+
+/* ── Administrar menús ── */
+.menu-semana-admin { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.btn-quitar { margin-left: auto; background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+#envio-estado { font-size: 0.85rem; color: #6b7280; }
+
+[hidden] { display: none !important; }
+
+/* ── Pulido visual ── */
+footer { text-align: center; padding: 20px; color: #6b7280; }
+aside p { margin: 0; }
+main form > aside { margin: 16px 0; }
+main form > button[type="submit"] { margin-bottom: 16px; }
+main.ancha { max-width: 920px; }
+.menu-semana article label { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; row-gap: 0; align-items: start; }
+.menu-semana article label em { grid-column: 2; margin-top: 2px; }
+.menu-semana article label input[type="radio"] { margin-top: 3px; }
+.nav-semana button { white-space: nowrap; }
+.actions-footer button, .actions-footer .btn { width: auto; }
+
+/* ── Gestión de usuarios ── */
+.btn-tabla { padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; cursor: pointer; border: 1px solid #d1d5db; background: #fff; color: #374151; margin-right: 6px; }
+.btn-tabla.peligro { color: #dc2626; border-color: #dc2626; }
+.form-usuario { border-top: 1px solid #eee; margin-top: 28px; padding-top: 20px; }
+.form-usuario select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; background: #fff; }
+.form-usuario .actions-footer { margin-top: 16px; }
+
+/* ── Celulares y pantallas chicas ── */
+@media (max-width: 640px) {
+  header, .navbar-admin { flex-wrap: wrap; gap: 8px 14px; padding: 10px 14px; }
+  header nav, .navbar-admin .user-info { flex-wrap: wrap; gap: 6px 14px; }
+  header p { font-size: 0.85rem; }
+  main, .container-admin { margin: 16px 10px; padding: 16px; max-width: 100%; }
+  .main-content { padding: 0 10px; }
+  .menu-semana, .menu-semana-admin { grid-template-columns: 1fr; }
+  .days-grid { grid-template-columns: 1fr; }
+  .nav-semana { flex-wrap: wrap; }
+  .nav-semana .semana-label { flex-basis: 100%; order: -1; }
+  .pedido-acciones, .actions-footer { flex-wrap: wrap; }
+  .pedido-encabezado, .menu-lista-item, .menu-form-header, .toolbar { flex-wrap: wrap; gap: 8px; }
+  .menu-lista-item .acciones { width: 100%; }
+  table { display: block; max-width: 100%; overflow-x: auto; }
+  .dialogo-confirmar { max-width: 92vw; padding: 18px; }
+  #toast-container { top: 8px; right: 8px; left: 8px; max-width: none; }
+  .hero { padding: 40px 16px; }
 }
 
-.campo-error[hidden],
-.form-error[hidden] {
-  display: none;
-}
-
-input[aria-invalid="true"] {
-  border-color: #fca5a5;
+@media (max-width: 640px) {
+  .tabla-apilada { display: table; overflow: visible; }
+  .tabla-apilada thead { display: none; }
+  .tabla-apilada, .tabla-apilada tbody, .tabla-apilada tr, .tabla-apilada td { display: block; width: 100%; }
+  .tabla-apilada tr { border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 4px; margin-bottom: 10px; background: #fff; }
+  .tabla-apilada td { border: none; padding: 4px 12px; }
 }

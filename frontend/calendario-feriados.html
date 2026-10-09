@@ -1,48 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendario de Feriados - SistemaPedidos</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SistemaPedidos — Calendario de feriados</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
+<body data-rol="admin">
 
-    <!-- Navbar Obligatoria -->
-    <header class="navbar-admin">
-        <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
-        <nav>
-        <a href="index.html">Inicio</a>
-        <a href="consolidado.html">Consolidado</a>
-        <a href="menuadmin.html">Menús</a>
-        <a href="calendario-feriados.html">Feriados</a>
-    </nav>
-        <div class="user-info">
-            <span>Admin</span>
-            <a href="login.html" class="btn-logout">Cerrar Sesión</a>
-        </div>
-    </header>
+  <header class="navbar-admin">
+    <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
+    <div class="user-info">
+      <a href="menuadmin.html">Menús</a>
+      <a href="consolidado.html">Consolidado</a>
+      <a href="usuarios.html">Usuarios</a>
+      <span data-usuario></span>
+      <a href="#" data-logout class="btn-logout">Cerrar Sesión</a>
+    </div>
+  </header>
 
-    <main class="container-admin">
-        <h2>Calendario de feriados</h2>
-        <p class="subtitulo">Gestioná los días en los que no habrá servicio de comedor.</p>
+  <main class="container-admin">
+    <h2>Calendario de feriados</h2>
+    <p class="subtitulo">Gestioná los días en los que no habrá servicio de comedor.</p>
 
-        <!-- Nota Explicativa Obligatoria -->
-        <div class="info-box">
-            En los días marcados como feriado <strong>no se publica menú ni se reciben pedidos</strong>.
-        </div>
+    <div class="info-box">
+      En los días marcados como feriado <strong>no se publica menú ni se reciben pedidos</strong>.
+    </div>
 
-        <div class="toolbar">
-            <div class="mes-actual">Agosto 2026</div>
-            <!-- Botón Opcional -->
-            <button class="btn-outline">Cargar los feriados nacionales de una</button>
-        </div>
+    <div class="toolbar">
+      <div class="mes-actual">Agosto 2026</div>
+      <button type="button" class="btn-outline" id="btn-nacionales">Cargar los feriados nacionales de una</button>
+    </div>
 
-        <p id="calendario-estado" hidden></p>
+    <p id="calendario-estado" hidden></p>
 
-        <div class="days-grid" id="days-grid-contenido"></div>
-    </main>
+    <div class="days-grid" id="days-grid-contenido"></div>
+  </main>
 
-    <script src="assets/js/calendario-feriados.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/calendario-feriados.js"></script>
 </body>
 </html>

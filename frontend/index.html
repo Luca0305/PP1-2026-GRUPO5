@@ -10,6 +10,13 @@
 
     <header class="hero">
         <h1>SistemaPedidos</h1>
+        <details class="acceso-usuario">
+            <summary aria-label="Cuenta de usuario" title="Cuenta">👤</summary>
+            <div class="acceso-menu" id="acceso-menu">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="registro.html">Registrarse</a>
+            </div>
+        </details>
     </header>
 
     <main class="main-content">
@@ -18,19 +25,11 @@
         </div>
 
         <div class="grid-links">
-            <a href="login.html" class="card-link card-pub">
-                <div>
-                    <span class="badge badge-pub">Acceso</span>
-                    <h3>01. Iniciar Sesión</h3>
-                    <p>Pantalla de login unificada con validación visual para el ingreso de usuarios al sistema.</p>
-                </div>
-                <div class="btn-go">Ver pantalla →</div>
-            </a>
 
             <a href="asistencia.html" class="card-link card-emp">
                 <div>
                     <span class="badge badge-emp">Empleado</span>
-                    <h3>02. Asistencia Semanal</h3>
+                    <h3>01. Asistencia Semanal</h3>
                     <p>Interfaz para que el personal declare los días que trabajará presencialmente en la oficina.</p>
                 </div>
                 <div class="btn-go">Ver pantalla →</div>
@@ -39,7 +38,7 @@
             <a href="menu-pedido.html" class="card-link card-emp">
                 <div>
                     <span class="badge badge-emp">Empleado</span>
-                    <h3>03. Registrar Pedido</h3>
+                    <h3>02. Registrar Pedido</h3>
                     <p>Menú del día interactivo que permite seleccionar platos y añadir aclaraciones culinarias.</p>
                 </div>
                 <div class="btn-go">Ver pantalla →</div>
@@ -48,7 +47,7 @@
             <a href="mis-pedidos.html" class="card-link card-emp">
                 <div>
                     <span class="badge badge-emp">Empleado</span>
-                    <h3>04. Mis Pedidos</h3>
+                    <h3>03. Mis Pedidos</h3>
                     <p>Historial y gestión de viandas reservadas, permitiendo modificaciones antes del horario límite.</p>
                 </div>
                 <div class="btn-go">Ver pantalla →</div>
@@ -57,7 +56,7 @@
             <a href="consolidado.html" class="card-link card-adm">
                 <div>
                     <span class="badge badge-adm">Administrador</span>
-                    <h3>05. Generar Consolidado</h3>
+                    <h3>04. Generar Consolidado</h3>
                     <p>Panel de control para agrupar las viandas solicitadas y despachar el reporte al proveedor.</p>
                 </div>
                 <div class="btn-go">Ver pantalla →</div>
@@ -66,7 +65,7 @@
             <a href="menuadmin.html" class="card-link card-adm">
                 <div>
                     <span class="badge badge-adm">Administrador</span>
-                    <h3>06. Menu Administrador</h3>
+                    <h3>05. Menu Administrador</h3>
                     <p>Cargá las opciones del menú semanal y publicalas para habilitar los pedidos de los empleados.</p>
                  </div>
                  <div class="btn-go">Ver pantalla →</div>
@@ -75,17 +74,17 @@
             <a href="calendario-feriados.html" class="card-link card-adm">
                 <div>
                     <span class="badge badge-adm">Administrador</span>
-                    <h3>07. Calendario de feriados</h3>
+                    <h3>06. Calendario de feriados</h3>
                     <p>Marcá los días sin servicio para que ese día no se publique menú ni se reciban pedidos.</p>
                  </div>
                  <div class="btn-go">Ver pantalla →</div>
             </a>
 
-             <a href="registro.html" class="card-link card-emp">
+            <a href="usuarios.html" class="card-link card-adm">
                 <div>
-                    <span class="badge badge-emp">Empleado</span>
-                    <h3>08. Registro</h3>
-                    <p>Formulario para que un usuario sin cuenta se dé de alta como Empleado y pueda empezar a pedir su almuerzo.</p>
+                    <span class="badge badge-adm">Administrador</span>
+                    <h3>08. Gestión de usuarios</h3>
+                    <p>Dá de alta, modificá, activá o desactivá las cuentas del sistema y asigná su rol.</p>
                  </div>
                  <div class="btn-go">Ver pantalla →</div>
             </a>
@@ -93,12 +92,11 @@
             <a href="mi-perfil.html" class="card-link card-emp">
                 <div>
                     <span class="badge badge-emp">Empleado</span>
-                    <h3>09. Mi Perfil</h3>
+                    <h3>07. Mi Perfil</h3>
                     <p>Consulta y actualiza tus datos personales, y cambia tu contraseña cuando lo necesites.</p>
                  </div>
                  <div class="btn-go">Ver pantalla →</div>
             </a>
-
         </div>
     </main>
 
@@ -106,5 +104,7 @@
         <small>© 2026 SistemaPedidos</small>
     </footer>
     
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/index.js"></script>
 </body>
 </html>

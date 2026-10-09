@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <title>SistemaPedidos — Mi Asistencia Semanal</title>
 </head>
-<body>
+<body data-rol="empleado">
 
   <header>
     <h1>SistemaPedidos</h1>
@@ -15,64 +15,43 @@
       <a href="menu-pedido.html">Menú</a>
       <a href="mis-pedidos.html">Mis pedidos</a>
       <a href="mi-perfil.html">Mi perfil</a>
-      <a href="login.html">Cerrar sesión</a>
     </nav>
-    <p>Empleado Activo</p>
+    <p><span data-usuario></span> · <a href="#" data-logout>Cerrar sesión</a></p>
   </header>
 
   <main>
     <h2>Mi Asistencia Semanal</h2>
-    <p>Configurá los días de la semana que vas a asistir a la oficina.</p>
+    <p>Marcá los días de la semana que vas a asistir a la oficina (podés elegir uno solo o varios).</p>
 
-    <form>
+    <form id="form-asistencia" novalidate>
 
       <section>
-        <label>Lunes</label>
         <label>
-          <input type="radio" name="lunes" value="asisto" required> Asisto
-        </label>
-        <label>
-          <input type="radio" name="lunes" value="no-asisto"> No asisto
+          <input type="checkbox" name="dias" value="lunes"> Lunes
         </label>
       </section>
 
       <section>
-        <label>Martes</label>
         <label>
-          <input type="radio" name="martes" value="asisto" required> Asisto
-        </label>
-        <label>
-          <input type="radio" name="martes" value="no-asisto"> No asisto
+          <input type="checkbox" name="dias" value="martes"> Martes
         </label>
       </section>
 
       <section>
-        <label>Miércoles</label>
         <label>
-          <input type="radio" name="miercoles" value="asisto" required> Asisto
-        </label>
-        <label>
-          <input type="radio" name="miercoles" value="no-asisto"> No asisto
+          <input type="checkbox" name="dias" value="miercoles"> Miércoles
         </label>
       </section>
 
       <section>
-        <label>Jueves</label>
         <label>
-          <input type="radio" name="jueves" value="asisto" required> Asisto
-        </label>
-        <label>
-          <input type="radio" name="jueves" value="no-asisto"> No asisto
+          <input type="checkbox" name="dias" value="jueves"> Jueves
         </label>
       </section>
 
       <section>
-        <label>Viernes</label>
         <label>
-          <input type="radio" name="viernes" value="asisto" required> Asisto
-        </label>
-        <label>
-          <input type="radio" name="viernes" value="no-asisto"> No asisto
+          <input type="checkbox" name="dias" value="viernes"> Viernes
         </label>
       </section>
 
@@ -90,5 +69,7 @@
     <small>© 2026 SistemaPedidos</small>
   </footer>
 
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/asistencia.js"></script>
 </body>
 </html>
