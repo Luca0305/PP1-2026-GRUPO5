@@ -7,7 +7,6 @@
     <title>Elegir menú · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-    <script type="module" src="assets/js/app.js"></script>
   </head>
   <body data-page="menu-pedido" data-required="empleado">
     <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -15,7 +14,7 @@
       <a class="brand" href="login.html">SistemaPedidos</a>
     </header>
     <main id="main" class="main">
-      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <p id="loading" role="status">Cargando…</p>
       <div
         id="message"
         class="message"
@@ -70,11 +69,16 @@
           </p>
           <div class="actions">
             <button type="submit" id="save-order">
-              Guardar y revisar pedido →</button
+              Guardar borrador</button
             ><a href="mis-pedidos.html">Volver a mis pedidos</a>
           </div>
         </div>
       </form>
+      <section id="saved-order" class="panel saved-order" aria-labelledby="saved-title" tabindex="-1" hidden>
+        <h2 id="saved-title">Pedido guardado</h2>
+        <div id="saved-summary"></div>
+        <div class="actions"><a id="review-saved" class="button" href="mis-pedidos.html">Revisar y confirmar pedido →</a><a href="menu-pedido.html">Seguir eligiendo otros días</a></div>
+      </section>
     </main>
     <footer class="app-footer">
       <span>© 2026 SistemaPedidos · Grupo 5</span
@@ -83,5 +87,6 @@
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
     >
+    <script type="module" src="assets/js/app.js"></script>
   </body>
 </html>

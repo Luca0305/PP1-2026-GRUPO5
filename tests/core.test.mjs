@@ -145,7 +145,11 @@ test("sin cuentas sembradas al inicializar y fechas estables", async () => {
     json: async () =>
       url.includes("empresa.json")
         ? { administradoresAutorizados: ["proadmin@gmail.com"] }
-        : [{ dia: "Lunes", nombre: "Plato", descripcion: "Vegetal" }],
+        : url.includes("platos.json") && !url.includes("menu-platos.json")
+          ? [{id:"p1", nombre:"Plato", descripcion:"Vegetal"}]
+          : url.includes("menus.json")
+            ? [0,7].map(offset => ({id:"m"+offset,fecha:core.addDays(core.monday(),offset),publicado:true}))
+            : [],
   });
   try {
     const db = await core.initDB();

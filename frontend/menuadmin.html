@@ -7,7 +7,6 @@
     <title>Administrar menús · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-    <script type="module" src="assets/js/app.js"></script>
   </head>
   <body data-page="menuadmin" data-required="admin">
     <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -15,7 +14,7 @@
       <a class="brand" href="login.html">SistemaPedidos</a>
     </header>
     <main id="main" class="main">
-      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <p id="loading" role="status">Cargando…</p>
       <div
         id="message"
         class="message"
@@ -46,6 +45,18 @@
           Duplicar semana anterior
         </button>
       </div>
+      <section class="panel" aria-labelledby="catalog-title">
+        <h2 id="catalog-title">Agregar desde el catálogo</h2>
+        <p>Elegí un plato y un día de la semana. Después guardá el menú para aplicar el cambio.</p>
+        <p id="catalog-state" role="status"></p>
+        <div class="toolbar">
+          <div class="field"><label for="catalog-day">Día</label><select id="catalog-day"></select></div>
+          <div class="field"><label for="catalog-plate">Plato</label><select id="catalog-plate" disabled></select></div>
+          <button type="button" id="catalog-add" disabled>Agregar plato al día</button>
+          <button type="button" id="catalog-retry" class="secondary">Actualizar catálogo</button>
+        </div>
+        <details><summary>Ver platos del catálogo</summary><div id="catalog-list" class="catalog-list"></div></details>
+      </section>
       <form id="menu-form" novalidate>
         <div id="admin-days" class="admin-days"></div>
         <p class="note">
@@ -67,5 +78,6 @@
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
     >
+    <script type="module" src="assets/js/app.js"></script>
   </body>
 </html>

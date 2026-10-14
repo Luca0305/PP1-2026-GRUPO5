@@ -1,3 +1,4 @@
+import { cargarMenusIniciales } from "./datos.js";
 import { FieldError, emailError, passwordError } from "./validation.js";
 // Reglas y persistencia compartidas. La UI está en ui.js y cada pantalla tiene su módulo.
 export const DB_KEY = "sistemaPedidos:v1";
@@ -141,37 +142,40 @@ export function saveDB(db) {
 export async function initDB() {
   await loadCompany();
   if (localStorage.getItem(DB_KEY)) return readDB();
-  const response = await fetch("data/platos.json");
-  if (!response.ok)
-    throw new Error(
-      "No se pudo cargar el catálogo inicial. Recargá la página para reintentar.",
-    );
-  const catalog = await response.json();
-  if (!Array.isArray(catalog) || !catalog.length)
-    throw new Error("El catálogo inicial está vacío.");
-  const week = monday();
-  const menus = [0, 7].map((offset) => ({
-    week: addDays(week, offset),
-    status: "Publicado",
-    days: DAYS.map((day, index) => {
-      const options = catalog.filter((p) => p.dia === day);
-      const source = options.length
-        ? options
-        : catalog.filter((p) => p.dia === "Lunes");
-      return {
-        date: addDays(week, offset + index),
-        noService: false,
-        options: source.map((p) => ({
-          id: uid(),
-          name: p.nombre,
-          description: p.descripcion,
-          stock: 80,
-          vegetarian: /vegetal|verdura/i.test(p.descripcion),
-          glutenFree: false,
-        })),
-      };
-    }),
-  }));
+  const datos = await cargarMenusIniciales();
+  const menus = [];
+  const holidays = {};
+  const fechas = new Set();
+  for (const menuDia of datos.menus) {
+    if (!validDate(menuDia.fecha) || !DAYS.some((_, i) => addDays(monday(menuDia.fecha), i) === menuDia.fecha) || fechas.has(menuDia.fecha) || typeof menuDia.publicado !== "boolean")
+      throw new Error("Revisá los menús iniciales: una fecha hábil única por menú y publicado verdadero o falso.");
+    fechas.add(menuDia.fecha);
+    const week = monday(menuDia.fecha);
+    let semana = menus.find(menu => menu.week === week);
+    if (!semana) {
+      semana = {week, status: menuDia.publicado ? "Publicado" : "Borrador", days: DAYS.map((_, i) => ({date:addDays(week,i), noService:true, options:[]}))};
+      menus.push(semana);
+    }
+    if (semana.status !== (menuDia.publicado ? "Publicado" : "Borrador"))
+      throw new Error("La vista semanal requiere el mismo estado de publicación para los días de una semana.");
+    const dia = semana.days.find(dia => dia.date === menuDia.fecha);
+    dia.noService = false;
+    for (const opcion of datos.opciones.filter(opcion => opcion.idMenuDia === menuDia.id)) {
+      const plato = datos.platos.find(plato => plato.id === opcion.idPlato);
+      // Una lista de platos vacía es un estado de interfaz, no un error de red.
+      if (!plato && datos.platos.length) throw new Error("Una opción referencia un plato inexistente.");
+      if (!Number.isInteger(opcion.stockDisponible) || opcion.stockDisponible < 0 || opcion.stockDisponible > 9999)
+        throw new Error("El stock inicial debe ser un entero entre 0 y 9999.");
+      if (plato) dia.options.push({id:String(opcion.id), idPlato:plato.id, name:plato.nombre, description:plato.descripcion, stock:opcion.stockDisponible, vegetarian:plato.categoria === "vegetariano", glutenFree:false});
+    }
+  }
+  if (datos.opciones.some(opcion => !datos.menus.some(menu => menu.id === opcion.idMenuDia)))
+    throw new Error("Una opción referencia un menú inexistente.");
+  for (const feriado of datos.feriados) {
+    if (!validDate(feriado.fecha) || typeof feriado.motivo !== "string" || !feriado.motivo.trim() || holidays[feriado.fecha])
+      throw new Error("Revisá las fechas y motivos de los días no laborables.");
+    holidays[feriado.fecha] = feriado.motivo;
+  }
   // Se inicializa una sola vez: las fechas nunca se desplazan al volver a entrar.
   const db = {
     version: 1,
@@ -179,7 +183,7 @@ export async function initDB() {
     menus,
     orders: [],
     attendance: {},
-    holidays: {},
+    holidays,
     reports: {},
   };
   if (localStorage.getItem(DB_KEY)) return readDB();
@@ -188,7 +192,16 @@ export async function initDB() {
 }
 export function user(db = readDB()) {
   const id = sessionStorage.getItem(SESSION_KEY);
-  return db.users.find((u) => u.id === id && u.active && !u.pending) || null;
+  return (
+    db.users.find(
+      (u) =>
+        u.id === id &&
+        u.active &&
+        !u.pending &&
+        (u.sessionVersion || 0) ===
+          Number(sessionStorage.getItem("sistemaPedidos:versionSesion") || 0),
+    ) || null
+  );
 }
 export function requireUser(role, db = readDB()) {
   const u = user(db);
@@ -293,6 +306,10 @@ export async function login(email, password) {
       "La cuenta cambió durante el ingreso. Volvé a intentarlo.",
     );
   sessionStorage.setItem(SESSION_KEY, current.id);
+  sessionStorage.setItem(
+    "sistemaPedidos:versionSesion",
+    String(current.sessionVersion || 0),
+  );
   return current;
 }
 export const attendanceFor = (db, id, week) => db.attendance[id]?.[week] || [];

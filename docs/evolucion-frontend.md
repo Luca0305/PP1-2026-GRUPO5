@@ -60,3 +60,18 @@ Los archivos «Asistencia», «Datos de la Web» y «Login y Registro» orientar
 - Las cuentas, pedidos y asistencias locales existentes se conservan. No se importaron otras copias del proyecto.
 
 Verificación de esta revisión: 23 pruebas de lógica y recorrido completo en Chrome, incluidos rechazo de `.co`, campos con errores, ticks, autorización de otro administrador, preferencia de fecha persistente, tres días de asistencia con solo uno confirmado, enlaces de continuación, 10 pantallas móviles y reflujo con zoom del 200% en las pantallas internas. Login a 1366×768 sin scroll en su estado inicial. No se crearon commits ni se modificó main.
+
+
+## Recuperación de acceso previa al login · 14/10/2026
+
+Se incorporó el recorrido acordado: login → recuperar acceso → correo simulado → nueva contraseña → login. Dos pantallas nuevas en HTML, controladores JavaScript y estilos compartidos; funciona con Live Server, sin servicios externos. Se identifica explícitamente la simulación y nunca se informa un envío real.
+
+Los enlaces aleatorios duran 15 minutos y tienen un solo uso. Pedir otro invalida el anterior; cambiar email o contraseña también invalida el enlace anterior. Las cuentas inactivas o pendientes no pueden recuperar acceso. El formulario conserva los requisitos de contraseña y errores por campo. El cambio preserva los datos y revoca las sesiones previas de la cuenta mediante una versión de sesión, sin romper las cuentas existentes.
+
+Verificación: **29 pruebas de lógica aprobadas** (23 existentes y 6 de recuperación). Recorrido específico en Chrome: solicitud, email inválido/inexistente, correo simulado persistente al recargar, reemplazo de enlace, contraseña inválida, confirmación diferente, ojos y ticks, cambio exitoso, rechazo de contraseña anterior, login con la nueva, enlace ausente/usado y vencimiento durante edición. Comprobación móvil de ambas pantallas y regreso al login. También se repitió el recorrido completo de pedidos y administración. Las pruebas usan contextos temporales y no agregan usuarios a la aplicación del responsable. Trabajo en pruebas, sin commits ni cambios en main.
+
+## Ajuste del acceso para computadora · 14/10/2026
+
+Se amplió el panel de acceso de 480 a 680 px en pantallas desde 900 px, con logo de 204 px, título de 34 px y campos de al menos 48 px de alto. Se mantiene centrado, con espacios uniformes y adaptación a ventanas pequeñas. Los estilos compartidos también mantienen coherencia en registro y recuperación.
+
+Verificación visual en Chrome a 1366×768 y 1920×1080: login centrado, sin desbordamiento ni desplazamiento vertical en el estado inicial. Pasaron los recorridos automatizados de ingreso, pedidos, administración y recuperación de contraseña. Sin commits ni cambios en main.

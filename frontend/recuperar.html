@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Recuperar acceso · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="recuperar" data-required="">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="auth-main">
+      <p id="loading" role="status">Cargando…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <section class="auth-panel" aria-labelledby="auth-title">
+        <img
+          class="auth-logo"
+          src="assets/img/logo.png"
+          width="1536"
+          height="1024"
+          alt="SistemaPedidos"
+        />
+        <h1 id="auth-title">Recuperá tu acceso</h1>
+        <p class="auth-description">
+          Ingresá el email con el que te registraste.
+        </p>
+        <p class="note">
+          Demostración: no se enviará un email real. El correo simulado
+          aparece acá y funciona en este navegador.
+        </p>
+        <form id="recovery-form" novalidate>
+          <div class="field">
+            <label for="email">Email</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              required
+              maxlength="254"
+              placeholder="usuario@mail.com"
+              aria-describedby="email-help"
+            />
+            <p id="email-help" class="help">
+              Usá el email de una cuenta registrada y activa.
+            </p>
+          </div>
+          <button class="full" type="submit">Solicitar enlace</button>
+        </form>
+        <section
+          id="demo-mail" tabindex="-1"
+          class="recovery-mail"
+          aria-labelledby="mail-title"
+          hidden
+        >
+          <h2 id="mail-title">Correo simulado</h2>
+          <p>Para: <strong id="mail-recipient"></strong></p>
+          <p>
+            Solicitaste recuperar el acceso a SistemaPedidos. Abrí el enlace
+            para elegir una nueva contraseña.
+          </p>
+          <p id="mail-expiry" class="help"></p>
+          <a id="mail-link" class="button" href="restablecer.html"
+            >Cambiar contraseña</a
+          >
+        </section>
+        <p id="demo-empty" class="note" hidden>
+          No hay correo simulado disponible. Revisá el email y asegurate de
+          haber completado el registro en este navegador y dirección. Si tu
+          cuenta está desactivada, contactá al administrador.
+        </p>
+        <p class="auth-link">
+          ¿Todavía no tenés cuenta? <a href="registro.html">Registrate</a>
+        </p>
+        <p class="auth-link">
+          <a href="login.html">Volver al inicio de sesión</a>
+        </p>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos</span
+      ><span>Hecho para compartir un buen almuerzo.</span>
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>

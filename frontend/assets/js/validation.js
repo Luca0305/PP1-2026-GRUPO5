@@ -17,15 +17,15 @@ export const PASSWORD_RULES = [
     text: "Una letra mayúscula (A–Z)",
     test: (p) => /[A-Z]/.test(p),
   },
-  { id: "number", text: "Un número (0–9)", test: (p) => /[0-9]/.test(p) },
+  { id: "number", text: "Un número", test: (p) => /[0-9]/.test(p) },
   {
     id: "symbol",
-    text: "Un símbolo (por ejemplo ! @ # $ % & *)",
+    text: "Un símbolo (ej: ! @ # $ % & *)",
     test: (p) => /[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]/.test(p),
   },
   {
     id: "spaces",
-    text: "Sin espacios ni saltos de línea",
+    text: "Sin espacios",
     test: (p) => p.length > 0 && !/\s/.test(p),
   },
   {
@@ -55,7 +55,7 @@ export function emailError(value) {
   if (!/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+$/.test(local))
     return "La parte anterior a @ contiene caracteres no permitidos. Usá letras sin tildes, números y signos válidos.";
   if (!domain.toLowerCase().endsWith(".com"))
-    return "En SistemaPedidos el email debe terminar en .com. Por ejemplo usuario@mail.com; .co no cumple esta regla.";
+    return "El email debe terminar en .com. Por ejemplo usuario@mail.com";
   const labels = domain.split(".");
   if (
     labels.length < 2 ||

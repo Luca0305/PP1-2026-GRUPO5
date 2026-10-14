@@ -7,7 +7,6 @@
     <title>Iniciar sesión · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-    <script type="module" src="assets/js/app.js"></script>
   </head>
   <body data-page="login" data-required="">
     <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -15,7 +14,7 @@
       <a class="brand" href="login.html">SistemaPedidos</a>
     </header>
     <main id="main" class="auth-main">
-      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <p id="loading" role="status">Cargando…</p>
       <div
         id="message"
         class="message"
@@ -49,7 +48,6 @@
               placeholder="usuario@mail.com"
               aria-describedby="email-help"
             />
-            <p id="email-help" class="help">Usá un email terminado en .com.</p>
           </div>
           <div class="field">
             <label for="password">Contraseña</label
@@ -70,16 +68,20 @@
           </button>
         </form>
         <p class="auth-link">
+          <a href="recuperar.html">Olvidé mi contraseña</a>
+        </p>
+        <p class="auth-link">
           ¿Sos nuevo? <a href="registro.html">Registrate</a>
         </p>
       </section>
     </main>
     <footer class="app-footer">
-      <span>© 2026 SistemaPedidos · Grupo 5</span
+      <span>© 2026 SistemaPedidos</span
       ><span>Hecho para compartir un buen almuerzo.</span>
     </footer>
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
     >
+    <script type="module" src="assets/js/app.js"></script>
   </body>
 </html>

@@ -14,7 +14,7 @@ import {
   validDate,
   escapeHTML as esc,
 } from "./core.js";
-import { $, stepper, bindForm, redirect, run } from "./ui.js";
+import { $, stepper, bindForm, message, run } from "./ui.js";
 export function init() {
   stepper(1);
   const params = new URLSearchParams(location.search),
@@ -124,8 +124,8 @@ export function init() {
     $("#comment").value = drafts[selected]?.comment || "";
     $("#order-details").hidden = false;
     $("#save-order").textContent = edit
-      ? "Guardar cambios y revisar →"
-      : "Guardar y revisar pedido →";
+      ? "Guardar cambios"
+      : "Guardar borrador";
   }
   $("#menu-days").addEventListener("click", (e) => {
     const button = e.target.closest("[data-date]");
@@ -148,7 +148,7 @@ export function init() {
   bindForm("#pedido-form", (data) => {
     if (!data.get("option"))
       throw new Error("Elegí un plato antes de guardar.");
-    saveOrder(
+    const pedido = saveOrder(
       {
         date: selected,
         optionId: data.get("option"),
@@ -156,10 +156,14 @@ export function init() {
       },
       editId,
     );
-    redirect(
-      `mis-pedidos.html?semana=${week}`,
-      "Pedido guardado. Revisá el resumen y confirmalo para reservar tu vianda.",
-    );
+    drafts[pedido.date] = {optionId:pedido.optionId, comment:pedido.comment};
+    render();
+    $("#saved-order").hidden = false;
+    $("#saved-summary").innerHTML = `<h3>${esc(pedido.plate)}</h3><p>${formatDate(pedido.date)} · <span class="badge ${pedido.status.toLowerCase()}">${pedido.status}</span></p><p>${esc(pedido.comment || "Sin comentarios adicionales.")}</p>`;
+    $("#review-saved").href = `mis-pedidos.html#pedido-${pedido.id}`;
+    message("Pedido guardado. Revisá el resumen y continuá a la confirmación.");
+    $("#saved-order").focus();
+    $("#saved-order").scrollIntoView({block:"center"});
   });
   render();
 }

@@ -14,10 +14,16 @@ async function start() {
       location.replace(home(u));
       return;
     }
-    shell(u);
+    shell(
+      ["recuperar", "restablecer"].includes(document.body.dataset.page)
+        ? null
+        : u,
+    );
     const modules = {
       login: "auth",
       registro: "auth",
+      recuperar: "recuperacion",
+      restablecer: "recuperacion",
       asistencia: "asistencia",
       "menu-pedido": "menu-pedido",
       "mis-pedidos": "mis-pedidos",

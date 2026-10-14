@@ -1,3 +1,4 @@
+import { cargarPlatos } from "./datos.js";
 import { formatDate } from "./core.js";
 import { readDate, writeDate } from "./dates.js";
 import {
@@ -27,13 +28,15 @@ export function init() {
     })),
   });
   function optionHTML(o, locked) {
-    return `<div class="option-editor" data-id="${o.id}"><div class="field"><label for="name-${o.id}">Nombre del plato</label><input id="name-${o.id}" data-field="name" value="${esc(o.name)}" maxlength="60" ${locked ? "disabled" : ""}></div><div class="field"><label for="description-${o.id}">Descripción</label><input id="description-${o.id}" data-field="description" value="${esc(o.description)}" maxlength="140" ${locked ? "disabled" : ""}></div><div class="field"><label for="stock-${o.id}">Porciones</label><input id="stock-${o.id}" data-field="stock" value="${o.stock}" type="number" min="0" max="9999" step="1" ${locked ? "disabled" : ""}></div><div class="option-flags"><label class="inline-check"><input type="checkbox" data-field="vegetarian" ${o.vegetarian ? "checked" : ""} ${locked ? "disabled" : ""}>Vegetariano</label><label class="inline-check"><input type="checkbox" data-field="glutenFree" ${o.glutenFree ? "checked" : ""} ${locked ? "disabled" : ""}>Sin TACC</label><button type="button" class="danger" data-remove ${locked ? "disabled" : ""}>Quitar opción</button></div></div>`;
+    return `<div class="option-editor" data-id="${o.id}" data-plate-id="${esc(o.idPlato || "")}"><div class="field"><label for="name-${o.id}">Nombre del plato</label><input id="name-${o.id}" data-field="name" value="${esc(o.name)}" maxlength="60" ${locked ? "disabled" : ""}></div><div class="field"><label for="description-${o.id}">Descripción</label><input id="description-${o.id}" data-field="description" value="${esc(o.description)}" maxlength="140" ${locked ? "disabled" : ""}></div><div class="field"><label for="stock-${o.id}">Porciones</label><input id="stock-${o.id}" data-field="stock" value="${o.stock}" type="number" min="0" max="9999" step="1" ${locked ? "disabled" : ""}></div><div class="option-flags"><label class="inline-check"><input type="checkbox" data-field="vegetarian" ${o.vegetarian ? "checked" : ""} ${locked ? "disabled" : ""}>Vegetariano</label><label class="inline-check"><input type="checkbox" data-field="glutenFree" ${o.glutenFree ? "checked" : ""} ${locked ? "disabled" : ""}>Sin TACC</label><button type="button" class="danger" data-remove ${locked ? "disabled" : ""}>Quitar opción</button></div></div>`;
   }
   function render(menu) {
     const db = readDB();
     writeDate($("#week"), week);
     $("#week-label").textContent = `Semana del ${weekLabel(week)}`;
     $("#menu-status").textContent = loaded.status;
+    $("#menu-status").className = `badge ${loaded.status.toLowerCase()}`;
+    $("#catalog-day").innerHTML = '<option value="">Elegí un día</option>' + menu.days.filter(dia => !closed(dia.date)).map(dia => `<option value="${dia.date}">${formatDate(dia.date)}</option>`).join('');
     $("#admin-days").innerHTML = menu.days
       .map((day, i) => {
         const locked = closed(day.date),
@@ -42,6 +45,56 @@ export function init() {
       })
       .join("");
   }
+  let catalogo = [];
+  function crearTarjetaPlato(plato) {
+    return `<article><h3>${esc(plato.nombre)}</h3><p>${esc(plato.descripcion)}</p></article>`;
+  }
+  function renderCatalogo(lista) {
+    let tarjetas = "";
+    let opciones = '<option value="">Elegí un plato</option>';
+    for (const plato of lista) {
+      tarjetas += crearTarjetaPlato(plato);
+      opciones += `<option value="${esc(plato.id)}">${esc(plato.nombre)}</option>`;
+    }
+    $("#catalog-list").innerHTML = tarjetas;
+    $("#catalog-plate").innerHTML = opciones;
+    $("#catalog-plate").disabled = !lista.length;
+    $("#catalog-add").disabled = !lista.length;
+  }
+  async function cargarCatalogo() {
+    const estado = $("#catalog-state");
+    estado.textContent = "Cargando catálogo…";
+    estado.className = "help";
+    estado.setAttribute("role", "status");
+    $("#catalog-retry").disabled = true;
+    renderCatalogo([]);
+    try {
+      catalogo = await cargarPlatos();
+      renderCatalogo(catalogo);
+      estado.textContent = catalogo.length ? `${catalogo.length} platos disponibles.` : "Todavía no hay platos en el catálogo. Podés cargar una opción manualmente abajo.";
+    } catch (error) {
+      catalogo = [];
+      estado.className = "message error";
+      estado.setAttribute("role", "alert");
+      estado.textContent = error.message;
+    } finally {
+      $("#catalog-retry").disabled = false;
+    }
+  }
+  $("#catalog-retry").addEventListener("click", cargarCatalogo);
+  $("#catalog-add").addEventListener("click", event => run(() => {
+    const fecha = $("#catalog-day").value;
+    const plato = catalogo.find(plato => String(plato.id) === $("#catalog-plate").value);
+    if (!fecha || closed(fecha)) throw new Error("Elegí un día cuyo plazo esté abierto.");
+    if (!plato) throw new Error("Elegí un plato del catálogo.");
+    const dia = document.querySelector(`.admin-day[data-date="${fecha}"]`);
+    if (readDB().holidays[fecha] || dia.querySelector("[data-no-service]").checked)
+      throw new Error("Este día no tiene servicio. Habilitalo antes de agregar opciones.");
+    dia.querySelector(".day-options").insertAdjacentHTML("beforeend", optionHTML({id:uid(), idPlato:plato.id, name:plato.nombre, description:plato.descripcion, stock:80, vegetarian:plato.categoria === "vegetariano", glutenFree:false}, false));
+    dirty = true;
+    message("Plato agregado al formulario. Guardá el menú para aplicar el cambio.");
+    dia.scrollIntoView({block:"center"});
+  }, event.currentTarget));
   function open() {
     loaded = structuredClone(
       readDB().menus.find((m) => m.week === week) || empty(week),
@@ -61,6 +114,7 @@ export function init() {
           options: [...section.querySelectorAll(".option-editor")].map(
             (row) => ({
               id: row.dataset.id,
+              ...(row.dataset.plateId ? {idPlato: row.dataset.plateId} : {}),
               name: row.querySelector("[data-field=name]").value.trim(),
               description: row
                 .querySelector("[data-field=description]")
@@ -204,4 +258,5 @@ export function init() {
     }
   });
   open();
+  cargarCatalogo();
 }

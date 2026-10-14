@@ -30,6 +30,18 @@ No existe selector de rol ni enlace público para configurar administradores. Ag
 
 Las cuentas existentes se conservan con su rol; editar el JSON no modifica retroactivamente sus permisos. Para una cuenta ya registrada, un administrador debe cambiar su rol desde Usuarios. La asignación y los permisos son una simulación local; en producción deberán resolverse en el servidor.
 
+## Recuperar una contraseña olvidada
+
+Desde el login, elegir **Olvidé mi contraseña** → ingresar el email → **Solicitar enlace**. El bloque **Correo simulado · demostración** muestra un enlace **Cambiar contraseña** para una cuenta registrada y activa en este navegador y origen. No se envía correo real ni se comprueba la titularidad del email.
+
+El enlace dura 15 minutos, es de un solo uso y queda invalidado al pedir otro. La pantalla Nueva contraseña mantiene las validaciones, ticks y controles de mostrar/ocultar. Después de guardar, permite volver al login: la contraseña anterior deja de funcionar si se eligió una diferente. Se conservan ID, rol, pedidos, asistencia y preferencias; las sesiones anteriores de esa cuenta quedan invalidadas.
+
+Un enlace ausente, alterado, vencido, usado o reemplazado ofrece **Solicitar un nuevo enlace**. También se revalida al guardar, por si vence mientras el formulario está abierto. Todas las pantallas incluyen **Volver al inicio de sesión**. Las cuentas sin registro completo o desactivadas no reciben enlace. Una falla de almacenamiento no muestra éxito ni cambia la contraseña guardada.
+
+La bandeja simulada se conserva durante la sesión de la pestaña para poder recargar o volver. Los identificadores aleatorios de recuperación se guardan como hash en los datos locales, con vencimiento y referencia a la cuenta. Esto sigue siendo una demostración frontend: la recuperación real requiere backend, verificación y servicio de correo.
+
+**Para presentar:** crear una cuenta → cerrar sesión → olvidar contraseña → solicitar enlace → abrir el correo simulado → guardar una contraseña distinta → ingresar. Mostrar también un email `.co`, contraseñas diferentes y un enlace ya utilizado. No borrar los datos del navegador entre los pasos.
+
 ## Recorrido del empleado
 
 1. **Asistencia:** elegir la semana y marcar uno o varios días. Cualquier fecha del selector se convierte al lunes de esa semana. La asistencia se guarda por persona y semana.
@@ -75,6 +87,7 @@ El formato de email es una política práctica del proyecto; no intenta aceptar 
 
 ```text
 frontend/
+  recuperar.html / restablecer.html  Recuperación con correo simulado
   login.html / registro.html          Acceso y alta
   asistencia.html                    Días presenciales
   menu-pedido.html / mis-pedidos.html  Ciclo de pedidos
@@ -87,6 +100,8 @@ frontend/
   assets/js/validation.js             Validación detallada y requisitos de contraseña
   assets/js/dates.js                  Entrada y presentación de fechas por preferencia
   assets/img/logo.png                Logo provisto por el responsable
+  assets/js/recovery.js               Reglas de recuperación y vencimiento
+  assets/js/recuperacion.js           Interfaz de solicitud y cambio
   assets/js/accounts.js               Operaciones sobre cuentas
   assets/js/ui.js                     Navegación, avisos, diálogos y ojos
   assets/js/app.js                    Inicio, protección y carga de pantalla
@@ -138,7 +153,7 @@ La numeración de referencia es la especificación de E1, que tiene diferencias 
 npm test
 ```
 
-Las 23 pruebas de lógica cubren asignación empresarial, autorización de otros administradores, fechas y avisos de pendientes, además de email, contraseña, registro sin cuentas predefinidas, hashes, permisos, corte exacto, datos persistidos, estados, stock, asistencia, feriados, licencia, publicación, usuarios, perfil, consolidado y errores de almacenamiento.
+Las 29 pruebas de lógica cubren asignación empresarial, autorización de otros administradores, fechas y avisos de pendientes, además de email, contraseña, registro sin cuentas predefinidas, hashes, permisos, corte exacto, datos persistidos, estados, stock, asistencia, feriados, licencia, publicación, usuarios, perfil, consolidado y errores de almacenamiento.
 
 Para el recorrido automatizado de navegador: con el servidor iniciado, instalar Playwright en el entorno de pruebas (`npm install --no-save --package-lock=false playwright`) y ejecutar `node tests/browser.mjs`. Requiere Chrome instalado; también admite `BROWSER_CHANNEL=edge`, `BASE_URL` y `PLAYWRIGHT_MODULE`. Las cuentas que crea esta prueba existen únicamente en un contexto temporal de navegador que se elimina al terminar. Capturas y CSV quedan en `test-results/`, ignorado por Git.
 
@@ -147,6 +162,8 @@ Para el recorrido automatizado de navegador: con el servidor iniciado, instalar 
 ## Revisión de la prueba manual · 14/10/2026
 
 Se aplicaron las observaciones de los tres TXT: login y registro centrados, logo original, navegación con iconos, perfil junto al nombre, adaptación al zoom, formato de fechas por cuenta, avisos de pedidos pendientes, login único y asignación administrativa. Se verificó el login a 1366×768 sin desplazamiento vertical en su estado inicial; con mensajes, poca altura o zoom el contenido puede desplazarse para permanecer accesible.
+
+El recorrido específico de recuperación se ejecuta con `node tests/recovery-browser.mjs`, usando el mismo servidor y configuración de Playwright que `tests/browser.mjs`. Sus cuentas y correos se crean en un navegador temporal; no quedan cargados para la presentación.
 
 ## Historial del trabajo
 
@@ -162,3 +179,7 @@ Se aplicaron las observaciones de los tres TXT: login y registro centrados, logo
 La integración fue realizada con asistencia de Codex: reorganización, implementación, revisión y pruebas. Cada integrante debe revisar las reglas de `core.js` y el controlador de su pantalla antes de la defensa. La documentación histórica de uso de IA se mantiene como registro de cada entrega, sin atribuir retrospectivamente este trabajo a sus autores.
 
 Para continuar: trabajar en `pruebas`, ejecutar pruebas, registrar cambios en este README y en el documento de evolución, revisar manualmente el recorrido y recién después decidir en equipo qué integrar. Esta intervención no realiza commits ni envía cambios a `main`.
+
+### Presentación en computadora
+
+El acceso utiliza un panel centrado de 680 px en escritorio, con logo y campos ampliados. Se comprobó a 1366×768 y 1920×1080; las ventanas pequeñas y el zoom conservan adaptación y desplazamiento cuando es necesario.

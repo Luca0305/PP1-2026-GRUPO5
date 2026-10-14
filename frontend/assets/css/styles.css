@@ -1446,3 +1446,99 @@ input[aria-invalid="true"]:focus-visible {
     display: none;
   }
 }
+
+/* Correo de demostración de la recuperación de acceso. */
+.recovery-mail {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--background);
+}
+.recovery-mail h2 {
+  font-size: 19px;
+}
+.recovery-mail p {
+  font-size: 13px;
+}
+.recovery-mail .button {
+  margin-top: 14px;
+}
+.auth-panel .note {
+  font-size: 12px;
+  padding: 14px;
+}
+
+/* Catálogo: una columna en móvil; tres cuando hay espacio. */
+.catalog-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.catalog-list article {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.catalog-list h3 {
+  font-size: 18px;
+}
+.catalog-list p {
+  margin: 0;
+  font-size: 14px;
+}
+.saved-order {
+  margin-top: 24px;
+  border-left: 5px solid var(--teal);
+}
+.recovery-mail .button {
+  width: 100%;
+  text-align: center;
+}
+@media (min-width: 700px) {
+  .catalog-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Acceso pensado primero para la presentación en computadora. */
+@media (min-width: 900px) {
+  .auth-panel {
+    width: min(680px, 100%);
+    padding: 20px 40px 24px;
+  }
+  .auth-main > .message {
+    width: min(680px, 100%);
+  }
+  .auth-logo {
+    width: 204px;
+    margin-bottom: 4px;
+  }
+  .auth-panel h1 {
+    font-size: 34px;
+  }
+  .auth-panel .auth-description {
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+  .auth-panel label {
+    font-size: 15px;
+  }
+  .auth-panel input {
+    font-size: 16px;
+    min-height: 48px;
+  }
+  .auth-panel .help {
+    font-size: 12px;
+  }
+  .auth-panel .auth-link {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+  .auth-panel .password-rules {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    font-size: 12px;
+    gap: 5px 12px;
+  }
+}

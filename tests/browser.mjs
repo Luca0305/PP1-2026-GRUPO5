@@ -151,7 +151,10 @@ try {
     path: "test-results/menu-desktop.png",
     fullPage: true,
   });
-  await button("Guardar y revisar pedido →").click();
+  await button("Guardar borrador").click();
+  await text("#saved-summary", "Borrador");
+  assert.ok(page.url().includes("menu-pedido.html"));
+  await page.locator("#review-saved").click();
   await waitPage("mis-pedidos.html");
   await text("#orders", "Borrador");
   await text("#pending-orders", "3 días");
@@ -174,7 +177,9 @@ try {
   await page.getByRole("link", { name: "Modificar", exact: true }).click();
   await waitPage("menu-pedido.html");
   await page.locator("[name=option]").nth(1).check();
-  await button("Guardar cambios y revisar →").click();
+  await button("Guardar cambios").click();
+  await text("#saved-summary", "Borrador");
+  await page.locator("#review-saved").click();
   await waitPage("mis-pedidos.html");
   await text("#orders", "Borrador");
   await button("Confirmar pedido").click();
@@ -188,7 +193,10 @@ try {
   await go("menu-pedido.html");
   await page.locator('[data-date="2026-10-15"]').click();
   await page.locator("[name=option]").first().check();
-  await button("Guardar y revisar pedido →").click();
+  await button("Guardar borrador").click();
+  await text("#saved-summary", "Borrador");
+  assert.ok(page.url().includes("menu-pedido.html"));
+  await page.locator("#review-saved").click();
   await waitPage("mis-pedidos.html");
   await button("Confirmar pedido").click();
   await go("mi-perfil.html");
