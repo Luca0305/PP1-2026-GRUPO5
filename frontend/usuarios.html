@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Gestión de usuarios · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script type="module" src="assets/js/app.js"></script>
+  </head>
+  <body data-page="usuarios" data-required="admin">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">ADMINISTRACIÓN DEL EQUIPO</span>
+          <h1>Usuarios</h1>
+          <p>Creá cuentas, actualizá roles y gestioná el acceso al sistema.</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="field">
+          <label for="search-users">Buscar por nombre o email</label
+          ><input
+            id="search-users"
+            name="search-users"
+            type="search"
+            placeholder="Buscar usuario…"
+          />
+        </div>
+      </div>
+      <section class="panel table-wrap">
+        <table>
+          <caption>
+            Personas registradas
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Nombre y email</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-body"></tbody>
+        </table>
+      </section>
+      <section class="panel narrow">
+        <h2 id="user-form-title">Autorizar nuevo usuario</h2>
+        <form id="user-form" novalidate>
+          <div class="field">
+            <label for="name">Nombre completo</label
+            ><input
+              id="name"
+              name="name"
+              type="text"
+              required
+              maxlength="80"
+              autocomplete="name"
+            />
+          </div>
+          <div class="field">
+            <label for="email">Email</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              required
+              maxlength="254"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field">
+            <label for="role">Rol</label
+            ><select id="role" name="role">
+              <option value="empleado">Empleado</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <p class="help" id="user-password-note">
+            Autorizá el email y el rol. La persona completará el registro y
+            elegirá su propia contraseña.
+          </p>
+          <div class="actions">
+            <button type="submit" id="save-user">Guardar autorización</button
+            ><button type="button" class="secondary" id="cancel-user" hidden>
+              Cancelar edición
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos · Grupo 5</span
+      ><span>Hecho para compartir un buen almuerzo.</span>
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+  </body>
+</html>

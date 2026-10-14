@@ -1,4 +1,6 @@
 # Entrega 2 — Diseño de Interfaces
+
+> Registro histórico de esta entrega. Para ejecutar y probar la versión integrada, ver el [README principal](../../README.md) y las [decisiones de evolución](../evolucion-frontend.md).
 **Grupo**: Grupo-5
 **Proyecto**: SistemaPedidos
 **Fecha de entrega**: 25/06/2026

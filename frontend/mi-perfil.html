@@ -1,73 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <title>SistemaPedidos — Mi perfil</title>
-</head>
-<body>
-
-  <header>
-    <h1>SistemaPedidos</h1>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="menu-pedido.html">Menú</a>
-      <a href="mis-pedidos.html">Mis pedidos</a>
-      <a href="perfil.html">Mi perfil</a>
-    </nav>
-    <p>Empleado Activo</p>
-  </header>
-
-  <main>
-    <h2>Mi perfil</h2>
-    <p>Consultá y actualizá tus datos personales.</p>
-
-    <form>
-
-      <label for="nombre">Nombre completo</label>
-      <input
-        type="text"
-        id="nombre"
-        name="nombre"
-        value="Rodrigo Aliendro"
-        required
-      >
-
-      <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        value="rodaliend@gmail.com"
-        required
-      >
-
-      <section class="resumen">
-        <h3>Cambiar contraseña <em>(opcional)</em></h3>
-
-        <label for="pass-actual">Contraseña actual</label>
-        <input type="password" id="pass-actual" name="pass-actual" placeholder="••••••••">
-
-        <label for="pass-nueva">Nueva contraseña</label>
-        <input type="password" id="pass-nueva" name="pass-nueva" placeholder="Mínimo 8 caracteres">
-
-        <label for="pass-confirmar">Confirmar nueva contraseña</label>
-        <input type="password" id="pass-confirmar" name="pass-confirmar" placeholder="Repetí la nueva contraseña">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Mi perfil · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script type="module" src="assets/js/app.js"></script>
+  </head>
+  <body data-page="mi-perfil" data-required="any">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">TU CUENTA</span>
+          <h1>Mi perfil</h1>
+          <p>Mantené tus datos actualizados y elegí una contraseña segura.</p>
+        </div>
+      </div>
+      <section class="panel narrow">
+        <form id="profile-form" novalidate>
+          <div class="field">
+            <label for="name">Nombre completo</label
+            ><input
+              id="name"
+              name="name"
+              type="text"
+              required
+              maxlength="80"
+              autocomplete="name"
+            />
+          </div>
+          <div class="field">
+            <label for="email">Email</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              required
+              maxlength="254"
+              autocomplete="email"
+            />
+          </div>
+          <h2>Preferencias</h2>
+          <div class="field">
+            <label for="date-format">Formato de fecha</label
+            ><select id="date-format" name="date-format">
+              <option value="DD/MM/AAAA">Día / Mes / Año (DD/MM/AAAA)</option>
+              <option value="MM/DD/AAAA">Mes / Día / Año (MM/DD/AAAA)</option>
+              <option value="AAAA-MM-DD">Año - Mes - Día (AAAA-MM-DD)</option>
+            </select>
+            <p class="help">
+              Se aplica a los calendarios y fechas de todas tus pantallas al
+              guardar.
+            </p>
+          </div>
+          <h2>Cambiar contraseña</h2>
+          <p class="help">
+            Dejá estos tres campos vacíos si querés conservar tu contraseña.
+          </p>
+          <div class="field">
+            <label for="current-password">Contraseña actual</label
+            ><input
+              id="current-password"
+              name="current-password"
+              type="password"
+              autocomplete="current-password"
+            />
+          </div>
+          <div class="field">
+            <label for="password">Contraseña</label
+            ><input
+              id="password"
+              name="password"
+              type="password"
+              required
+              minlength="8"
+              maxlength="64"
+              autocomplete="new-password"
+              aria-describedby="password-help"
+            />
+          </div>
+          <p id="password-help" class="help" data-password-help></p>
+          <div class="field">
+            <label for="confirm">Confirmar nueva contraseña</label
+            ><input
+              id="confirm"
+              name="confirm"
+              type="password"
+              maxlength="64"
+              autocomplete="new-password"
+            />
+          </div>
+          <fieldset id="leave-fields">
+            <legend>Licencia o vacaciones (opcional)</legend>
+            <p class="help">
+              Durante estas fechas no podrás registrar pedidos. Borrá ambas
+              fechas para quitar la licencia.
+            </p>
+            <div class="field">
+              <label for="leave-start">Desde</label
+              ><input id="leave-start" name="leave-start" type="date" />
+            </div>
+            <div class="field">
+              <label for="leave-end">Hasta</label
+              ><input id="leave-end" name="leave-end" type="date" />
+            </div>
+          </fieldset>
+          <button type="submit">Guardar cambios</button>
+        </form>
       </section>
-
-      <aside>
-        <p>Los cambios se reflejan a partir de tu próximo inicio de sesión.</p>
-      </aside>
-
-      <button type="submit">Guardar cambios</button>
-
-    </form>
-
-  </main>
-
-  <footer>
-    <small>© 2026 SistemaPedidos</small>
-  </footer>
-
-</body>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos · Grupo 5</span
+      ><span>Hecho para compartir un buen almuerzo.</span>
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+  </body>
 </html>

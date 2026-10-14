@@ -1,173 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Consolidado - SistemaPedidos</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    
-    <style>
-        /* Estilos forzados para garantizar que esta pantalla se vea bien */
-        body {
-            background-color: #f4f6f9;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            color: #333;
-        }
-        
-        .navbar-admin {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fff;
-            padding: 15px 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
-        }
-        
-        .navbar-admin .logo { font-weight: bold; font-size: 1.2rem; }
-        .navbar-admin .logo span { color: #666; font-weight: normal; }
-        
-        .navbar-admin .user-info { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-        }
-        
-        .navbar-admin .btn-logout { 
-            color: #dc3545; 
-            text-decoration: none; 
-            font-weight: bold; 
-        }
-        
-        .container-admin {
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        
-        .container-admin h2 { margin-top: 0; color: #2c3e50; }
-        
-        .filter-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .filter-section input { 
-            padding: 8px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-        }
-        
-        .table-consolidado {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .table-consolidado th, .table-consolidado td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .table-consolidado th { 
-            background-color: #f8f9fa; 
-            font-weight: bold; 
-            color: #495057; 
-        }
-        
-        .table-consolidado tfoot td { 
-            border-top: 2px solid #333; 
-            font-size: 1.1rem; 
-        }
-        
-        .actions-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: opacity 0.2s;
-        }
-        
-        .btn:hover { opacity: 0.8; }
-        .btn-primary { background-color: #0d6efd; color: white; }
-        .btn-secondary { background-color: #fff; color: #333; border: 1px solid #ccc; }
-        .btn-success { background-color: #198754; color: white; }
-    </style>
-</head>
-<body>
-    <header class="navbar-admin">
-        <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
-        <div class="user-info">
-            <span>Admin</span>
-            <a href="login.html" class="btn-logout">Cerrar Sesión</a>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Consolidado de pedidos · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script type="module" src="assets/js/app.js"></script>
+  </head>
+  <body data-page="consolidado" data-required="admin">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
     </header>
-
-    <main class="container-admin">
-        <h2>Generar consolidado</h2>
-        <p>Revisá los pedidos confirmados del día para enviarlos al proveedor.</p>
-
-        <div class="filter-section">
-            <label for="fecha-consolidado">Fecha:</label>
-            <input type="date" id="fecha-consolidado" value="2026-06-25">
-            <button class="btn btn-primary">Buscar</button>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">PEDIDOS DEL EQUIPO</span>
+          <h1>Consolidado diario</h1>
+          <p>
+            Agrupá los pedidos confirmados y prepará el detalle para el
+            proveedor.
+          </p>
         </div>
-
-        <table class="table-consolidado">
-            <thead>
-                <tr>
-                    <th>Plato / Opción</th>
-                    <th>Cantidad Total</th>
-                    <th>Aclaraciones / Comentarios</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Menú 1: Milanesa con puré</td>
-                    <td>14</td>
-                    <td>- 2 sin sal<br>- 1 puré de calabaza</td>
-                </tr>
-                <tr>
-                    <td>Menú 2: Tarta de verdura</td>
-                    <td>8</td>
-                    <td>- 1 masa integral</td>
-                </tr>
-                <tr>
-                    <td>Menú 3: Ensalada completa</td>
-                    <td>5</td>
-                    <td>- Sin aderezo</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td><strong>Total de viandas:</strong></td>
-                    <td colspan="2"><strong>27</strong></td>
-                </tr>
-            </tfoot>
+        <div class="metric">
+          <strong id="total">0</strong><span>viandas confirmadas</span>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="field">
+          <label for="report-date">Fecha del pedido</label
+          ><input id="report-date" name="report-date" type="date" required />
+        </div>
+        <button type="button" id="generate-report">Generar consolidado</button>
+      </div>
+      <p id="report-status" class="help" aria-live="polite"></p>
+      <section class="panel table-wrap">
+        <table>
+          <caption>
+            Pedidos confirmados por plato
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Plato</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Comentarios del equipo</th>
+            </tr>
+          </thead>
+          <tbody id="report-body"></tbody>
         </table>
-
-        <div class="actions-footer">
-            <button class="btn btn-secondary">Descargar PDF</button>
-            <button class="btn btn-success">Enviar al Proveedor</button>
-        </div>
+      </section>
+      <div class="actions">
+        <button type="button" id="download-csv">Descargar CSV</button
+        ><button type="button" id="print-report" class="secondary">
+          Imprimir / Guardar PDF
+        </button>
+      </div>
+      <p class="note">
+        Descargá el archivo para compartirlo con el proveedor. El envío
+        automático estará disponible al conectar el servicio de notificaciones.
+      </p>
     </main>
-</body>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos · Grupo 5</span
+      ><span>Hecho para compartir un buen almuerzo.</span>
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+  </body>
 </html>

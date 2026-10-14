@@ -1,62 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <title>SistemaPedidos — Menú + Registrar Pedido</title>
-</head>
-<body>
-
-  <header>
-    <h1>SistemaPedidos</h1>
-    <nav>
-      <a href="index.html">Inicio</a>
-    </nav>
-  </header>
-
-  <main>
-    <h2>Menú + Registrar pedido</h2>
-    <p>Seleccioná una opción por cada día que asistís. El pedido quedará en borrador.</p>
-
-    <form id="form-pedido">
-
-      <section class="menu-semana-wrapper">
-        <h3>Menú de la semana — días de asistencia</h3>
-
-        <p id="menu-estado" hidden></p>
-
-        <section class="menu-semana" id="menu-semana-contenido"></section>
-      </section>
-
-      <section>
-        <label for="comentarios">Comentarios / preferencias alimentarias (opcional)</label>
-        <textarea
-          id="comentarios"
-          name="comentarios"
-          placeholder="Ej: sin sal, sin TACC, alergia al maní..."
-          maxlength="200">
-        </textarea>
-      </section>
-
-      <aside>
-        <p>Plazo para registrar el pedido: hasta las 10:00 hs de cada día.</p>
-      </aside>
-
-      <button type="submit">Guardar pedido</button>
-
-      <section class="resumen">
-        <h3>Pedidos registrados en esta sesión</h3>
-        <ul class="lista-pedidos-registrados" id="pedidos-lista"></ul>
-      </section>
-
-    </form>
-
-  </main>
-
-  <footer>
-    <small>© 2026 SistemaPedidos</small>
-  </footer>
-
-  <script src="assets/js/menu-pedido.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Elegir menú · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script type="module" src="assets/js/app.js"></script>
+  </head>
+  <body data-page="menu-pedido" data-required="empleado">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando SistemaPedidos…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div id="steps" class="steps"></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">UN ALMUERZO A TU GUSTO</span>
+          <h1>Elegí tu menú</h1>
+          <p>
+            Una opción por día. Guardá el borrador y revisalo antes de
+            confirmar.
+          </p>
+        </div>
+        <span class="pill">Corte · 10:00 hs</span>
+      </div>
+      <div class="toolbar">
+        <div class="field week-picker">
+          <label for="week">Semana</label
+          ><input type="date" id="week" name="week" /><span
+            id="week-label"
+            class="help"
+          ></span>
+        </div>
+        <a href="asistencia.html">Editar asistencia</a>
+      </div>
+      <div
+        id="menu-days"
+        class="day-tabs"
+        role="group"
+        aria-label="Día del pedido"
+      ></div>
+      <form id="pedido-form" novalidate>
+        <div id="menu-options" class="menu-options"></div>
+        <div id="order-details" class="panel narrow" hidden>
+          <div class="field">
+            <label for="comment">Comentarios o preferencias (opcional)</label
+            ><input
+              id="comment"
+              name="comment"
+              type="text"
+              maxlength="200"
+              placeholder="Ej.: sin sal o alergia al maní"
+            />
+          </div>
+          <p class="help">
+            Máximo 200 caracteres. Informá cualquier restricción alimentaria.
+          </p>
+          <div class="actions">
+            <button type="submit" id="save-order">
+              Guardar y revisar pedido →</button
+            ><a href="mis-pedidos.html">Volver a mis pedidos</a>
+          </div>
+        </div>
+      </form>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos · Grupo 5</span
+      ><span>Hecho para compartir un buen almuerzo.</span>
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+  </body>
 </html>

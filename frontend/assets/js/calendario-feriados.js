@@ -1,109 +1,66 @@
-const contenedorDias = document.getElementById('days-grid-contenido');
-const estadoCalendario = document.getElementById('calendario-estado');
-
-let dias = [];
-
-function mostrarEstado(mensaje, esError = false) {
-  estadoCalendario.textContent = mensaje;
-  estadoCalendario.hidden = false;
-  estadoCalendario.classList.toggle('estado-error', esError);
-  contenedorDias.hidden = true;
-}
-
-function ocultarEstado() {
-  estadoCalendario.hidden = true;
-  estadoCalendario.textContent = '';
-  estadoCalendario.classList.remove('estado-error');
-  contenedorDias.hidden = false;
-}
-
-async function cargarFeriados() {
-  mostrarEstado('Cargando el calendario…');
-
-  try {
-    const respuesta = await fetch('data/feriados.json');
-
-    if (!respuesta.ok) {
-      throw new Error('Respuesta no exitosa del servidor');
-    }
-
-    dias = await respuesta.json();
-
-    if (dias.length === 0) {
-      mostrarEstado('Todavía no hay días cargados para este mes.');
-      return;
-    }
-
-    dibujarDias();
-    ocultarEstado();
-  } catch (error) {
-    mostrarEstado('No se pudo cargar el calendario. Intentá de nuevo más tarde.', true);
+import { readDate, writeDate } from "./dates.js";
+import {
+  readDB,
+  clock,
+  closed,
+  dateLabel,
+  setHoliday,
+  escapeHTML as esc,
+} from "./core.js";
+import { $, bindForm, run, message, confirmAction } from "./ui.js";
+export function init() {
+  writeDate($("#date"), clock().today);
+  function render() {
+    const dates = Object.entries(readDB().holidays).sort(([a], [b]) =>
+      a.localeCompare(b),
+    );
+    $("#holidays").innerHTML = dates.length
+      ? dates
+          .map(
+            ([date, reason]) =>
+              `<article class="order-card"><div class="order-top"><h2>${esc(dateLabel(date))}</h2><span class="badge borrador">Sin servicio</span></div><p>${esc(reason)}</p><div class="actions"><button class="secondary" data-edit="${date}" ${closed(date) ? "disabled" : ""}>Editar motivo</button><button class="danger" data-remove="${date}" ${closed(date) ? "disabled" : ""}>Habilitar servicio</button></div>${closed(date) ? '<p class="help">Fecha cerrada: solo lectura.</p>' : ""}</article>`,
+          )
+          .join("")
+      : '<div class="empty">No hay feriados ni cierres registrados. Agregá las fechas que correspondan al comedor.</div>';
   }
-}
-
-function dibujarDias() {
-  contenedorDias.innerHTML = '';
-  dias.forEach((dia) => contenedorDias.appendChild(crearTarjetaDia(dia)));
-}
-
-function crearTarjetaDia(dia) {
-  const card = document.createElement('div');
-  card.className = dia.feriado ? 'day-card holiday' : 'day-card';
-
-  const header = document.createElement('div');
-  header.className = 'day-header';
-
-  const nombre = document.createElement('h3');
-  nombre.className = 'day-name';
-  nombre.textContent = dia.dia;
-
-  const badge = document.createElement('span');
-  badge.className = dia.feriado ? 'badge badge-feriado' : 'badge badge-habil';
-  badge.textContent = dia.feriado ? 'Feriado' : 'Día hábil';
-
-  header.append(nombre, badge);
-
-  const fecha = document.createElement('div');
-  fecha.className = 'day-date';
-  fecha.textContent = formatearFecha(dia.fecha);
-
-  const motivo = document.createElement('input');
-  motivo.type = 'text';
-  motivo.className = 'input-motivo';
-  motivo.placeholder = 'Motivo del feriado...';
-  motivo.value = dia.motivo || '';
-  motivo.disabled = !dia.feriado;
-  motivo.addEventListener('input', () => {
-    dia.motivo = motivo.value;
+  bindForm("#holiday-form", async (data) => {
+    const reason = data.get("reason").trim();
+    if (!reason || reason.length > 120)
+      throw new Error("Ingresá un motivo de hasta 120 caracteres.");
+    if (
+      !(await confirmAction(
+        "Guardar día sin servicio",
+        "Los empleados no podrán registrar pedidos para esta fecha.",
+        "Guardar",
+      ))
+    )
+      return;
+    setHoliday(data.get("date"), reason);
+    render();
+    message("Calendario actualizado.");
   });
-
-  const boton = document.createElement('button');
-  boton.type = 'button';
-  boton.className = 'btn-action';
-  boton.textContent = dia.feriado ? 'Desmarcar feriado' : '+ Marcar como feriado';
-  boton.addEventListener('click', () => alternarFeriado(dia.id));
-
-  card.append(header, fecha, motivo, boton);
-  return card;
+  $("#holidays").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    run(async () => {
+      if (b.dataset.edit) {
+        writeDate($("#date"), b.dataset.edit);
+        $("#reason").value = readDB().holidays[b.dataset.edit];
+        $("#reason").focus();
+      }
+      if (
+        b.dataset.remove &&
+        (await confirmAction(
+          "Habilitar servicio",
+          "La fecha volverá a estar disponible si tiene menú publicado.",
+          "Habilitar",
+        ))
+      ) {
+        setHoliday(b.dataset.remove, null);
+        render();
+        message("Fecha habilitada.");
+      }
+    }, b);
+  });
+  render();
 }
-
-async function alternarFeriado(id) {
-  const dia = dias.find((d) => d.id === id);
-  if (!dia) return;
-
-  dia.feriado = !dia.feriado;
-  if (!dia.feriado) dia.motivo = '';
-
-  await guardarCambioFeriado(dia);
-  dibujarDias();
-}
-
-async function guardarCambioFeriado(dia) {
-}
-
-function formatearFecha(fechaISO) {
-  const [anio, mes, dia] = fechaISO.split('-');
-  return `${dia}/${mes}/${anio}`;
-}
-
-cargarFeriados();

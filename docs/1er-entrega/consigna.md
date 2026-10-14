@@ -2,7 +2,7 @@
 
 **Materia**: Práctica Profesionalizante I (PP1) — 2026  
 **Fecha límite**: 30/04/2026  
-**Formato de entrega**: completar el archivo [`entrega-1-analisis.md`](./entrega-1-analisis.md) de este repositorio y subir el link del repo a Moodle.
+**Formato de entrega**: completar el archivo [`analisis.md`](./analisis.md) de este repositorio y subir el link del repo a Moodle.
 
 ---
 
@@ -98,4 +98,4 @@ El **flujo** se documenta en una tabla paralela de dos columnas:
 
 ## Guía de trabajo
 
-![Entrega 1 — Guía de Trabajo: qué entregar, dónde, con qué herramienta y cómo coordinar en equipo](./guia-trabajo-entrega-1.png)
+![Entrega 1 — Guía de Trabajo: qué entregar, dónde, con qué herramienta y cómo coordinar en equipo](./guia.png)

@@ -1,4 +1,6 @@
 # Entrega 3 — Frontend Codificado
+
+> Registro histórico de esta entrega. Para ejecutar y probar la versión integrada, ver el [README principal](../../README.md) y las [decisiones de evolución](../evolucion-frontend.md).
  
 **Grupo**: Grupo-5
 **Proyecto**: SistemaPedidos
