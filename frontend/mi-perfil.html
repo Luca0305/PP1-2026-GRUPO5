@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#4F3B78" />
     <title>Mi perfil · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body data-page="mi-perfil" data-required="any">
@@ -32,16 +36,29 @@
       </div>
       <section class="panel narrow">
         <form id="profile-form" novalidate>
-          <div class="field">
-            <label for="name">Nombre completo</label
-            ><input
-              id="name"
-              name="name"
-              type="text"
-              required
-              maxlength="80"
-              autocomplete="name"
-            />
+          <div class="row gx-3">
+            <div class="field col-12 col-md-6">
+              <label for="name">Nombre(s)</label
+              ><input
+                id="name"
+                name="name"
+                type="text"
+                required
+                maxlength="80"
+                autocomplete="given-name"
+              />
+            </div>
+            <div class="field col-12 col-md-6">
+              <label for="last-name">Apellido(s)</label>
+              <input
+                id="last-name"
+                name="last-name"
+                type="text"
+                autocomplete="family-name"
+                maxlength="80"
+                required
+              />
+            </div>
           </div>
           <div class="field">
             <label for="email">Email</label
@@ -53,19 +70,6 @@
               maxlength="254"
               autocomplete="email"
             />
-          </div>
-          <h2>Preferencias</h2>
-          <div class="field">
-            <label for="date-format">Formato de fecha</label
-            ><select id="date-format" name="date-format">
-              <option value="DD/MM/AAAA">Día / Mes / Año (DD/MM/AAAA)</option>
-              <option value="MM/DD/AAAA">Mes / Día / Año (MM/DD/AAAA)</option>
-              <option value="AAAA-MM-DD">Año - Mes - Día (AAAA-MM-DD)</option>
-            </select>
-            <p class="help">
-              Se aplica a los calendarios y fechas de todas tus pantallas al
-              guardar.
-            </p>
           </div>
           <h2>Cambiar contraseña</h2>
           <p class="help">
@@ -109,8 +113,7 @@
       </section>
     </main>
     <footer class="app-footer">
-      <span>© 2026 SistemaPedidos · Grupo 5</span
-      ><span>Hecho para compartir un buen almuerzo.</span>
+      <span>© 2026 SistemaPedidos</span>
     </footer>
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript

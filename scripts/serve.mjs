@@ -18,7 +18,7 @@ http
   .createServer(async (req, res) => {
     try {
       const url = new URL(req.url, "http://localhost");
-      if (url.pathname === "/" || url.pathname === "/index.html") {
+      if (url.pathname === "/") {
         res.writeHead(302, { Location: "/login.html" });
         res.end();
         return;

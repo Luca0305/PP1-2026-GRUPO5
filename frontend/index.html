@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Guía de revisión · SistemaPedidos</title>
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body class="ready">
+    <header class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a
+      ><a href="login.html">Entrar al sistema</a>
+    </header>
+    <main class="main">
+      <h1>Guía de revisión del frontend</h1>
+      <p>
+        Índice académico. La entrada del empleado sigue siendo el login. Los
+        enlaces respetan los permisos: iniciá sesión con el rol correspondiente
+        antes de revisar pantallas internas.
+      </p>
+      <div class="row g-3">
+        <section class="col-12 col-lg-4">
+          <div class="panel">
+            <h2>Acceso y cuenta</h2>
+            <ul>
+              <li><a href="login.html">Iniciar sesión</a></li>
+              <li><a href="registro.html">Crear cuenta</a></li>
+              <li><a href="recuperar.html">Recuperar acceso</a></li>
+              <li>
+                <a href="restablecer.html">Restablecer contraseña</a> (requiere
+                el enlace de recuperación)
+              </li>
+              <li><a href="mi-perfil.html">Mi perfil</a></li>
+            </ul>
+          </div>
+        </section>
+        <section class="col-12 col-lg-4">
+          <div class="panel">
+            <h2>Empleado</h2>
+            <ol>
+              <li><a href="asistencia.html">Configurar asistencia</a></li>
+              <li>
+                <a href="menu-pedido.html">Elegir menú y guardar borrador</a>
+              </li>
+              <li>
+                <a href="mis-pedidos.html"
+                  >Revisar, confirmar, modificar o cancelar</a
+                >
+              </li>
+            </ol>
+          </div>
+        </section>
+        <section class="col-12 col-lg-4">
+          <div class="panel">
+            <h2>Administrador</h2>
+            <ul>
+              <li><a href="menuadmin.html">Administrar y publicar menús</a></li>
+              <li>
+                <a href="calendario-feriados.html">Calendario de feriados</a>
+              </li>
+              <li><a href="consolidado.html">Consolidado y exportación</a></li>
+              <li><a href="usuarios.html">Usuarios y roles</a></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+      <section class="panel">
+        <h2>Limpiar las pruebas</h2>
+        <p>
+          Elimina cuentas, pedidos, asistencias, feriados agregados, reportes,
+          sesiones y enlaces de recuperación de este navegador y esta dirección.
+          Restaura los menús y platos originales. No borra archivos del proyecto
+          ni información de otros sitios.
+        </p>
+        <p>
+          Dirección actual: <code id="review-origin"></code>. Cerrá las demás
+          pestañas de SistemaPedidos antes de continuar.
+        </p>
+        <p id="review-status" role="status" tabindex="-1"></p>
+        <button id="reset-open" class="danger" type="button">
+          Restablecer datos de prueba
+        </button>
+      </section>
+    </main>
+    <dialog id="reset-dialog" aria-labelledby="reset-title">
+      <h2 id="reset-title">¿Eliminar las pruebas de esta dirección?</h2>
+      <p>
+        Se perderán las cuentas y los cambios guardados en este navegador. Para
+        empezar de nuevo tendrás que registrarte otra vez.
+      </p>
+      <div class="actions">
+        <button id="reset-cancel" type="button" class="secondary" autofocus>
+          Cancelar</button
+        ><button id="reset-confirm" type="button" class="danger">
+          Sí, eliminar pruebas
+        </button>
+      </div>
+    </dialog>
+    <footer class="app-footer">© 2026 SistemaPedidos</footer>
+    <script type="module" src="assets/js/revision.js"></script>
+  </body>
+</html>

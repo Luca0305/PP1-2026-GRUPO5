@@ -168,6 +168,7 @@ test("sin cuentas sembradas al inicializar y fechas estables", async () => {
 test("registro, hash, duplicados, login y rol incorrecto", async () => {
   const data = {
     name: "Nueva Persona",
+    lastName: "Prueba",
     email: "nueva@example.com",
     password: "Valida#2026",
     confirm: "Valida#2026",
@@ -204,6 +205,7 @@ test("asignación empresarial y ningún rol elegido desde registro", async () =>
   }
   const data = {
     name: "Mi Admin",
+    lastName: "Prueba",
     email: "proadmin@gmail.com",
     password: "Valida#2026",
     confirm: "Valida#2026",
@@ -220,6 +222,7 @@ test("administrador autoriza email, persona elige su contraseña", async () => {
   sessionStorage.setItem(core.SESSION_KEY, "admin");
   await saveAccount({
     name: "Otra Admin",
+    lastName: "Prueba",
     email: "otra@example.com",
     role: "admin",
     password: "",
@@ -230,6 +233,7 @@ test("administrador autoriza email, persona elige su contraseña", async () => {
   await assert.rejects(core.login(u.email, "Valida#2026"), /registro/);
   await core.register({
     name: "Otra Admin",
+    lastName: "Prueba",
     email: u.email,
     password: "Valida#2026",
     confirm: "Valida#2026",
@@ -241,8 +245,9 @@ test("fechas visibles y conversión estricta", () => {
   assert.equal(core.parseDate("15/10/2026"), "2026-10-15");
   assert.equal(core.parseDate("31/02/2026"), "");
   assert.equal(core.parseDate("1/2/2026"), "");
-  assert.equal(core.parseDate("10/15/2026", "MM/DD/AAAA"), "2026-10-15");
-  assert.equal(core.formatDate("2026-10-15", "AAAA-MM-DD"), "2026-10-15");
+  assert.equal(core.parseDate("10/15/2026"), "");
+  // Una preferencia antigua no cambia la presentación fija del sistema.
+  assert.equal(core.formatDate("2026-10-15", "AAAA-MM-DD"), "15/10/2026");
 });
 test("avisos incluyen todos los días pendientes aunque uno ya esté confirmado", () => {
   const db = core.readDB();
@@ -384,6 +389,7 @@ test("usuarios: alta validada, baja lógica y protección propia", async () => {
   sessionStorage.setItem(core.SESSION_KEY, "admin");
   await saveAccount({
     name: "Equipo Nuevo",
+    lastName: "Prueba",
     email: "equipo@example.com",
     role: "empleado",
     password: "Valida#2026",
@@ -403,6 +409,7 @@ test("perfil conserva referencias al cambiar email y valida contraseña actual",
   const o = core.saveOrder({ date, optionId: "p0", comment: "" });
   await saveProfile({
     name: "Nombre Nuevo",
+    lastName: "Prueba",
     email: "nuevo@example.com",
     current: "",
     password: "",
@@ -413,6 +420,7 @@ test("perfil conserva referencias al cambiar email y valida contraseña actual",
   await assert.rejects(
     saveProfile({
       name: "Nombre Nuevo",
+      lastName: "Prueba",
       email: "nuevo@example.com",
       current: "Mala#2026",
       password: "Otra#2026",

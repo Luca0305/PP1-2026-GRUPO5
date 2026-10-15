@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#4F3B78" />
     <title>Administrar menús · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body data-page="menuadmin" data-required="admin">
@@ -47,15 +51,33 @@
       </div>
       <section class="panel" aria-labelledby="catalog-title">
         <h2 id="catalog-title">Agregar desde el catálogo</h2>
-        <p>Elegí un plato y un día de la semana. Después guardá el menú para aplicar el cambio.</p>
+        <p>
+          Marcá uno o varios platos y elegí un día de la semana. Después guardá
+          el menú para aplicar el cambio.
+        </p>
         <p id="catalog-state" role="status"></p>
         <div class="toolbar">
-          <div class="field"><label for="catalog-day">Día</label><select id="catalog-day"></select></div>
-          <div class="field"><label for="catalog-plate">Plato</label><select id="catalog-plate" disabled></select></div>
-          <button type="button" id="catalog-add" disabled>Agregar plato al día</button>
-          <button type="button" id="catalog-retry" class="secondary">Actualizar catálogo</button>
+          <div class="field">
+            <label for="catalog-day">Día</label
+            ><select id="catalog-day"></select>
+          </div>
+
+          <button type="button" id="catalog-add" disabled>
+            Agregar selección al día
+          </button>
+          <button type="button" id="catalog-retry" class="secondary">
+            Actualizar catálogo
+          </button>
         </div>
-        <details><summary>Ver platos del catálogo</summary><div id="catalog-list" class="catalog-list"></div></details>
+        <fieldset>
+          <legend>Platos disponibles</legend>
+          <div id="catalog-list" class="catalog-list"></div>
+        </fieldset>
+      </section>
+      <section class="panel">
+        <h2>Menús guardados</h2>
+        <p>Seleccioná una semana para ver sus días y opciones en el editor.</p>
+        <div id="saved-menus" class="catalog-list"></div>
       </section>
       <form id="menu-form" novalidate>
         <div id="admin-days" class="admin-days"></div>
@@ -67,13 +89,13 @@
         <div class="actions">
           <button type="button" id="save-draft" class="secondary">
             Guardar borrador</button
-          ><button type="submit">Publicar menú</button>
+          ><button type="submit" id="publish-menu">Publicar menú</button>
         </div>
       </form>
     </main>
     <footer class="app-footer">
-      <span>© 2026 SistemaPedidos · Grupo 5</span
-      ><span>Hecho para compartir un buen almuerzo.</span>
+      <span>© 2026 SistemaPedidos</span
+      >
     </footer>
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript

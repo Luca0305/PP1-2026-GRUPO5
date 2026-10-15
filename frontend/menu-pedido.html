@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#4F3B78" />
     <title>Elegir menú · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body data-page="menu-pedido" data-required="empleado">
@@ -36,14 +40,22 @@
         <span class="pill">Corte · 10:00 hs</span>
       </div>
       <div class="toolbar">
-        <div class="field week-picker">
-          <label for="week">Semana</label
-          ><input type="date" id="week" name="week" /><span
-            id="week-label"
-            class="help"
-          ></span>
+        <div
+          class="week-navigation"
+          role="group"
+          aria-label="Semanas del mes actual"
+        >
+          <p id="week-label" aria-live="polite"></p>
+          <div class="actions">
+            <button type="button" class="secondary" id="previous-week">
+              ← Semana anterior</button
+            ><button type="button" class="secondary" id="next-week">
+              Semana siguiente →
+            </button>
+          </div>
+          <p class="help">Semanas del mes actual.</p>
         </div>
-        <a href="asistencia.html">Editar asistencia</a>
+        <a id="edit-attendance" href="asistencia.html">Editar asistencia</a>
       </div>
       <div
         id="menu-days"
@@ -68,25 +80,108 @@
             Máximo 200 caracteres. Informá cualquier restricción alimentaria.
           </p>
           <div class="actions">
-            <button type="submit" id="save-order">
-              Guardar borrador</button
+            <button type="submit" id="save-order">Guardar borrador</button
             ><a href="mis-pedidos.html">Volver a mis pedidos</a>
           </div>
         </div>
       </form>
-      <section id="saved-order" class="panel saved-order" aria-labelledby="saved-title" tabindex="-1" hidden>
+      <section
+        id="saved-order"
+        class="panel saved-order"
+        aria-labelledby="saved-title"
+        tabindex="-1"
+        hidden
+      >
         <h2 id="saved-title">Pedido guardado</h2>
         <div id="saved-summary"></div>
-        <div class="actions"><a id="review-saved" class="button" href="mis-pedidos.html">Revisar y confirmar pedido →</a><a href="menu-pedido.html">Seguir eligiendo otros días</a></div>
+        <div class="actions">
+          <a id="review-saved" class="button" href="mis-pedidos.html"
+            >Revisar y confirmar pedido →</a
+          ><a href="menu-pedido.html">Seguir eligiendo otros días</a>
+        </div>
       </section>
     </main>
     <footer class="app-footer">
-      <span>© 2026 SistemaPedidos · Grupo 5</span
-      ><span>Hecho para compartir un buen almuerzo.</span>
+      <span>© 2026 SistemaPedidos</span>
     </footer>
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
     >
+
+    <!-- Fotos del catálogo: cambiar src aquí para reemplazar una imagen. -->
+    <!-- Autores y licencias: assets/img/platos/README.md -->
+    <template id="foto-p1" data-meal-name="Milanesa con puré"
+      ><img
+        src="assets/img/platos/p1.jpg"
+        alt="Imagen representativa de Milanesa con puré"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p2" data-meal-name="Pollo al limón"
+      ><img
+        src="assets/img/platos/p2.jpg"
+        alt="Imagen representativa de Pollo al limón"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p3" data-meal-name="Tarta de verduras"
+      ><img
+        src="assets/img/platos/p3.jpg"
+        alt="Imagen representativa de Tarta de verduras"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p4" data-meal-name="Pasta al pesto"
+      ><img
+        src="assets/img/platos/p4.jpg"
+        alt="Imagen representativa de Pasta al pesto"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p5" data-meal-name="Carne al horno"
+      ><img
+        src="assets/img/platos/p5.jpg"
+        alt="Imagen representativa de Carne al horno"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p6" data-meal-name="Locro vegetal"
+      ><img
+        src="assets/img/platos/p6.jpg"
+        alt="Imagen representativa de Locro vegetal"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p7" data-meal-name="Cazuela de pollo"
+      ><img
+        src="assets/img/platos/p7.jpg"
+        alt="Imagen representativa de Cazuela de pollo"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p8" data-meal-name="Revuelto gramajo"
+      ><img
+        src="assets/img/platos/p8.jpg"
+        alt="Imagen representativa de Revuelto gramajo"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
+    <template id="foto-p9" data-meal-name="Ensalada completa"
+      ><img
+        src="assets/img/platos/p9.jpg"
+        alt="Imagen representativa de Ensalada completa"
+        width="640"
+        height="360"
+        loading="lazy"
+    /></template>
     <script type="module" src="assets/js/app.js"></script>
   </body>
 </html>

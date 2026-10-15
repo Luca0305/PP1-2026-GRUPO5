@@ -1,21 +1,19 @@
-import { datePreference, formatDate, parseDate } from "./core.js";
+import { DATE_FORMAT, formatDate, parseDate } from "./core.js";
 import { FieldError } from "./validation.js";
 
 export function readDate(input) {
   if (!input.dataset.dateFormat) return input.value;
   if (!input.value.trim()) return "";
-  const iso = parseDate(input.value.trim(), input.dataset.dateFormat);
+  const iso = parseDate(input.value.trim());
   if (!iso)
     throw new FieldError(
       input.id,
-      `Ingresá una fecha real con el formato ${input.dataset.dateFormat}. Ejemplo: ${formatDate("2026-10-15", input.dataset.dateFormat)}.`,
+      `Ingresá una fecha real con el formato ${input.dataset.dateFormat}. Ejemplo: ${formatDate("2026-10-15")}.`,
     );
   return iso;
 }
 export function writeDate(input, iso) {
-  input.value = input.dataset.dateFormat
-    ? formatDate(iso, input.dataset.dateFormat)
-    : iso;
+  input.value = input.dataset.dateFormat ? formatDate(iso) : iso;
 }
 // El texto visible es independiente del idioma del navegador. El calendario nativo
 // se conserva como ayuda; todos los controladores reciben fechas ISO.
@@ -24,7 +22,7 @@ export function enhanceDates() {
     if (input.classList.contains("native-calendar")) return;
     const iso = input.value;
     input.type = "text";
-    input.dataset.dateFormat = datePreference();
+    input.dataset.dateFormat = DATE_FORMAT;
     input.placeholder = input.dataset.dateFormat;
     input.maxLength = 10;
     input.inputMode = "text";
@@ -72,13 +70,5 @@ export function enhanceDates() {
       attributes: true,
       attributeFilter: ["disabled"],
     });
-  });
-}
-export function refreshDatePreference() {
-  document.querySelectorAll("[data-date-format]").forEach((input) => {
-    const iso = readDate(input);
-    input.dataset.dateFormat = datePreference();
-    input.placeholder = input.dataset.dateFormat;
-    writeDate(input, iso);
   });
 }

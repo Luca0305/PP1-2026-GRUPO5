@@ -1,6 +1,6 @@
 # Entrega 3 — Frontend Codificado
 
-> Registro histórico de esta entrega. Para ejecutar y probar la versión integrada, ver el [README principal](../../README.md) y las [decisiones de evolución](../evolucion-frontend.md).
+> Registro histórico de esta entrega. Para ejecutar y probar la versión integrada, ver el [README principal](../../README.md).
  
 **Grupo**: Grupo-5
 **Proyecto**: SistemaPedidos
@@ -40,3 +40,28 @@ La implementación y adaptación de las funcionalidades al proyecto fueron reali
 
 **Nivel de comprensión del grupo:**  
 El grupo comprende de manera general el funcionamiento de las funcionalidades implementadas y puede explicar los conceptos principales utilizados. Sin embargo, reconocemos que algunas partes específicas del código todavía requieren una revisión para poder explicarlas con mayor detalle durante la defensa.
+
+## Actualización de la versión integrada · 15/10/2026
+
+Las secciones anteriores describen la entrega histórica de septiembre. Para el código actual rige esta tabla; no confundir `login.js` histórico con `auth.js`, ni `feriados.json` antiguo con `dias-no-laborables.json`.
+
+| Pantalla / capacidad | Archivo actual (assets/js) | CU E1 | Comportamiento actual |
+| --- | --- | --- | --- |
+| Login / capacidad 1 | auth.js, validation.js | Precondición común | Valida y consulta cuenta local; redirige por rol |
+| Menú / capacidades 2 y 4 | menu-pedido.js, core.js, datos.js, app.js | CU-02 | Inicializa JSON relacionados y renderiza días/platos; carga/error compartidos, estados de falta de menú/asistencia/servicio |
+| Pedido / capacidad 3 | menu-pedido.js, core.js | CU-03, CU-06, CU-12 | `saveOrder` separado, borrador y resumen en la misma pantalla |
+| Feriados / capacidad 5 | calendario-feriados.js, core.js | Extensión CU-14 | Lista ordenada, alta, edición, eliminación lógica del cierre y validación |
+| Asistencia | asistencia.js | CU-01 | Guarda días por empleado y semana; enlaza al menú |
+| Mis pedidos | mis-pedidos.js | CU-04, CU-05, CU-12, CU-13 | Confirma, modifica, cancela y muestra pendientes |
+| Consolidado | consolidado.js | CU-09 | Agrupa confirmados, CSV e impresión |
+| Administrar menús | menuadmin.js | CU-07, CU-08 | Catálogo con fetch/estados, selección múltiple, borrador, publicación y semanas guardadas |
+| Registro | auth.js, core.js | Sin CU específico en E1 | Nombre, apellido, email, contraseña; rol asignado; vuelve al login |
+| Mi perfil | perfil.js, accounts.js | Sin CU específico en E1 | Edita datos y contraseña; fechas fijas DD/MM/AAAA |
+| Usuarios | usuarios.js, accounts.js | CU-10 | Autoriza roles y activa/desactiva cuentas |
+| Recuperación | recuperacion.js, recovery.js | Extensión del responsable | Enlace simulado de un uso, vencimiento y cambio efectivo |
+
+La persistencia local, registro del administrador autorizado y modelo semanal son adaptaciones al recorrido solicitado por el responsable; **no son una reproducción literal de la guía 18**. El README principal describe el alcance del prototipo.
+
+### Declaración de IA de esta actualización
+
+Se utilizó IA como apoyo para explicar conceptos, implementar ajustes y revisar el funcionamiento de la versión integrada.

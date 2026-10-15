@@ -1,5 +1,11 @@
+import { clearPrototype } from "./limpieza.js";
 import { cargarMenusIniciales } from "./datos.js";
-import { FieldError, emailError, passwordError, nameError } from "./validation.js";
+import {
+  FieldError,
+  emailError,
+  passwordError,
+  nameError,
+} from "./validation.js";
 // Reglas y persistencia compartidas. La UI está en ui.js y cada pantalla tiene su módulo.
 export const DB_KEY = "sistemaPedidos:v1";
 export const SESSION_KEY = "sistemaPedidos:sesion";
@@ -53,26 +59,17 @@ export function closed(iso, now = new Date()) {
   const c = clock(now);
   return iso < c.today || (iso === c.today && c.hour >= 10);
 }
-export const DATE_FORMATS = ["DD/MM/AAAA", "MM/DD/AAAA", "AAAA-MM-DD"];
-export function datePreference() {
-  return user()?.dateFormat || "DD/MM/AAAA";
-}
-export function formatDate(iso, preference = datePreference()) {
+export const DATE_FORMAT = "DD/MM/AAAA";
+export function formatDate(iso) {
   if (!validDate(iso)) return "";
   const [year, month, day] = iso.split("-");
-  if (preference === "MM/DD/AAAA") return `${month}/${day}/${year}`;
-  if (preference === "AAAA-MM-DD") return iso;
   return `${day}/${month}/${year}`;
 }
-export function parseDate(value, preference = datePreference()) {
-  if (preference === "AAAA-MM-DD") return validDate(value) ? value : "";
+export function parseDate(value) {
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
   if (!match) return "";
-  const [, first, second, year] = match;
-  const iso =
-    preference === "MM/DD/AAAA"
-      ? `${year}-${first}-${second}`
-      : `${year}-${second}-${first}`;
+  const [, day, month, year] = match;
+  const iso = `${year}-${month}-${day}`;
   return validDate(iso) ? iso : "";
 }
 export const dateLabel = (iso) =>
@@ -90,6 +87,7 @@ export function checkIdentity(name, email, password) {
     throw new FieldError("password", passwordError(password));
 }
 let assignedAdmins = [];
+let resetVersion = "";
 // Simula la asignación empresarial. No incluye contraseñas ni cuentas de ejemplo.
 export async function loadCompany() {
   const response = await fetch("data/empresa.json", { cache: "no-store" });
@@ -105,6 +103,7 @@ export async function loadCompany() {
     throw new Error(
       "Revisá los emails autorizados en data/empresa.json: deben ser válidos y terminar en .com.",
     );
+  resetVersion = config.reinicioPruebas || "";
   assignedAdmins = config.administradoresAutorizados.map((email) =>
     email.toLowerCase(),
   );
@@ -137,38 +136,88 @@ export function saveDB(db) {
 }
 export async function initDB() {
   await loadCompany();
+  // Reinicio único solicitado para la exposición: también limpia navegadores
+  // usados antes, cuando vuelven a abrir el proyecto. No borra nuevas pruebas.
+  if (resetVersion && localStorage.getItem("sistemaPedidos:reinicio") !== resetVersion) {
+    clearPrototype();
+    localStorage.setItem("sistemaPedidos:reinicio", resetVersion);
+  }
   if (localStorage.getItem(DB_KEY)) return readDB();
   const datos = await cargarMenusIniciales();
   const menus = [];
   const holidays = {};
   const fechas = new Set();
   for (const menuDia of datos.menus) {
-    if (!validDate(menuDia.fecha) || !DAYS.some((_, i) => addDays(monday(menuDia.fecha), i) === menuDia.fecha) || fechas.has(menuDia.fecha) || typeof menuDia.publicado !== "boolean")
-      throw new Error("Revisá los menús iniciales: una fecha hábil única por menú y publicado verdadero o falso.");
+    if (
+      !validDate(menuDia.fecha) ||
+      !DAYS.some(
+        (_, i) => addDays(monday(menuDia.fecha), i) === menuDia.fecha,
+      ) ||
+      fechas.has(menuDia.fecha) ||
+      typeof menuDia.publicado !== "boolean"
+    )
+      throw new Error(
+        "Revisá los menús iniciales: una fecha hábil única por menú y publicado verdadero o falso.",
+      );
     fechas.add(menuDia.fecha);
     const week = monday(menuDia.fecha);
-    let semana = menus.find(menu => menu.week === week);
+    let semana = menus.find((menu) => menu.week === week);
     if (!semana) {
-      semana = {week, status: menuDia.publicado ? "Publicado" : "Borrador", days: DAYS.map((_, i) => ({date:addDays(week,i), noService:true, options:[]}))};
+      semana = {
+        week,
+        status: menuDia.publicado ? "Publicado" : "Borrador",
+        days: DAYS.map((_, i) => ({
+          date: addDays(week, i),
+          noService: true,
+          options: [],
+        })),
+      };
       menus.push(semana);
     }
     if (semana.status !== (menuDia.publicado ? "Publicado" : "Borrador"))
-      throw new Error("La vista semanal requiere el mismo estado de publicación para los días de una semana.");
-    const dia = semana.days.find(dia => dia.date === menuDia.fecha);
+      throw new Error(
+        "La vista semanal requiere el mismo estado de publicación para los días de una semana.",
+      );
+    const dia = semana.days.find((dia) => dia.date === menuDia.fecha);
     dia.noService = false;
-    for (const opcion of datos.opciones.filter(opcion => opcion.idMenuDia === menuDia.id)) {
-      const plato = datos.platos.find(plato => plato.id === opcion.idPlato);
+    for (const opcion of datos.opciones.filter(
+      (opcion) => opcion.idMenuDia === menuDia.id,
+    )) {
+      const plato = datos.platos.find((plato) => plato.id === opcion.idPlato);
       // Una lista de platos vacía es un estado de interfaz, no un error de red.
-      if (!plato && datos.platos.length) throw new Error("Una opción referencia un plato inexistente.");
-      if (!Number.isInteger(opcion.stockDisponible) || opcion.stockDisponible < 0 || opcion.stockDisponible > 9999)
+      if (!plato && datos.platos.length)
+        throw new Error("Una opción referencia un plato inexistente.");
+      if (
+        !Number.isInteger(opcion.stockDisponible) ||
+        opcion.stockDisponible < 0 ||
+        opcion.stockDisponible > 9999
+      )
         throw new Error("El stock inicial debe ser un entero entre 0 y 9999.");
-      if (plato) dia.options.push({id:String(opcion.id), idPlato:plato.id, name:plato.nombre, description:plato.descripcion, stock:opcion.stockDisponible, vegetarian:plato.categoria === "vegetariano", glutenFree:false});
+      if (plato)
+        dia.options.push({
+          id: String(opcion.id),
+          idPlato: plato.id,
+          name: plato.nombre,
+          description: plato.descripcion,
+          stock: opcion.stockDisponible,
+          vegetarian: plato.categoria === "vegetariano",
+          glutenFree: false,
+        });
     }
   }
-  if (datos.opciones.some(opcion => !datos.menus.some(menu => menu.id === opcion.idMenuDia)))
+  if (
+    datos.opciones.some(
+      (opcion) => !datos.menus.some((menu) => menu.id === opcion.idMenuDia),
+    )
+  )
     throw new Error("Una opción referencia un menú inexistente.");
   for (const feriado of datos.feriados) {
-    if (!validDate(feriado.fecha) || typeof feriado.motivo !== "string" || !feriado.motivo.trim() || holidays[feriado.fecha])
+    if (
+      !validDate(feriado.fecha) ||
+      typeof feriado.motivo !== "string" ||
+      !feriado.motivo.trim() ||
+      holidays[feriado.fecha]
+    )
       throw new Error("Revisá las fechas y motivos de los días no laborables.");
     holidays[feriado.fecha] = feriado.motivo;
   }
@@ -241,8 +290,13 @@ export async function credential(password) {
 export async function verify(password, record) {
   return record && (await derive(password, record.salt)) === record.hash;
 }
-export async function register({ name, email, password, confirm }) {
+export async function register({ name, lastName, email, password, confirm }) {
   checkIdentity(name, email, password);
+  if (nameError(lastName))
+    throw new FieldError("apellido", "Apellido: " + nameError(lastName));
+  const firstName = name.trim();
+  const surname = lastName.trim();
+  name = `${firstName} ${surname}`;
   if (password !== confirm)
     throw new FieldError(
       "confirm",
@@ -262,16 +316,23 @@ export async function register({ name, email, password, confirm }) {
       "La autorización de esta cuenta está desactivada. Consultá al administrador.",
     );
   if (existing)
-    Object.assign(existing, { name: name.trim(), auth, pending: false });
+    Object.assign(existing, {
+      name,
+      firstName,
+      lastName: surname,
+      auth,
+      pending: false,
+    });
   else
     db.users.push({
       id: uid(),
-      name: name.trim(),
+      name,
+      firstName,
+      lastName: surname,
       email: email.toLowerCase(),
       auth,
       role: assignedAdmins.includes(email.toLowerCase()) ? "admin" : "empleado",
       active: true,
-      dateFormat: "DD/MM/AAAA",
     });
   saveDB(db);
 }

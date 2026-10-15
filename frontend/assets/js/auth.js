@@ -31,6 +31,7 @@ export function init() {
       await register({
         name: data.get("nombre"),
         email: data.get("email"),
+        lastName: data.get("apellido"),
         password: data.get("password"),
         confirm: data.get("confirm"),
       });

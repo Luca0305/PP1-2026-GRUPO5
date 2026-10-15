@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#4F3B78" />
     <title>Crear cuenta · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body class="auth-page" data-page="registro" data-required="">
@@ -29,18 +33,32 @@
           Completá tus datos para organizar tus almuerzos.
         </p>
         <form id="registro-form" novalidate>
-          <div class="field">
-            <label for="nombre">Nombre completo</label
-            ><input
-              id="nombre"
-              name="nombre"
-              type="text"
-              autocomplete="name"
-              aria-describedby="nombre-help"
-              maxlength="80"
-              required
-            />
+          <div class="row gx-3">
+            <div class="field col-12 col-md-6">
+              <label for="nombre">Nombre(s)</label
+              ><input
+                id="nombre"
+                name="nombre"
+                type="text"
+                autocomplete="given-name"
+                aria-describedby="nombre-help"
+                maxlength="80"
+                required
+              />
+            </div>
+            <div class="field col-12 col-md-6">
+              <label for="apellido">Apellido(s)</label>
+              <input
+                id="apellido"
+                name="apellido"
+                type="text"
+                autocomplete="family-name"
+                maxlength="80"
+                required
+              />
+            </div>
           </div>
+
           <p id="nombre-help" class="help">
             Letras, tildes y ñ. Guiones o apóstrofes solo entre letras.
           </p>
@@ -93,8 +111,8 @@
       </section>
     </main>
     <footer class="app-footer">
-      <span>© 2026 SistemaPedidos · Grupo 5</span
-      ><span>Hecho para compartir un buen almuerzo.</span>
+      <span>© 2026 SistemaPedidos</span
+      >
     </footer>
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript

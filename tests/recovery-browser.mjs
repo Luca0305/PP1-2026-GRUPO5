@@ -36,6 +36,7 @@ await mkdir("test-results", { recursive: true });
 try {
   await go("registro.html");
   await page.locator("#nombre").fill("Recuperación Prueba");
+  await page.locator("#apellido").fill("Prueba");
   await page.locator("#email").fill("recuperacion@example.com");
   await page.locator("#password").fill("Valida#2026");
   await page.locator("#confirm").fill("Valida#2026");

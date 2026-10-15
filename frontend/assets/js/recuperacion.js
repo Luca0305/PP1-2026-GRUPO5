@@ -32,7 +32,7 @@ export async function init() {
       $("#demo-empty").hidden = Boolean(mail);
       if (mail) {
         $("#demo-mail").focus();
-        $("#demo-mail").scrollIntoView({block:"center"});
+        $("#demo-mail").scrollIntoView({ block: "center" });
       }
     });
     return;

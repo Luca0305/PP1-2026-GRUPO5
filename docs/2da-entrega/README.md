@@ -1,6 +1,6 @@
 # Entrega 2 — Diseño de Interfaces
 
-> Registro histórico de esta entrega. Para ejecutar y probar la versión integrada, ver el [README principal](../../README.md) y las [decisiones de evolución](../evolucion-frontend.md).
+> Registro histórico de esta entrega. Para ejecutar y probar la versión integrada, ver el [README principal](../../README.md).
 **Grupo**: Grupo-5
 **Proyecto**: SistemaPedidos
 **Fecha de entrega**: 25/06/2026
@@ -83,3 +83,8 @@ nuestro modelo el pedido queda en estado Borrador al guardarse.
 La confirmación definitiva es un paso aparte (CU-13). 
 
 Así el empleado puede revisar su selección antes de confirmar.
+
+
+## Inventario actualizado · 15/10/2026
+
+La maquetación histórica evolucionó a doce pantallas funcionales: login, registro, asistencia, menú/pedido, Mis pedidos, consolidado, administrar menús, feriados, perfil, usuarios, recuperar contraseña y restablecer contraseña. Se añade un índice académico con enlaces a todas; el login sigue siendo la entrada. La tabla vigente de la tercera entrega complementa la tabla histórica. Se mantiene la numeración real de E1 (CU-09 consolidado, CU-10 usuarios).

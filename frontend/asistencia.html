@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#4F3B78" />
     <title>Mi asistencia · SistemaPedidos</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body data-page="asistencia" data-required="empleado">
@@ -33,12 +37,20 @@
         <span class="large-icon" aria-hidden="true">▦</span>
       </div>
       <section class="panel narrow">
-        <div class="field week-picker">
-          <label for="week">Semana</label
-          ><input type="date" id="week" name="week" /><span
-            id="week-label"
-            class="help"
-          ></span>
+        <div
+          class="week-navigation"
+          role="group"
+          aria-label="Semanas del mes actual"
+        >
+          <p id="week-label" aria-live="polite"></p>
+          <div class="actions">
+            <button type="button" class="secondary" id="previous-week">
+              ← Semana anterior</button
+            ><button type="button" class="secondary" id="next-week">
+              Semana siguiente →
+            </button>
+          </div>
+          <p class="help">Semanas del mes actual.</p>
         </div>
         <form id="asistencia-form" novalidate>
           <fieldset>
@@ -54,8 +66,7 @@
       </section>
     </main>
     <footer class="app-footer">
-      <span>© 2026 SistemaPedidos · Grupo 5</span
-      ><span>Hecho para compartir un buen almuerzo.</span>
+      <span>© 2026 SistemaPedidos</span>
     </footer>
     <noscript
       >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript

@@ -34,9 +34,30 @@ export function init() {
     const db = readDB();
     writeDate($("#week"), week);
     $("#week-label").textContent = `Semana del ${weekLabel(week)}`;
+    $("#publish-menu").textContent =
+      loaded.status === "Publicado"
+        ? "Guardar cambios publicados"
+        : "Publicar menú";
+    $("#saved-menus").innerHTML = db.menus.length
+      ? [...db.menus]
+          .sort((a, b) => a.week.localeCompare(b.week))
+          .map(
+            (item) =>
+              `<article><h3>${weekLabel(item.week)}</h3><span class="badge ${item.status.toLowerCase()}">${item.status}</span><p>${item.days.filter((day) => !day.noService).length} días con servicio</p><details><summary>Fechas y opciones</summary><ul>${item.days.map((day) => `<li><strong>${formatDate(day.date)}</strong>: ${day.noService ? "Sin servicio" : day.options.map((option) => esc(option.name)).join(", ") || "Sin opciones"}</li>`).join("")}</ul></details><button type="button" class="secondary" data-open-week="${item.week}">Ver semana</button></article>`,
+          )
+          .join("")
+      : '<p class="empty">No hay menús guardados. Armá una semana y guardala como borrador.</p>';
     $("#menu-status").textContent = loaded.status;
     $("#menu-status").className = `badge ${loaded.status.toLowerCase()}`;
-    $("#catalog-day").innerHTML = '<option value="">Elegí un día</option>' + menu.days.filter(dia => !closed(dia.date)).map(dia => `<option value="${dia.date}">${formatDate(dia.date)}</option>`).join('');
+    $("#catalog-day").innerHTML =
+      '<option value="">Elegí un día</option>' +
+      menu.days
+        .filter((dia) => !closed(dia.date))
+        .map(
+          (dia) =>
+            `<option value="${dia.date}">${formatDate(dia.date)}</option>`,
+        )
+        .join("");
     $("#admin-days").innerHTML = menu.days
       .map((day, i) => {
         const locked = closed(day.date),
@@ -45,20 +66,24 @@ export function init() {
       })
       .join("");
   }
+  $("#saved-menus").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-open-week]");
+    if (!button) return;
+    writeDate($("#week"), button.dataset.openWeek);
+    $("#week").dispatchEvent(new Event("change"));
+  });
   let catalogo = [];
   function crearTarjetaPlato(plato) {
-    return `<article><h3>${esc(plato.nombre)}</h3><p>${esc(plato.descripcion)}</p></article>`;
+    return `<article><label class="inline-check"><input type="checkbox" name="catalog-plate" value="${esc(plato.id)}">${esc(plato.nombre)}</label><p>${esc(plato.descripcion)}</p></article>`;
   }
   function renderCatalogo(lista) {
     let tarjetas = "";
-    let opciones = '<option value="">Elegí un plato</option>';
+
     for (const plato of lista) {
       tarjetas += crearTarjetaPlato(plato);
-      opciones += `<option value="${esc(plato.id)}">${esc(plato.nombre)}</option>`;
     }
     $("#catalog-list").innerHTML = tarjetas;
-    $("#catalog-plate").innerHTML = opciones;
-    $("#catalog-plate").disabled = !lista.length;
+
     $("#catalog-add").disabled = !lista.length;
   }
   async function cargarCatalogo() {
@@ -71,7 +96,9 @@ export function init() {
     try {
       catalogo = await cargarPlatos();
       renderCatalogo(catalogo);
-      estado.textContent = catalogo.length ? `${catalogo.length} platos disponibles.` : "Todavía no hay platos en el catálogo. Podés cargar una opción manualmente abajo.";
+      estado.textContent = catalogo.length
+        ? `${catalogo.length} platos disponibles.`
+        : "Todavía no hay platos en el catálogo. Podés cargar una opción manualmente abajo.";
     } catch (error) {
       catalogo = [];
       estado.className = "message error";
@@ -82,19 +109,58 @@ export function init() {
     }
   }
   $("#catalog-retry").addEventListener("click", cargarCatalogo);
-  $("#catalog-add").addEventListener("click", event => run(() => {
-    const fecha = $("#catalog-day").value;
-    const plato = catalogo.find(plato => String(plato.id) === $("#catalog-plate").value);
-    if (!fecha || closed(fecha)) throw new Error("Elegí un día cuyo plazo esté abierto.");
-    if (!plato) throw new Error("Elegí un plato del catálogo.");
-    const dia = document.querySelector(`.admin-day[data-date="${fecha}"]`);
-    if (readDB().holidays[fecha] || dia.querySelector("[data-no-service]").checked)
-      throw new Error("Este día no tiene servicio. Habilitalo antes de agregar opciones.");
-    dia.querySelector(".day-options").insertAdjacentHTML("beforeend", optionHTML({id:uid(), idPlato:plato.id, name:plato.nombre, description:plato.descripcion, stock:80, vegetarian:plato.categoria === "vegetariano", glutenFree:false}, false));
-    dirty = true;
-    message("Plato agregado al formulario. Guardá el menú para aplicar el cambio.");
-    dia.scrollIntoView({block:"center"});
-  }, event.currentTarget));
+  $("#catalog-add").addEventListener("click", (event) =>
+    run(() => {
+      const fecha = $("#catalog-day").value;
+      const elegidos = [
+        ...document.querySelectorAll('[name="catalog-plate"]:checked'),
+      ].map((input) =>
+        catalogo.find((plato) => String(plato.id) === input.value),
+      );
+      if (!fecha || closed(fecha))
+        throw new Error("Elegí un día cuyo plazo esté abierto.");
+      if (!elegidos.length)
+        throw new Error("Elegí al menos un plato del catálogo.");
+      const dia = document.querySelector(`.admin-day[data-date="${fecha}"]`);
+      if (
+        readDB().holidays[fecha] ||
+        dia.querySelector("[data-no-service]").checked
+      )
+        throw new Error(
+          "Este día no tiene servicio. Habilitalo antes de agregar opciones.",
+        );
+      for (const plato of elegidos) {
+        if (
+          [...dia.querySelectorAll("[data-plate-id]")].some(
+            (row) => row.dataset.plateId === String(plato.id),
+          )
+        )
+          continue;
+        dia
+          .querySelector(".day-options")
+          .insertAdjacentHTML(
+            "beforeend",
+            optionHTML(
+              {
+                id: uid(),
+                idPlato: plato.id,
+                name: plato.nombre,
+                description: plato.descripcion,
+                stock: 80,
+                vegetarian: plato.categoria === "vegetariano",
+                glutenFree: false,
+              },
+              false,
+            ),
+          );
+      }
+      dirty = true;
+      message(
+        "Selección aplicada al formulario, sin repetir platos existentes. Guardá el menú para aplicar el cambio.",
+      );
+      dia.scrollIntoView({ block: "center" });
+    }, event.currentTarget),
+  );
   function open() {
     loaded = structuredClone(
       readDB().menus.find((m) => m.week === week) || empty(week),
@@ -114,7 +180,7 @@ export function init() {
           options: [...section.querySelectorAll(".option-editor")].map(
             (row) => ({
               id: row.dataset.id,
-              ...(row.dataset.plateId ? {idPlato: row.dataset.plateId} : {}),
+              ...(row.dataset.plateId ? { idPlato: row.dataset.plateId } : {}),
               name: row.querySelector("[data-field=name]").value.trim(),
               description: row
                 .querySelector("[data-field=description]")
@@ -239,17 +305,24 @@ export function init() {
     }, e.currentTarget),
   );
   bindForm("#menu-form", async () => {
+    if (!readDB().menus.some((menu) => menu.week === week))
+      throw new Error("Guardá el menú como borrador antes de publicarlo.");
+    const updating = loaded.status === "Publicado";
     if (
       !(await confirmAction(
-        "Publicar menú",
-        `Los empleados verán las opciones de la semana del ${weekLabel(week)}. ¿Publicar?`,
-        "Publicar",
+        updating ? "Guardar cambios publicados" : "Publicar menú",
+        `Los empleados verán las opciones de la semana del ${weekLabel(week)}. ¿Continuar?`,
+        updating ? "Guardar" : "Publicar",
       ))
     )
       return;
     saveMenu(read("Publicado"));
     open();
-    message("Menú publicado. Ya está disponible para los empleados.");
+    message(
+      updating
+        ? "Cambios guardados en el menú publicado."
+        : "Menú publicado. Ya está disponible para los empleados.",
+    );
   });
   window.addEventListener("beforeunload", (e) => {
     if (dirty) {

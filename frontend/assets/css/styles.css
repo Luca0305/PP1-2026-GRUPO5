@@ -1621,3 +1621,47 @@ body[data-role="admin"] .profile-link .profile-role {
   height: 14px;
   flex: 0 0 14px;
 }
+
+/* Fotografías locales: sin sustituciones automáticas si falla la ruta. */
+.meal-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.meal-art {
+  height: 180px;
+  padding: 0;
+  position: relative;
+}
+.meal-art input {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: white;
+}
+
+/* Navegación semanal del empleado: solo el mes en curso. */
+.week-navigation {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--background);
+  border-radius: 12px;
+}
+.week-navigation > p:first-child {
+  font-weight: 700;
+  color: var(--violet);
+}
+.week-navigation .help {
+  margin: 12px 0 0;
+}
+.meal-art img {
+  object-fit: contain;
+  object-position: center;
+  background: #fff;
+}
+.meal-art {
+  height: 200px;
+  background: #fff;
+}

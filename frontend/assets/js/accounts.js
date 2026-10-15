@@ -1,4 +1,4 @@
-import { FieldError } from "./validation.js";
+import { FieldError, nameError } from "./validation.js";
 import {
   readDB,
   saveDB,
@@ -7,7 +7,6 @@ import {
   credential,
   verify,
   uid,
-  DATE_FORMATS,
 } from "./core.js";
 export async function saveAccount({ id, name, email, role, password }) {
   checkIdentity(name, email, password || undefined);
@@ -32,6 +31,11 @@ export async function saveAccount({ id, name, email, role, password }) {
     )
       throw new Error("Debe quedar al menos un administrador activo.");
   }
+  // Una edición del nombre completo no debe dejar componentes anteriores en el perfil.
+  if (existing && existing.name !== name.trim()) {
+    delete existing.firstName;
+    delete existing.lastName;
+  }
   if (existing)
     Object.assign(existing, {
       name: name.trim(),
@@ -48,7 +52,6 @@ export async function saveAccount({ id, name, email, role, password }) {
       auth,
       active: true,
       pending: !auth,
-      dateFormat: "DD/MM/AAAA",
     });
   saveDB(db);
 }
@@ -71,18 +74,15 @@ export function toggleAccount(id) {
 }
 export async function saveProfile({
   name,
+  lastName,
   email,
   current,
   password,
   confirm,
-  dateFormat,
 }) {
   checkIdentity(name, email);
-  if (dateFormat && !DATE_FORMATS.includes(dateFormat))
-    throw new FieldError(
-      "date-format",
-      "Elegí uno de los formatos de fecha disponibles.",
-    );
+  if (nameError(lastName))
+    throw new FieldError("last-name", "Apellido: " + nameError(lastName));
   const before = requireUser(),
     change = Boolean(current || password || confirm);
   let auth;
@@ -105,10 +105,12 @@ export async function saveProfile({
     );
   if (db.users.some((u) => u.id !== me.id && u.email === email.toLowerCase()))
     throw new FieldError("email", "Ya existe una cuenta con ese email.");
+  delete me.dateFormat; // Preferencia antigua: todas las fechas usan DD/MM/AAAA.
   Object.assign(me, {
-    name: name.trim(),
+    name: `${name.trim()} ${lastName.trim()}`,
+    firstName: name.trim(),
+    lastName: lastName.trim(),
     email: email.toLowerCase(),
-    dateFormat: dateFormat || me.dateFormat || "DD/MM/AAAA",
     ...(auth ? { auth, pending: false } : {}),
   });
   saveDB(db);

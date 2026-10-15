@@ -99,3 +99,12 @@ Se eliminó la configuración de licencias/vacaciones del perfil y toda su lógi
 El encabezado reemplaza los carteles de rol por una sola personita junto al nombre: verde para empleados, violeta para administradores. El rol sigue disponible para lectores de pantalla y al situar el cursor sobre el icono. «Mi perfil y preferencias» incorpora una tuerca y mantiene su enlace al perfil.
 
 Las 33 pruebas de lógica pasan, incluida una regresión que comprueba que una licencia antigua no bloquee pedidos ni oculte días pendientes. Sin commits ni subidas.
+
+
+## Revisión de consignas y entrega frontend · 15/10/2026
+
+Se revisó el material disponible 01–18, se incorporó índice académico y Bootstrap Grid local con autorización del responsable, apellido separado en registro/perfil, catálogo de selección múltiple y listado de menús con estados. Se corrigió publicación sin borrador previo y duplicación de feriados. Se agregó limpieza explícita de datos, recorrido interactivo e inventario de etiquetas.
+
+Por pedidos adicionales del responsable se incorporaron nueve fotos de platos con fuentes/licencias y se eliminó completamente la preferencia de formato de fecha: DD/MM/AAAA fijo. Las cuentas antiguas pueden ingresar y ya no determinan el formato. No se repuso la función de licencias.
+
+El [informe de revisión](revision-final.md) registra las diferencias que permanecen respecto de la implementación didáctica literal, especialmente persistencia local y modelo semanal. El [manual de limpieza](limpieza-de-pruebas.md) explica la separación de datos por origen y navegador. La intervención de IA incluyó implementación y queda declarada sin presentarla como consultas menores. Trabajo local, sin commits ni push.

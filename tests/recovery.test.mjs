@@ -37,7 +37,13 @@ test.beforeEach(async () => {
     holidays: {},
     reports: {},
   });
-  await register({ name: "Persona", email, password, confirm: password });
+  await register({
+    name: "Persona",
+    lastName: "Prueba",
+    email,
+    password,
+    confirm: password,
+  });
 });
 test("recuperación cambia contraseña, conserva datos y revoca sesiones", async () => {
   const account = await login(email, password);

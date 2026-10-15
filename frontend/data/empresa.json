@@ -1,3 +1,6 @@
 {
-  "administradoresAutorizados": ["proadmin@gmail.com"]
+  "administradoresAutorizados": [
+    "proadmin@gmail.com"
+  ],
+  "reinicioPruebas": "entrega-2026-10-15-final"
 }

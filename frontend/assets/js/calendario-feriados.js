@@ -9,6 +9,7 @@ import {
 } from "./core.js";
 import { $, bindForm, run, message, confirmAction } from "./ui.js";
 export function init() {
+  let editingDate = "";
   writeDate($("#date"), clock().today);
   function render() {
     const dates = Object.entries(readDB().holidays).sort(([a], [b]) =>
@@ -25,6 +26,10 @@ export function init() {
   }
   bindForm("#holiday-form", async (data) => {
     const reason = data.get("reason").trim();
+    if (readDB().holidays[data.get("date")] && editingDate !== data.get("date"))
+      throw new Error(
+        "Ya existe un cierre en esa fecha. Usá Editar motivo para modificarlo.",
+      );
     if (!reason || reason.length > 120)
       throw new Error("Ingresá un motivo de hasta 120 caracteres.");
     if (
@@ -36,6 +41,8 @@ export function init() {
     )
       return;
     setHoliday(data.get("date"), reason);
+    editingDate = "";
+    $("#reason").value = "";
     render();
     message("Calendario actualizado.");
   });
@@ -44,6 +51,7 @@ export function init() {
     if (!b) return;
     run(async () => {
       if (b.dataset.edit) {
+        editingDate = b.dataset.edit;
         writeDate($("#date"), b.dataset.edit);
         $("#reason").value = readDB().holidays[b.dataset.edit];
         $("#reason").focus();
