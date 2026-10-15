@@ -146,9 +146,13 @@ test("sin cuentas sembradas al inicializar y fechas estables", async () => {
       url.includes("empresa.json")
         ? { administradoresAutorizados: ["proadmin@gmail.com"] }
         : url.includes("platos.json") && !url.includes("menu-platos.json")
-          ? [{id:"p1", nombre:"Plato", descripcion:"Vegetal"}]
+          ? [{ id: "p1", nombre: "Plato", descripcion: "Vegetal" }]
           : url.includes("menus.json")
-            ? [0,7].map(offset => ({id:"m"+offset,fecha:core.addDays(core.monday(),offset),publicado:true}))
+            ? [0, 7].map((offset) => ({
+                id: "m" + offset,
+                fecha: core.addDays(core.monday(), offset),
+                publicado: true,
+              }))
             : [],
   });
   try {
@@ -311,7 +315,7 @@ test("asistencia no se puede quitar con pedidos activos", () => {
     /cancelá/,
   );
 });
-test("comentario largo y licencia se rechazan", () => {
+test("comentario largo se rechaza y licencias antiguas no bloquean pedidos", () => {
   assert.throws(
     () => core.saveOrder({ date, optionId: "p0", comment: "a".repeat(201) }),
     /200/,
@@ -319,9 +323,12 @@ test("comentario largo y licencia se rechazan", () => {
   const db = core.readDB();
   Object.assign(db.users[1], { leaveStart: date, leaveEnd: date });
   core.saveDB(db);
-  assert.throws(
-    () => core.saveOrder({ date, optionId: "p0", comment: "" }),
-    /licencia/,
+  assert.doesNotThrow(() =>
+    core.saveOrder({ date, optionId: "p0", comment: "" }),
+  );
+  assert.equal(
+    core.pendingDays(core.readDB(), "emp").some((day) => day.date === date),
+    true,
   );
 });
 test("publicación requiere opciones o sin servicio en todos los días", () => {
@@ -385,7 +392,7 @@ test("usuarios: alta validada, baja lógica y protección propia", async () => {
   toggleAccount(u.id);
   await assert.rejects(
     core.login(u.email, "Valida#2026", "empleado"),
-    /desactivada/,
+    /no está registrada o activada/,
   );
   assert.throws(() => toggleAccount("admin"), /propia/);
 });
@@ -400,8 +407,6 @@ test("perfil conserva referencias al cambiar email y valida contraseña actual",
     current: "",
     password: "",
     confirm: "",
-    leaveStart: "",
-    leaveEnd: "",
   });
   assert.equal(core.user().email, "nuevo@example.com");
   assert.equal(core.readDB().orders[0].userId, o.userId);
@@ -412,8 +417,6 @@ test("perfil conserva referencias al cambiar email y valida contraseña actual",
       current: "Mala#2026",
       password: "Otra#2026",
       confirm: "Otra#2026",
-      leaveStart: "",
-      leaveEnd: "",
     }),
     /actual/,
   );

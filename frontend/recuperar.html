@@ -9,7 +9,7 @@
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
-  <body data-page="recuperar" data-required="">
+  <body class="auth-page" data-page="recuperar" data-required="">
     <a class="skip-link" href="#main">Saltar al contenido</a>
     <header id="app-header" class="app-header">
       <a class="brand" href="login.html">SistemaPedidos</a>
@@ -25,20 +25,13 @@
       ></div>
       <div id="reminder" class="note" role="status" hidden></div>
       <section class="auth-panel" aria-labelledby="auth-title">
-        <img
-          class="auth-logo"
-          src="assets/img/logo.png"
-          width="1536"
-          height="1024"
-          alt="SistemaPedidos"
-        />
         <h1 id="auth-title">Recuperá tu acceso</h1>
         <p class="auth-description">
           Ingresá el email con el que te registraste.
         </p>
         <p class="note">
-          Demostración: no se enviará un email real. El correo simulado
-          aparece acá y funciona en este navegador.
+          Demostración: no se enviará un email real. El correo simulado aparece
+          acá y funciona en este navegador.
         </p>
         <form id="recovery-form" novalidate>
           <div class="field">
@@ -60,7 +53,8 @@
           <button class="full" type="submit">Solicitar enlace</button>
         </form>
         <section
-          id="demo-mail" tabindex="-1"
+          id="demo-mail"
+          tabindex="-1"
           class="recovery-mail"
           aria-labelledby="mail-title"
           hidden

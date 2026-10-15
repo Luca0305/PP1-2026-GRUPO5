@@ -7,8 +7,6 @@ import {
   credential,
   verify,
   uid,
-  validDate,
-  clock,
   DATE_FORMATS,
 } from "./core.js";
 export async function saveAccount({ id, name, email, role, password }) {
@@ -77,8 +75,6 @@ export async function saveProfile({
   current,
   password,
   confirm,
-  leaveStart,
-  leaveEnd,
   dateFormat,
 }) {
   checkIdentity(name, email);
@@ -101,13 +97,6 @@ export async function saveProfile({
       throw new FieldError("confirm", "Las nuevas contraseñas no coinciden.");
     auth = await credential(password);
   }
-  if (
-    (leaveStart || leaveEnd) &&
-    (!validDate(leaveStart) || !validDate(leaveEnd) || leaveStart > leaveEnd)
-  )
-    throw new Error(
-      "Completá ambas fechas de licencia, con el inicio anterior o igual al fin.",
-    );
   const db = readDB(),
     me = requireUser(null, db);
   if (me.id !== before.id || me.auth.hash !== before.auth.hash)
@@ -116,25 +105,9 @@ export async function saveProfile({
     );
   if (db.users.some((u) => u.id !== me.id && u.email === email.toLowerCase()))
     throw new FieldError("email", "Ya existe una cuenta con ese email.");
-  if (
-    leaveStart &&
-    db.orders.some(
-      (o) =>
-        o.userId === me.id &&
-        o.status !== "Cancelado" &&
-        o.date >= clock().today &&
-        o.date >= leaveStart &&
-        o.date <= leaveEnd,
-    )
-  )
-    throw new Error(
-      "Cancelá tus pedidos activos de ese período antes de registrar la licencia.",
-    );
   Object.assign(me, {
     name: name.trim(),
     email: email.toLowerCase(),
-    leaveStart,
-    leaveEnd,
     dateFormat: dateFormat || me.dateFormat || "DD/MM/AAAA",
     ...(auth ? { auth, pending: false } : {}),
   });

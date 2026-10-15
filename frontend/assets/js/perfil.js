@@ -1,4 +1,3 @@
-import { readDate, writeDate } from "./dates.js";
 import { refreshDatePreference } from "./dates.js";
 import { user } from "./core.js";
 import { saveProfile } from "./accounts.js";
@@ -10,9 +9,6 @@ export function init() {
   $("#email").value = u.email;
   $("#password").required = false;
   $("#confirm").required = false;
-  writeDate($("#leave-start"), u.leaveStart || "");
-  writeDate($("#leave-end"), u.leaveEnd || "");
-  $("#leave-fields").hidden = u.role === "admin";
   bindForm("#profile-form", async (data) => {
     if (
       !(await confirmAction(
@@ -28,8 +24,6 @@ export function init() {
       current: data.get("current-password"),
       password: data.get("password"),
       confirm: data.get("confirm"),
-      leaveStart: data.get("leave-start"),
-      leaveEnd: data.get("leave-end"),
       dateFormat: data.get("date-format"),
     });
     ["#current-password", "#password", "#confirm"].forEach(

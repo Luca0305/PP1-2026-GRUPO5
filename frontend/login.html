@@ -8,7 +8,7 @@
     <link rel="icon" href="assets/img/logo.png" type="image/png" />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
-  <body data-page="login" data-required="">
+  <body class="auth-page" data-page="login" data-required="">
     <a class="skip-link" href="#main">Saltar al contenido</a>
     <header id="app-header" class="app-header">
       <a class="brand" href="login.html">SistemaPedidos</a>
@@ -24,13 +24,6 @@
       ></div>
       <div id="reminder" class="note" role="status" hidden></div>
       <section class="auth-panel" aria-labelledby="auth-title">
-        <img
-          class="auth-logo"
-          src="assets/img/logo.png"
-          width="1536"
-          height="1024"
-          alt="SistemaPedidos"
-        />
         <h1 id="auth-title">Iniciá sesión</h1>
         <p class="auth-description">
           Tu almuerzo, bien organizado. Ingresá con tu cuenta.
@@ -46,7 +39,6 @@
               maxlength="254"
               autocomplete="username"
               placeholder="usuario@mail.com"
-              aria-describedby="email-help"
             />
           </div>
           <div class="field">

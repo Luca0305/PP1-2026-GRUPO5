@@ -76,12 +76,6 @@ export function init() {
       empty(`Sin servicio: ${esc(db.holidays[selected])}.`);
       return;
     }
-    if (u.leaveStart && selected >= u.leaveStart && selected <= u.leaveEnd) {
-      empty(
-        "Estás de licencia en esta fecha. Podés actualizarla desde Mi perfil.",
-      );
-      return;
-    }
     const existing = db.orders.find(
       (o) =>
         o.userId === u.id &&

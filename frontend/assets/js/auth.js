@@ -1,5 +1,5 @@
 import { register, login, home } from "./core.js";
-import { emailError } from "./validation.js";
+import { emailError, nameError } from "./validation.js";
 import {
   $,
   bindForm,
@@ -14,8 +14,14 @@ export function init() {
   $("#email").addEventListener("blur", () => {
     const error = emailError($("#email").value);
     if (error && $("#email").value) fieldError($("#email"), error);
+    else clearFieldError($("#email"));
   });
   if (registration) {
+    $("#nombre").addEventListener("blur", () => {
+      const error = nameError($("#nombre").value);
+      if (error && $("#nombre").value) fieldError($("#nombre"), error);
+      else clearFieldError($("#nombre"));
+    });
     $("#confirm").addEventListener("input", () => {
       if ($("#confirm").value && $("#confirm").value !== $("#password").value)
         fieldError($("#confirm"), "Las contraseñas todavía no coinciden.");

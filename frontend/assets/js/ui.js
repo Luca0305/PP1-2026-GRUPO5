@@ -13,6 +13,8 @@ import {
 } from "./core.js";
 export const $ = (selector) => document.querySelector(selector);
 export const icons = {
+  settings:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="19.39,8.94 21.81,10.05 21.81,13.95 19.39,15.06 19.39,15.06 20.31,17.56 17.56,20.31 15.06,19.39 15.06,19.39 13.95,21.81 10.05,21.81 8.94,19.39 8.94,19.39 6.44,20.31 3.69,17.56 4.61,15.06 4.61,15.06 2.19,13.95 2.19,10.05 4.61,8.94 4.61,8.94 3.69,6.44 6.44,3.69 8.94,4.61 8.94,4.61 10.05,2.19 13.95,2.19 15.06,4.61 15.06,4.61 17.56,3.69 20.31,6.44 19.39,8.94"/><circle cx="12" cy="12" r="3.5"/></svg>',
   attendance:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6m-10 7 3 3 7-7"/></svg>',
   meal: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M3 2v7m3-7v7M3 6h3M4.5 9v13M21 2v20m0-20c-4 3-4 9 0 10"/></svg>',
@@ -195,7 +197,7 @@ export function shell(u) {
   };
   document.body.dataset.role = u?.role || "public";
   $("#app-header").innerHTML =
-    `<a class="brand" href="${u ? home(u) : "login.html"}" aria-label="SistemaPedidos, inicio"><img class="brand-logo" src="assets/img/logo.png" alt="SistemaPedidos" width="1536" height="1024"></a>${u ? `<nav aria-label="Navegación principal">${nav.map(([key, label]) => `<a href="${key}.html" ${key === page ? 'aria-current="page"' : ""}>${icons[navIcons[key]]}<span>${label}</span></a>`).join("")}</nav><div class="account"><span class="role-badge">${u.role === "admin" ? icons.shield : icons.person}${u.role === "admin" ? "Administrador" : "Empleado"}</span><a class="profile-link" href="mi-perfil.html" ${page === "mi-perfil" ? 'aria-current="page"' : ""}>${icons.person}<span><span class="account-name">${esc(u.name)}</span><small>Mi perfil y preferencias</small></span></a><button id="logout" class="text-button">Cerrar sesión</button></div>` : ""}`;
+    `<a class="brand" href="${u ? home(u) : "login.html"}" aria-label="SistemaPedidos, inicio"><img class="brand-logo" src="assets/img/logo.png" alt="SistemaPedidos" width="1536" height="1024"></a>${u ? `<nav aria-label="Navegación principal">${nav.map(([key, label]) => `<a href="${key}.html" ${key === page ? 'aria-current="page"' : ""}>${icons[navIcons[key]]}<span>${label}</span></a>`).join("")}</nav><div class="account"><a class="profile-link" href="mi-perfil.html" ${page === "mi-perfil" ? 'aria-current="page"' : ""}><span class="profile-role" role="img" aria-label="${u.role === "admin" ? "Administrador" : "Empleado"}" title="${u.role === "admin" ? "Administrador" : "Empleado"}">${icons.person}</span><span><span class="account-name">${esc(u.name)}</span><small>${icons.settings}Mi perfil y preferencias</small></span></a><button id="logout" class="text-button">Cerrar sesión</button></div>` : ""}`;
   $("#logout")?.addEventListener("click", () => {
     sessionStorage.removeItem(SESSION_KEY);
     redirect("login.html", "Cerraste tu sesión.");

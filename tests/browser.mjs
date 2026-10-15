@@ -240,7 +240,10 @@ try {
   await waitPage("login.html");
   await register("Administración Propia", "proadmin@gmail.com", true);
   await login("proadmin@gmail.com", "admin");
-  await text(".role-badge", "Administrador");
+  assert.equal(
+    await page.locator(".profile-role").getAttribute("aria-label"),
+    "Administrador",
+  );
   await page.setViewportSize({ width: 1440, height: 1050 });
   await page.locator("#week").fill("26/10/2026");
   await page.locator("#week").dispatchEvent("change");
@@ -381,7 +384,10 @@ try {
   await waitPage("login.html");
   await register("Administración Autorizada", "segunda@example.com");
   await login("segunda@example.com", "admin");
-  await text(".role-badge", "Administrador");
+  assert.equal(
+    await page.locator(".profile-role").getAttribute("aria-label"),
+    "Administrador",
+  );
   // Una carga fallida ofrece reintento y no deja enviar formularios sin JS.
   const failureContext = await browser.newContext();
   const failurePage = await failureContext.newPage();

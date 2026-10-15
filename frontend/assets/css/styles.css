@@ -317,25 +317,6 @@ body[data-role="admin"] .app-header nav a[aria-current] {
   grid-column: 2;
   justify-self: end;
 }
-.role-badge {
-  display: inline-flex;
-  gap: 7px;
-  align-items: center;
-  color: var(--teal-dark);
-  font-size: 12px;
-  font-weight: 700;
-  background: #eaf2ef;
-  padding: 6px 9px;
-  border-radius: 8px;
-}
-.role-badge svg {
-  width: 16px;
-  height: 16px;
-}
-body[data-role="admin"] .role-badge {
-  color: var(--violet);
-  background: #eee9f5;
-}
 .header-caption {
   margin-left: auto;
   color: var(--muted);
@@ -1541,4 +1522,102 @@ input[aria-invalid="true"]:focus-visible {
     font-size: 12px;
     gap: 5px 12px;
   }
+}
+
+/* Acceso público: identidad visible y formulario con contraste. */
+body.auth-page {
+  background: #f5f3ef;
+}
+body.auth-page .app-header {
+  mix-blend-mode: multiply;
+  display: flex;
+  position: static;
+  padding: 18px 24px 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  justify-content: flex-start;
+}
+.auth-page .app-header .brand {
+  padding: 8px 18px;
+  background: transparent;
+  border-radius: 0;
+}
+.auth-page .app-header .brand-logo {
+  width: 230px;
+  max-width: 100%;
+  height: auto;
+}
+.auth-page .auth-panel {
+  padding-block: 28px;
+  box-shadow: 0 12px 40px #4f3b7810;
+}
+.auth-page .app-footer {
+  color: var(--muted);
+  background: transparent;
+  border-color: var(--border);
+}
+.auth-page #nombre-help {
+  margin: -5px 0 14px;
+}
+.auth-page .auth-panel .password-rules,
+.password-rules {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  background: #f5f2f8;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 12px 0 18px;
+  font-size: 12px;
+}
+.password-rules li > span:first-child {
+  flex-basis: 16px;
+  text-align: center;
+}
+@media (min-width: 1280px) {
+  body.auth-page .app-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    z-index: 1;
+  }
+}
+@media (max-width: 600px) {
+  body.auth-page .app-header {
+    padding: 12px 18px 0;
+  }
+  .auth-page .app-header .brand-logo {
+    width: 165px;
+  }
+  .auth-page .auth-panel .password-rules,
+  .password-rules {
+    grid-template-columns: 1fr;
+  }
+}
+.password-rules li:last-child {
+  grid-column: 1 / -1;
+}
+
+/* El rol se identifica en el icono y mantiene su nombre accesible. */
+.profile-link .profile-role {
+  color: #28733d;
+}
+body[data-role="admin"] .profile-link .profile-role {
+  color: var(--violet);
+}
+.profile-link .profile-role svg {
+  width: 26px;
+  height: 26px;
+}
+.profile-link small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.profile-link small svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
 }

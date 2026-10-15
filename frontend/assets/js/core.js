@@ -1,5 +1,5 @@
 import { cargarMenusIniciales } from "./datos.js";
-import { FieldError, emailError, passwordError } from "./validation.js";
+import { FieldError, emailError, passwordError, nameError } from "./validation.js";
 // Reglas y persistencia compartidas. La UI está en ui.js y cada pantalla tiene su módulo.
 export const DB_KEY = "sistemaPedidos:v1";
 export const SESSION_KEY = "sistemaPedidos:sesion";
@@ -84,11 +84,7 @@ export const emailValid = (value) =>
 export const passwordValid = (value) =>
   typeof value === "string" && !passwordError(value);
 export function checkIdentity(name, email, password) {
-  if (name.trim().length < 2 || name.trim().length > 80 || !/\p{L}/u.test(name))
-    throw new FieldError(
-      "name",
-      "Ingresá un nombre de 2 a 80 caracteres que contenga letras.",
-    );
+  if (nameError(name)) throw new FieldError("name", nameError(name));
   if (emailError(email)) throw new FieldError("email", emailError(email));
   if (password !== undefined && passwordError(password))
     throw new FieldError("password", passwordError(password));
@@ -284,15 +280,9 @@ export async function login(email, password) {
   if (passwordError(password))
     throw new FieldError("password", passwordError(password));
   const u = readDB().users.find((u) => u.email === email.toLowerCase());
-  if (!u || u.pending)
-    throw new FieldError(
-      "email",
-      "Este email todavía no completó el registro. Elegí Registrate, creá tu contraseña y después volvé a iniciar sesión.",
-    );
-  if (!u.active)
-    throw new FieldError(
-      "email",
-      "Tu cuenta está desactivada. Consultá al administrador para recuperar el acceso.",
+  if (!u || u.pending || !u.active)
+    throw new Error(
+      "Tu cuenta no está registrada o activada. Si todavía no completaste el registro, elegí Registrate. Si ya tenés una cuenta, consultá al administrador para recuperar el acceso.",
     );
   if (!(await verify(password, u.auth)))
     throw new FieldError(
@@ -374,8 +364,6 @@ export function validateOrder(db, u, { date, optionId, comment }, excluding) {
     throw new Error("Ese día es feriado o no tiene servicio.");
   if (!attendanceFor(db, u.id, monday(date)).includes(date))
     throw new Error("Primero registrá tu asistencia para ese día.");
-  if (u.leaveStart && date >= u.leaveStart && date <= u.leaveEnd)
-    throw new Error("No podés pedir durante tu licencia o vacaciones.");
   const menu = db.menus.find(
     (m) => m.week === monday(date) && m.status === "Publicado",
   );
@@ -546,18 +534,10 @@ export function setHoliday(date, reason) {
 
 // Días de asistencia sin reserva confirmada, incluyendo los que aún no tienen borrador.
 export function pendingDays(db, userId, now = new Date()) {
-  const person = db.users.find((u) => u.id === userId);
   return [...new Set(Object.values(db.attendance[userId] || {}).flat())]
     .sort()
     .flatMap((date) => {
-      if (
-        closed(date, now) ||
-        db.holidays[date] ||
-        (person?.leaveStart &&
-          date >= person.leaveStart &&
-          date <= person.leaveEnd)
-      )
-        return [];
+      if (closed(date, now) || db.holidays[date]) return [];
       const order = db.orders.find(
         (o) =>
           o.userId === userId && o.date === date && o.status !== "Cancelado",

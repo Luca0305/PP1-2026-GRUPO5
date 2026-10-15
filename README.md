@@ -48,7 +48,7 @@ La bandeja simulada se conserva durante la sesión de la pestaña para poder rec
 2. **Elegir menú:** aparecen solamente los días con asistencia. Seleccionar una fecha, un plato y un comentario opcional de hasta 200 caracteres.
 3. **Guardar y revisar:** se guarda un pedido en estado **Borrador** y se abre **Mis pedidos**. Revisar y confirmar para reservar una porción.
 4. **Mis pedidos:** confirmar, modificar o cancelar. Un aviso enumera todos los días de asistencia aún abiertos sin pedido confirmado, incluso si ya se confirmó otro día. Distingue borradores, días sin plato elegido y menús todavía no publicados, con enlaces para continuar. Al modificar un pedido confirmado, vuelve a borrador si cambió el plato o comentario. Guardar sin cambios conserva la confirmación.
-5. **Mi perfil:** actualizar nombre/email, elegir el formato de fecha, cambiar contraseña verificando la actual, o registrar licencia/vacaciones. El formato predeterminado es **DD/MM/AAAA**; también se puede elegir MM/DD/AAAA o AAAA-MM-DD. Se guarda por cuenta y se aplica a los campos y fechas visibles; internamente se conserva ISO para ordenar y validar. Los pedidos y asistencias usan un identificador estable: cambiar el email no los pierde.
+5. **Mi perfil:** actualizar nombre/email, elegir el formato de fecha, cambiar contraseña verificando la actual. El formato predeterminado es **DD/MM/AAAA**; también se puede elegir MM/DD/AAAA o AAAA-MM-DD. Se guarda por cuenta y se aplica a los campos y fechas visibles; internamente se conserva ISO para ordenar y validar. Los pedidos y asistencias usan un identificador estable: cambiar el email no los pierde.
 6. **Cerrar sesión:** elimina la sesión de esa pestaña y vuelve al login. La cuenta y sus pedidos permanecen guardados.
 
 Hay un pedido activo por empleado y fecha. Los cancelados conservan su historial y permiten volver a pedir antes del corte. El borrador no reserva stock ni se incluye en el consolidado.
@@ -73,10 +73,9 @@ Hay un pedido activo por empleado y fecha. Los cancelados conservan su historial
 | Login               | Cuenta registrada, contraseña correcta, cuenta activa; redirección automática según rol                                                                                                       |
 | Ojo de contraseña   | Mostrar/ocultar con teclado o mouse, texto accesible y estado anunciado                                                                                                                       |
 | Horario             | Antes de las 10:00 de la fecha del pedido, zona `America/Argentina/Buenos_Aires`; las 10:00 exactas ya están cerradas                                                                         |
-| Pedido              | Revalida asistencia, publicación, feriado, licencia, stock y comentario al guardar y al confirmar                                                                                             |
+| Pedido              | Revalida asistencia, publicación, feriado, stock y comentario al guardar y al confirmar                                                                                             |
 | Stock               | Se descuenta al confirmar y se libera al cancelar o volver a borrador                                                                                                                         |
 | Asistencia          | No se quita un día con pedidos activos; no se cambia un día cerrado                                                                                                                           |
-| Licencia            | Inicio y fin válidos, en orden; primero cancelar pedidos activos del período                                                                                                                  |
 | Almacenamiento      | Si falla una escritura, se muestra el error y no se informa éxito                                                                                                                             |
 
 Los errores indican el campo y la causa con borde rojo. Los requisitos de contraseña se marcan con ticks verdes en tiempo real. `.co`, `.com.ar` y otras terminaciones se rechazan por decisión explícita del proyecto, aunque algunas sean válidas fuera de este sistema.
@@ -153,7 +152,7 @@ La numeración de referencia es la especificación de E1, que tiene diferencias 
 npm test
 ```
 
-Las 29 pruebas de lógica cubren asignación empresarial, autorización de otros administradores, fechas y avisos de pendientes, además de email, contraseña, registro sin cuentas predefinidas, hashes, permisos, corte exacto, datos persistidos, estados, stock, asistencia, feriados, licencia, publicación, usuarios, perfil, consolidado y errores de almacenamiento.
+Las 29 pruebas de lógica cubren asignación empresarial, autorización de otros administradores, fechas y avisos de pendientes, además de email, contraseña, registro sin cuentas predefinidas, hashes, permisos, corte exacto, datos persistidos, estados, stock, asistencia, feriados, publicación, usuarios, perfil, consolidado y errores de almacenamiento.
 
 Para el recorrido automatizado de navegador: con el servidor iniciado, instalar Playwright en el entorno de pruebas (`npm install --no-save --package-lock=false playwright`) y ejecutar `node tests/browser.mjs`. Requiere Chrome instalado; también admite `BROWSER_CHANNEL=edge`, `BASE_URL` y `PLAYWRIGHT_MODULE`. Las cuentas que crea esta prueba existen únicamente en un contexto temporal de navegador que se elimina al terminar. Capturas y CSV quedan en `test-results/`, ignorado por Git.
 
@@ -183,3 +182,7 @@ Para continuar: trabajar en `pruebas`, ejecutar pruebas, registrar cambios en es
 ### Presentación en computadora
 
 El acceso utiliza un panel centrado de 680 px en escritorio, con logo y campos ampliados. Se comprobó a 1366×768 y 1920×1080; las ventanas pequeñas y el zoom conservan adaptación y desplazamiento cuando es necesario.
+
+### Última revisión de acceso
+
+Nombres con caracteres y separadores controlados; detección de errores comunes en dominios de correo; aviso único para cuentas no registradas o activadas. Formularios de acceso con fondo claro tenue, panel blanco, logo integrado al fondo y requisitos de contraseña agrupados. Detalles y pruebas en [evolución del frontend](docs/evolucion-frontend.md). Las pruebas adicionales de estas validaciones se ejecutan con `node --test tests/validation.test.mjs`.

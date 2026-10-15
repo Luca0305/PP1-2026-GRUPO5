@@ -8,6 +8,11 @@ export class FieldError extends Error {
 export const PASSWORD_RULES = [
   { id: "length", text: "Mínimo 8 caracteres", test: (p) => p.length >= 8 },
   {
+    id: "maximum",
+    text: "Máximo 64 caracteres",
+    test: (p) => p.length > 0 && p.length <= 64,
+  },
+  {
     id: "lower",
     text: "Una letra minúscula (a–z)",
     test: (p) => /[a-z]/.test(p),
@@ -28,12 +33,35 @@ export const PASSWORD_RULES = [
     text: "Sin espacios",
     test: (p) => p.length > 0 && !/\s/.test(p),
   },
-  {
-    id: "maximum",
-    text: "Máximo 64 caracteres",
-    test: (p) => p.length > 0 && p.length <= 64,
-  },
 ];
+// Lista acotada: no adivinamos ni corregimos dominios de empresas.
+const DOMAIN_TYPOS = {
+  "gmial.com": "gmail.com",
+  "gamil.com": "gmail.com",
+  "gmai.com": "gmail.com",
+  "gmaill.com": "gmail.com",
+  "gnail.com": "gmail.com",
+  "hotmial.com": "hotmail.com",
+  "hotmal.com": "hotmail.com",
+  "hotmaill.com": "hotmail.com",
+  "outlok.com": "outlook.com",
+  "outllook.com": "outlook.com",
+  "outloook.com": "outlook.com",
+  "yaho.com": "yahoo.com",
+  "yhaoo.com": "yahoo.com",
+  "yahooo.com": "yahoo.com",
+  "iclod.com": "icloud.com",
+  "icould.com": "icloud.com",
+};
+export function nameError(value) {
+  const name = (value || "").normalize("NFC").trim();
+  if (name.length < 2 || name.length > 80)
+    return "Ingresá un nombre de 2 a 80 caracteres.";
+  // Letras latinas (incluye ñ y tildes), con separadores entre palabras.
+  if (!/^[\p{Script=Latin}]+(?:[ '’\-][\p{Script=Latin}]+)*$/u.test(name))
+    return "Usá letras, con tildes o ñ si corresponde. Solo se permiten espacios, guiones o apóstrofes entre las partes del nombre; no números, emojis ni otros símbolos.";
+  return "";
+}
 export function emailError(value) {
   if (!value)
     return "Ingresá tu email. Si todavía no tenés una cuenta, elegí Registrate.";
@@ -66,6 +94,9 @@ export function emailError(value) {
     )
   )
     return "Revisá el dominio: debe tener un nombre antes de .com, sin guiones en sus extremos ni signos como _.";
+  const suggested = DOMAIN_TYPOS[domain.toLowerCase()];
+  if (suggested)
+    return `Revisá el dominio: escribiste ${domain}. ¿Quisiste poner ${suggested}? Corregilo para continuar.`;
   return "";
 }
 export function passwordError(value) {

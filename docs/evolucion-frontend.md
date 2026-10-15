@@ -75,3 +75,27 @@ Verificación: **29 pruebas de lógica aprobadas** (23 existentes y 6 de recuper
 Se amplió el panel de acceso de 480 a 680 px en pantallas desde 900 px, con logo de 204 px, título de 34 px y campos de al menos 48 px de alto. Se mantiene centrado, con espacios uniformes y adaptación a ventanas pequeñas. Los estilos compartidos también mantienen coherencia en registro y recuperación.
 
 Verificación visual en Chrome a 1366×768 y 1920×1080: login centrado, sin desbordamiento ni desplazamiento vertical en el estado inicial. Pasaron los recorridos automatizados de ingreso, pedidos, administración y recuperación de contraseña. Sin commits ni cambios en main.
+
+## Validaciones e identidad del acceso · 14/10/2026
+
+Se conservaron los textos ajustados manualmente y se reforzó la validación compartida de nombres: de 2 a 80 caracteres, letras latinas con tildes y ñ, espacios, guiones y apóstrofes entre partes. Se rechazan números, emojis, símbolos ajenos al nombre, separadores repetidos y caracteres invisibles internos. Se aplica en registro, edición de perfil y administración.
+
+El correo detecta una lista explícita de errores comunes en proveedores (por ejemplo gmial.com) y solicita corregirlos, sin reemplazar automáticamente la dirección ni limitarla a proveedores conocidos. Esto no verifica la existencia de una casilla; sigue siendo un frontend sin servicio de correo real.
+
+Las cuentas inexistentes, pendientes o inactivas muestran una sola vez «Tu cuenta no está registrada o activada», con indicaciones de registro o consulta al administrador. Los requisitos de contraseña conservan sus reglas, agrupados por longitud, letras, número/símbolo y espacios.
+
+Login, registro y recuperación utilizan fondo índigo y panel blanco. El logo queda arriba a la izquierda, separado del formulario, y se acomoda al ancho disponible. Se verificaron 1366×768, 1920×1080 y 390×844; el registro permite desplazamiento vertical cuando su contenido supera la altura disponible.
+
+Verificación: 33 pruebas de lógica aprobadas y recorridos de ingreso, pedidos, administración y recuperación aprobados en Chrome. Los contextos de prueba no modifican cuentas reales. Trabajo exclusivamente local en pruebas, sin commits ni push.
+
+## Fondo claro del acceso · 14/10/2026
+
+Por preferencia del responsable, se reemplazó el fondo índigo por un tono claro cálido (#F5F3EF), con formulario blanco y sombra suave. El logo conserva su posición superior izquierda y se integra al fondo sin tarjeta. Se comprobaron las pantallas de acceso a 1366×768, 1920×1080 y 390×844. Se conservan las validaciones y la navegación.
+
+## Retiro de licencias y encabezado por rol · 14/10/2026
+
+Se eliminó la configuración de licencias/vacaciones del perfil y toda su lógica de bloqueo en asistencia, elección de menú, guardado de pedidos y avisos pendientes. Los valores antiguos que puedan persistir en el navegador ya no tienen efecto. Se conservan cuentas, asistencia y pedidos.
+
+El encabezado reemplaza los carteles de rol por una sola personita junto al nombre: verde para empleados, violeta para administradores. El rol sigue disponible para lectores de pantalla y al situar el cursor sobre el icono. «Mi perfil y preferencias» incorpora una tuerca y mantiene su enlace al perfil.
+
+Las 33 pruebas de lógica pasan, incluida una regresión que comprueba que una licencia antigua no bloquee pedidos ni oculte días pendientes. Sin commits ni subidas.

@@ -26,9 +26,8 @@ export function init() {
     $("#week-label").textContent = `Semana del ${weekLabel(week)}`;
     $("#attendance-days").innerHTML = DAYS.map((day, i) => {
       const date = addDays(week, i),
-        holiday = db.holidays[date],
-        leave = u.leaveStart && date >= u.leaveStart && date <= u.leaveEnd;
-      return `<label class="attendance-day"><input type="checkbox" name="days" value="${date}" ${saved.includes(date) ? "checked" : ""} ${closed(date) || holiday || leave ? "disabled" : ""}><span>${day}</span><small>${holiday ? esc(holiday) : leave ? "Licencia" : closed(date) ? "Plazo cerrado" : `${formatDate(date)}`}</small></label>`;
+        holiday = db.holidays[date];
+      return `<label class="attendance-day"><input type="checkbox" name="days" value="${date}" ${saved.includes(date) ? "checked" : ""} ${closed(date) || holiday ? "disabled" : ""}><span>${day}</span><small>${holiday ? esc(holiday) : closed(date) ? "Plazo cerrado" : `${formatDate(date)}`}</small></label>`;
     }).join("");
   }
   $("#week").addEventListener("change", () =>
