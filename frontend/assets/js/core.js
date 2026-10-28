@@ -560,12 +560,19 @@ export function saveMenu(menu) {
   const before = db.menus.find((m) => m.week === menu.week);
   for (const day of menu.days) {
     const old = before?.days.find((d) => d.date === day.date);
-    if (closed(day.date) && JSON.stringify(old) !== JSON.stringify(day))
+    // Un día cuyo corte ya pasó no se edita, pero tampoco se exige completarlo:
+    // así se puede publicar una semana que ya empezó.
+    const locked = closed(day.date);
+    if (
+      locked &&
+      (old ? JSON.stringify(old) !== JSON.stringify(day) : day.options.length)
+    )
       throw new Error(
         "No se pueden modificar días cuyo horario de corte ya pasó.",
       );
     if (
       menu.status === "Publicado" &&
+      !locked &&
       !day.noService &&
       !db.holidays[day.date] &&
       !day.options.length

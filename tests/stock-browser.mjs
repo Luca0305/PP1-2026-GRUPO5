@@ -92,6 +92,22 @@ try {
   // La primera persona, sin excepción, sigue bloqueada.
   await go(a, "mis-pedidos.html");
   assert.equal(await a.getByRole("button", { name: "Cancelar pedido" }).count(), 0);
+  // Mitad de semana: los días que ya pasaron no se completan ni bloquean la publicación.
+  await context.clock.setSystemTime(new Date("2026-12-02T15:00:00Z"));
+  await go(admin, "menuadmin.html");
+  await admin.locator("#month").selectOption("2026-12");
+  await admin.locator("#week").selectOption("2026-11-30");
+  for (const day of ["2026-12-03", "2026-12-04"]) {
+    await admin.locator("#catalog-day").selectOption(day);
+    await admin.locator("[name=catalog-plate]").first().check();
+    await press(admin, "Agregar selección al día").click();
+  }
+  assert.equal(await admin.locator("#catalog-day option").count(), 3);
+  await press(admin, "Guardar borrador").click();
+  await admin.getByText("Borrador guardado").waitFor();
+  await press(admin, "Publicar menú").click();
+  await admin.locator("dialog").getByRole("button", { name: "Publicar", exact: true }).click();
+  await admin.getByText("Menú publicado").waitFor();
   assert.deepEqual(errors, []);
   console.log("OK: categorías desplegables, stock en tiempo real entre dos personas, confirmación en una pantalla y excepción de horario. Sin errores JS.");
 } finally {

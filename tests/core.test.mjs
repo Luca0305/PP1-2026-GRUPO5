@@ -505,3 +505,29 @@ test("consolidado por semana agrupa por día y plato", () => {
   );
   assert.equal(reportRows(core.readDB(), second).length, 1);
 });
+test("publicar una semana que ya empezó no exige completar los días cerrados", () => {
+  sessionStorage.setItem(core.SESSION_KEY, "admin");
+  // Semana pasada: todos sus días están cerrados y sin opciones, y aun así se puede publicar.
+  const past = core.addDays(core.monday(), -14);
+  const menu = {
+    week: past,
+    status: "Publicado",
+    days: core.DAYS.map((_, i) => ({
+      date: core.addDays(past, i),
+      noService: false,
+      options: [],
+    })),
+  };
+  core.saveMenu(menu);
+  assert.equal(core.readDB().menus.some((m) => m.week === past), true);
+  // Pero un día cerrado no se puede modificar agregándole opciones.
+  menu.days[0].options.push({
+    id: "x",
+    name: "Plato",
+    description: "",
+    stock: 5,
+    vegetarian: false,
+    glutenFree: false,
+  });
+  assert.throws(() => core.saveMenu(menu), /horario de corte/);
+});
