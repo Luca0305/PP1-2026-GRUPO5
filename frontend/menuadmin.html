@@ -38,47 +38,83 @@
         <span id="menu-status" class="pill"></span>
       </div>
       <div class="toolbar">
-        <div class="field week-picker">
-          <label for="week">Semana</label
-          ><input type="date" id="week" name="week" /><span
-            id="week-label"
-            class="help"
-          ></span>
+        <div class="field">
+          <label for="month">Mes</label><select id="month" name="month"></select>
+        </div>
+        <div class="field">
+          <label for="week">Semana</label><select id="week" name="week"></select>
         </div>
         <button type="button" id="duplicate-menu" class="secondary">
           Duplicar semana anterior
         </button>
       </div>
-      <section class="panel" aria-labelledby="catalog-title">
-        <h2 id="catalog-title">Agregar desde el catálogo</h2>
+      <details class="panel collapsible" open>
+        <summary>
+          <span id="catalog-title">Agregar desde el catálogo</span>
+          <small>Buscá, filtrá y tildá platos</small>
+        </summary>
         <p>
-          Marcá uno o varios platos y elegí un día de la semana. Después guardá
-          el menú para aplicar el cambio.
+          Elegí primero el día de la semana. Después tildá uno o varios platos
+          y agregalos. Guardá el menú para aplicar el cambio.
         </p>
         <p id="catalog-state" role="status"></p>
         <div class="toolbar">
           <div class="field">
             <label for="catalog-day">Día</label
-            ><select id="catalog-day"></select>
+            ><select id="catalog-day" required></select>
           </div>
-
-          <button type="button" id="catalog-add" disabled>
-            Agregar selección al día
-          </button>
-          <button type="button" id="catalog-retry" class="secondary">
-            Actualizar catálogo
+          <button type="button" id="catalog-retry" class="secondary" hidden>
+            Reintentar carga del catálogo
           </button>
         </div>
-        <fieldset>
+        <p id="catalog-hint" class="note">
+          Elegí un día para habilitar la búsqueda y la selección de platos.
+        </p>
+        <fieldset id="catalog-tools" class="catalog-tools" disabled>
           <legend>Platos disponibles</legend>
-          <div id="catalog-list" class="catalog-list"></div>
+          <div class="toolbar">
+            <div class="field grow">
+              <label for="catalog-search">Buscar plato</label
+              ><input
+                id="catalog-search"
+                type="search"
+                placeholder="Ej.: pollo, ñoquis, ensalada"
+                autocomplete="off"
+              />
+            </div>
+            <div class="field">
+              <label for="catalog-category">Categoría</label
+              ><select id="catalog-category">
+                <option value="">Todas las categorías</option>
+              </select>
+            </div>
+            <button type="button" id="catalog-add" disabled>
+              Agregar selección al día
+            </button>
+          </div>
+          <p id="catalog-count" class="help" aria-live="polite"></p>
+          <div class="table-wrap catalog-table-wrap">
+            <table class="catalog-table">
+              <thead>
+                <tr>
+                  <th scope="col"><span class="sr-only">Elegir</span></th>
+                  <th scope="col">Plato</th>
+                  <th scope="col">Categoría</th>
+                  <th scope="col">Descripción</th>
+                </tr>
+              </thead>
+              <tbody id="catalog-list"></tbody>
+            </table>
+          </div>
         </fieldset>
-      </section>
-      <section class="panel">
-        <h2>Menús guardados</h2>
-        <p>Seleccioná una semana para ver sus días y opciones en el editor.</p>
+      </details>
+      <details class="panel collapsible">
+        <summary>
+          <span>Menús guardados (<span id="saved-count">0</span>)</span>
+          <small>Seleccioná una semana para verla en el editor</small>
+        </summary>
         <div id="saved-menus" class="catalog-list"></div>
-      </section>
+      </details>
       <form id="menu-form" novalidate>
         <div id="admin-days" class="admin-days"></div>
         <p class="note">

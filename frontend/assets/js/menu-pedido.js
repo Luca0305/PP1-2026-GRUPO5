@@ -1,4 +1,10 @@
-import { formatDate } from "./core.js";
+import {
+  formatDate,
+  categoryLabel,
+  CATEGORIES,
+  changeOrder,
+  DB_KEY,
+} from "./core.js";
 import { allowedWeek, inCurrentMonth, showWeek, bindWeeks } from "./semanas.js";
 import {
   DAYS,
@@ -6,7 +12,7 @@ import {
   user,
   monday,
   addDays,
-  closed,
+  closedFor,
   attendanceFor,
   available,
   saveOrder,
@@ -41,6 +47,27 @@ export function init() {
         comment: $("#comment").value,
       };
   }
+  // Categorías abiertas: se conservan entre renders (por ejemplo, al actualizarse el stock).
+  let openGroups = null;
+  function groupByCategory(options) {
+    const groups = new Map();
+    for (const key of Object.keys(CATEGORIES))
+      groups.set(key, []);
+    for (const option of options) {
+      const key = CATEGORIES[option.category] ? option.category : "otros";
+      groups.get(key).push(option);
+    }
+    return [...groups].filter(([, list]) => list.length);
+  }
+  function groupHTML([key, options], db, isOpen) {
+    const cards = options
+      .map((o) => {
+        const stock = available(db, o.id, editId);
+        return `<label class="meal-card"><div class="meal-art ${photo(o) ? "" : "meal-art-empty"}">${photo(o)}<input type="radio" name="option" value="${o.id}" ${drafts[selected]?.optionId === o.id ? "checked" : ""} ${stock <= 0 ? "disabled" : ""} aria-label="${esc(o.name)}"></div><div class="meal-content"><h3>${esc(o.name)}</h3><p>${esc(o.description)}</p><div class="meal-tags">${o.vegetarian ? "<span>Vegetariano</span>" : ""}${o.glutenFree ? "<span>Sin TACC</span>" : ""}</div><span class="stock ${stock <= 0 ? "stock-out" : stock <= 10 ? "stock-low" : ""}">${stock > 0 ? `${stock} porciones disponibles` : "Agotado"}</span></div></label>`;
+      })
+      .join("");
+    return `<details class="menu-group" data-category="${key}" ${isOpen ? "open" : ""}><summary><span>${esc(categoryLabel(key))}</span><small>${options.length} ${options.length === 1 ? "opción" : "opciones"}</small></summary><div class="menu-group-body">${cards}</div></details>`;
+  }
   function photo(option) {
     const template = [
       ...document.querySelectorAll("template[data-meal-name]"),
@@ -57,7 +84,7 @@ export function init() {
       `asistencia.html?semana=${week}`,
     );
     if (!dates.includes(selected))
-      selected = dates.find((d) => !closed(d)) || dates[0];
+      selected = dates.find((d) => !closedFor(db, u.id, d)) || dates[0];
     $("#menu-days").innerHTML = dates
       .map(
         (date) =>
@@ -80,7 +107,7 @@ export function init() {
       );
       return;
     }
-    if (closed(selected)) {
+    if (closedFor(db, u.id, selected)) {
       empty(
         "El plazo de este día terminó. Elegí otro día o una semana próxima.",
       );
@@ -123,18 +150,30 @@ export function init() {
       empty("Este día está marcado sin servicio de comedor.");
       return;
     }
-    $("#menu-options").innerHTML = day.options
-      .map((o) => {
-        const stock = available(db, o.id, editId);
-        return `<label class="meal-card"><div class="meal-art">${photo(o)}<input type="radio" name="option" value="${o.id}" ${drafts[selected]?.optionId === o.id ? "checked" : ""} ${stock <= 0 ? "disabled" : ""} aria-label="${esc(o.name)}"></div><div class="meal-content"><h3>${esc(o.name)}</h3><p>${esc(o.description)}</p><div class="meal-tags">${o.vegetarian ? "<span>Vegetariano</span>" : ""}${o.glutenFree ? "<span>Sin TACC</span>" : ""}</div><span class="stock">${stock > 0 ? `${stock} porciones disponibles` : "Agotado"}</span></div></label>`;
-      })
+    const groups = groupByCategory(day.options);
+    // La primera vez se abre la primera categoría, o la del plato ya elegido.
+    if (!openGroups) {
+      const chosen = day.options.find((o) => o.id === drafts[selected]?.optionId);
+      openGroups = new Set([chosen?.category || groups[0][0]]);
+    }
+    $("#menu-options").innerHTML = groups
+      .map((group) => groupHTML(group, db, openGroups.has(group[0])))
       .join("");
     $("#comment").value = drafts[selected]?.comment || "";
     $("#order-details").hidden = false;
     $("#save-order").textContent = edit
       ? "Guardar cambios"
       : "Guardar borrador";
+    $("#confirm-order").textContent = edit
+      ? "Guardar y confirmar"
+      : "Confirmar pedido";
   }
+  $("#menu-options").addEventListener("toggle", (e) => {
+    const group = e.target.closest?.("details.menu-group");
+    if (!group || !openGroups) return;
+    if (group.open) openGroups.add(group.dataset.category);
+    else openGroups.delete(group.dataset.category);
+  }, true);
   $("#menu-days").addEventListener("click", (e) => {
     const button = e.target.closest("[data-date]");
     if (button) {
@@ -152,10 +191,11 @@ export function init() {
       render();
     },
   );
-  bindForm("#pedido-form", (data) => {
+  bindForm("#pedido-form", (data, form, submitter) => {
     if (!data.get("option"))
       throw new Error("Elegí un plato antes de guardar.");
-    const pedido = saveOrder(
+    const confirmar = submitter?.id === "confirm-order";
+    let pedido = saveOrder(
       {
         date: selected,
         optionId: data.get("option"),
@@ -163,18 +203,39 @@ export function init() {
       },
       editId,
     );
+    if (confirmar) {
+      // Guardar y confirmar es un solo paso: no hace falta pasar por Mis pedidos.
+      changeOrder(pedido.id, "confirm");
+      pedido = readDB().orders.find((o) => o.id === pedido.id);
+    }
     drafts[pedido.date] = {
       optionId: pedido.optionId,
       comment: pedido.comment,
     };
     render();
     $("#saved-order").hidden = false;
+    $("#saved-title").textContent = confirmar
+      ? "Pedido confirmado"
+      : "Borrador guardado";
     $("#saved-summary").innerHTML =
       `<h3>${esc(pedido.plate)}</h3><p>${formatDate(pedido.date)} · <span class="badge ${pedido.status.toLowerCase()}">${pedido.status}</span></p><p>${esc(pedido.comment || "Sin comentarios adicionales.")}</p>`;
+    $("#review-saved").textContent = confirmar
+      ? "Ver mis pedidos →"
+      : "Revisar y confirmar pedido →";
     $("#review-saved").href = `mis-pedidos.html#pedido-${pedido.id}`;
-    message("Pedido guardado. Revisá el resumen y continuá a la confirmación.");
+    message(
+      confirmar
+        ? "Pedido confirmado. Tu vianda quedó reservada."
+        : "Borrador guardado. Podés confirmarlo desde Mis pedidos.",
+    );
     $("#saved-order").focus();
     $("#saved-order").scrollIntoView({ block: "center" });
+  });
+  // Stock en tiempo real: si otra pestaña guarda un pedido, se vuelve a calcular.
+  window.addEventListener("storage", (e) => {
+    if (e.key && e.key !== DB_KEY) return;
+    remember();
+    render();
   });
   render();
 }

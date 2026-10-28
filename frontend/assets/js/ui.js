@@ -29,13 +29,21 @@ export const icons = {
   eyeOff:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10 5c7-1 12 7 12 7a22 22 0 0 1-4 5M6 6a24 24 0 0 0-4 6s4 7 10 7a13 13 0 0 0 4-1M10 10a3 3 0 0 0 4 4"/></svg>',
 };
-export function message(text, type = "success") {
+let messageTimer;
+// Con `temporary` (milisegundos) el aviso se borra solo; sin él queda visible.
+export function message(text, type = "success", temporary = 0) {
   const box = $("#message");
+  clearTimeout(messageTimer);
   box.textContent = text;
   box.className = `message ${type}`;
   box.hidden = false;
   box.setAttribute("role", type === "error" ? "alert" : "status");
   box.focus({ preventScroll: true });
+  if (temporary > 0)
+    messageTimer = setTimeout(() => {
+      box.hidden = true;
+      box.textContent = "";
+    }, temporary);
 }
 export function fieldError(input, text) {
   input.setAttribute("aria-invalid", "true");
@@ -114,7 +122,7 @@ export function bindForm(id, callback) {
         const iso = readDate(input);
         if (input.form === form && input.name) data.set(input.name, iso);
       });
-      return callback(data, form);
+      return callback(data, form, e.submitter);
     }, e.submitter);
   });
 }

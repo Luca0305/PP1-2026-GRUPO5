@@ -207,6 +207,20 @@ try {
   await page.locator("#review-saved").click();
   await waitPage("mis-pedidos.html");
   await button("Confirmar pedido").click();
+  // Confirmar desde la misma pantalla del menú, sin pasar por Mis pedidos.
+  await go("menu-pedido.html?semana=2026-10-12&fecha=2026-10-16");
+  await page.locator("[name=option]").first().check();
+  await page.locator("#comment").fill("Todo en una pantalla");
+  await button("Confirmar pedido").click();
+  await text("#saved-title", "Pedido confirmado");
+  await text("#saved-summary", "Confirmado");
+  await go("mis-pedidos.html");
+  const extra = page.locator("article").filter({ hasText: "Todo en una pantalla" });
+  await extra.getByRole("button", { name: "Cancelar pedido", exact: true }).click();
+  await dialog("Sí, cancelar");
+  await text("#message", "Pedido cancelado");
+  // El aviso de cancelación desaparece solo.
+  await page.locator("#message").waitFor({ state: "hidden", timeout: 8000 });
   await go("mi-perfil.html");
   await page.locator("#last-name").fill("Prueba");
   await page.locator("#name").fill("Persona Actualizada");
@@ -252,8 +266,10 @@ try {
     "Administrador",
   );
   await page.setViewportSize({ width: 1440, height: 1050 });
-  await page.locator("#week").fill("26/10/2026");
-  await page.locator("#week").dispatchEvent("change");
+  // El administrador elige mes y semana ("Semana 5"), sin números de fecha.
+  await page.locator("#month").selectOption("2026-11");
+  await page.locator("#week").selectOption("2026-11-30");
+  assert.equal(await page.locator("#week option:checked").innerText(), "Semana 5");
   await button("Duplicar semana anterior").click();
   await dialog("Duplicar");
   await button("Guardar borrador").click();
@@ -284,8 +300,8 @@ try {
   await dialog("Habilitar");
   await text("#holidays", "No hay feriados");
   await go("consolidado.html");
-  await page.locator("#report-date").fill("15/10/2026");
-  await page.locator("#report-date").dispatchEvent("change");
+  await page.locator("#week").selectOption("2026-10-12");
+  await page.locator("#report-day").selectOption("3");
   await button("Generar consolidado").click();
   await text("#total", "1");
   // Un reporte preliminar no debe impedir que se genere el final de las 10:05.
@@ -304,17 +320,12 @@ try {
   );
   await page.clock.setSystemTime(new Date("2026-10-13T12:00:00Z"));
   const downloadPromise = page.waitForEvent("download");
-  await button("Descargar CSV").click();
+  await button("Descargar planilla (CSV)").click();
   const download = await downloadPromise;
   assert.equal(download.suggestedFilename(), "consolidado-2026-10-15.csv");
   await download.saveAs("test-results/consolidado.csv");
-  await page.evaluate(() => {
-    window.print = () => {
-      window.__printed = true;
-    };
-  });
-  await button("Imprimir / Guardar PDF").click();
-  assert.equal(await page.evaluate(() => window.__printed), true);
+  // Una sola opción de descarga: ya no hay impresión ni PDF.
+  assert.equal(await page.getByRole("button", { name: /PDF|Imprimir/ }).count(), 0);
   await go("usuarios.html");
   await page.locator("#name").fill("Nueva Empleada");
   await page.locator("#email").fill("nueva@example.com");

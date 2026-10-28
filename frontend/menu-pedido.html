@@ -33,8 +33,8 @@
           <span class="eyebrow">UN ALMUERZO A TU GUSTO</span>
           <h1>Elegí tu menú</h1>
           <p>
-            Una opción por día. Guardá el borrador y revisalo antes de
-            confirmar.
+            Elegí una opción por día, agregá un comentario si querés y confirmá
+            sin salir de esta pantalla.
           </p>
         </div>
         <span class="pill">Corte · 10:00 hs</span>
@@ -65,7 +65,7 @@
       ></div>
       <form id="pedido-form" novalidate>
         <div id="menu-options" class="menu-options"></div>
-        <div id="order-details" class="panel narrow" hidden>
+        <div id="order-details" class="panel" hidden>
           <div class="field">
             <label for="comment">Comentarios o preferencias (opcional)</label
             ><input
@@ -80,7 +80,9 @@
             Máximo 200 caracteres. Informá cualquier restricción alimentaria.
           </p>
           <div class="actions">
-            <button type="submit" id="save-order">Guardar borrador</button
+            <button type="submit" id="confirm-order">Confirmar pedido</button
+            ><button type="submit" id="save-order" class="secondary">
+              Guardar borrador</button
             ><a href="mis-pedidos.html">Volver a mis pedidos</a>
           </div>
         </div>

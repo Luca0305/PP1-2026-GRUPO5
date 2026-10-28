@@ -12,39 +12,159 @@
     "stockDisponible": 80
   },
   {
+    "id": "menu-2026-10-12-p5",
+    "idMenuDia": "menu-2026-10-12",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-12-p4",
+    "idMenuDia": "menu-2026-10-12",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-12-p15",
+    "idMenuDia": "menu-2026-10-12",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-12-p9",
+    "idMenuDia": "menu-2026-10-12",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-12-p19",
+    "idMenuDia": "menu-2026-10-12",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
     "id": "menu-2026-10-12-p3",
     "idMenuDia": "menu-2026-10-12",
     "idPlato": "p3",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-13-p4",
-    "idMenuDia": "menu-2026-10-13",
-    "idPlato": "p4",
-    "stockDisponible": 80
-  },
-  {
-    "id": "menu-2026-10-13-p5",
-    "idMenuDia": "menu-2026-10-13",
-    "idPlato": "p5",
-    "stockDisponible": 80
-  },
-  {
-    "id": "menu-2026-10-13-p6",
-    "idMenuDia": "menu-2026-10-13",
+    "id": "menu-2026-10-12-p6",
+    "idMenuDia": "menu-2026-10-12",
     "idPlato": "p6",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-14-p1",
-    "idMenuDia": "menu-2026-10-14",
-    "idPlato": "p1",
+    "id": "menu-2026-10-12-p8",
+    "idMenuDia": "menu-2026-10-12",
+    "idPlato": "p8",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-14-p2",
+    "id": "menu-2026-10-13-p7",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p10",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p11",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p16",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p17",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p20",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p21",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p22",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p23",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-13-p25",
+    "idMenuDia": "menu-2026-10-13",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p12",
     "idMenuDia": "menu-2026-10-14",
-    "idPlato": "p2",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p13",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p14",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p18",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p4",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p9",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p19",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-14-p24",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p24",
     "stockDisponible": 80
   },
   {
@@ -54,51 +174,171 @@
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-15-p7",
+    "id": "menu-2026-10-14-p26",
+    "idMenuDia": "menu-2026-10-14",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p1",
     "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p2",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p5",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p15",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p16",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p20",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p21",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p6",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p22",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-15-p27",
+    "idMenuDia": "menu-2026-10-15",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-16-p7",
+    "idMenuDia": "menu-2026-10-16",
     "idPlato": "p7",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-15-p8",
-    "idMenuDia": "menu-2026-10-15",
-    "idPlato": "p8",
+    "id": "menu-2026-10-16-p10",
+    "idMenuDia": "menu-2026-10-16",
+    "idPlato": "p10",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-15-p9",
-    "idMenuDia": "menu-2026-10-15",
+    "id": "menu-2026-10-16-p11",
+    "idMenuDia": "menu-2026-10-16",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-16-p17",
+    "idMenuDia": "menu-2026-10-16",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-16-p18",
+    "idMenuDia": "menu-2026-10-16",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-16-p9",
+    "idMenuDia": "menu-2026-10-16",
     "idPlato": "p9",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-16-p1",
+    "id": "menu-2026-10-16-p19",
     "idMenuDia": "menu-2026-10-16",
-    "idPlato": "p1",
+    "idPlato": "p19",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-16-p2",
+    "id": "menu-2026-10-16-p23",
     "idMenuDia": "menu-2026-10-16",
-    "idPlato": "p2",
+    "idPlato": "p23",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-16-p3",
+    "id": "menu-2026-10-16-p24",
     "idMenuDia": "menu-2026-10-16",
-    "idPlato": "p3",
+    "idPlato": "p24",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-19-p1",
+    "id": "menu-2026-10-16-p8",
+    "idMenuDia": "menu-2026-10-16",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p12",
     "idMenuDia": "menu-2026-10-19",
-    "idPlato": "p1",
+    "idPlato": "p12",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-19-p2",
+    "id": "menu-2026-10-19-p13",
     "idMenuDia": "menu-2026-10-19",
-    "idPlato": "p2",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p14",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p4",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p15",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p20",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p21",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p21",
     "stockDisponible": 80
   },
   {
@@ -108,9 +348,27 @@
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-20-p4",
+    "id": "menu-2026-10-19-p6",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-19-p25",
+    "idMenuDia": "menu-2026-10-19",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-20-p1",
     "idMenuDia": "menu-2026-10-20",
-    "idPlato": "p4",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-20-p2",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p2",
     "stockDisponible": 80
   },
   {
@@ -120,21 +378,93 @@
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-20-p6",
+    "id": "menu-2026-10-20-p16",
     "idMenuDia": "menu-2026-10-20",
-    "idPlato": "p6",
+    "idPlato": "p16",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-21-p1",
-    "idMenuDia": "menu-2026-10-21",
-    "idPlato": "p1",
+    "id": "menu-2026-10-20-p17",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p17",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-21-p2",
+    "id": "menu-2026-10-20-p9",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-20-p19",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-20-p22",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-20-p23",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-20-p26",
+    "idMenuDia": "menu-2026-10-20",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p7",
     "idMenuDia": "menu-2026-10-21",
-    "idPlato": "p2",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p10",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p11",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p18",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p4",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p20",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p21",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-21-p24",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p24",
     "stockDisponible": 80
   },
   {
@@ -144,21 +474,69 @@
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-22-p7",
-    "idMenuDia": "menu-2026-10-22",
-    "idPlato": "p7",
+    "id": "menu-2026-10-21-p27",
+    "idMenuDia": "menu-2026-10-21",
+    "idPlato": "p27",
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-22-p8",
+    "id": "menu-2026-10-22-p12",
     "idMenuDia": "menu-2026-10-22",
-    "idPlato": "p8",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p13",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p14",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p15",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p16",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p16",
     "stockDisponible": 80
   },
   {
     "id": "menu-2026-10-22-p9",
     "idMenuDia": "menu-2026-10-22",
     "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p19",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p6",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p22",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-22-p8",
+    "idMenuDia": "menu-2026-10-22",
+    "idPlato": "p8",
     "stockDisponible": 80
   },
   {
@@ -174,9 +552,1551 @@
     "stockDisponible": 80
   },
   {
-    "id": "menu-2026-10-23-p3",
+    "id": "menu-2026-10-23-p5",
     "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p17",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p18",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p20",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p21",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p23",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p24",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-23-p25",
+    "idMenuDia": "menu-2026-10-23",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p7",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p10",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p11",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p4",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p15",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p9",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p19",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p3",
+    "idMenuDia": "menu-2026-10-26",
     "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p6",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-26-p26",
+    "idMenuDia": "menu-2026-10-26",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p12",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p13",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p14",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p16",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p17",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p20",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p21",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p22",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p23",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-27-p27",
+    "idMenuDia": "menu-2026-10-27",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p1",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p2",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p5",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p18",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p4",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p9",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p19",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p24",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p3",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-28-p8",
+    "idMenuDia": "menu-2026-10-28",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p7",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p10",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p11",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p15",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p16",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p20",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p21",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p6",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p22",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-29-p25",
+    "idMenuDia": "menu-2026-10-29",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p12",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p13",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p14",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p17",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p18",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p9",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p19",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p23",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p24",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-10-30-p26",
+    "idMenuDia": "menu-2026-10-30",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p1",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p2",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p5",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p4",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p15",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p20",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p21",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p3",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p6",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-02-p27",
+    "idMenuDia": "menu-2026-11-02",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p7",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p10",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p11",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p16",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p17",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p9",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p19",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p22",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p23",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-03-p8",
+    "idMenuDia": "menu-2026-11-03",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p12",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p13",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p14",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p18",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p4",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p20",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p21",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p24",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p3",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-04-p25",
+    "idMenuDia": "menu-2026-11-04",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p1",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p2",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p5",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p15",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p16",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p9",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p19",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p6",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p22",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-05-p26",
+    "idMenuDia": "menu-2026-11-05",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p7",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p10",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p11",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p17",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p18",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p20",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p21",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p23",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p24",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-06-p27",
+    "idMenuDia": "menu-2026-11-06",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p12",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p13",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p14",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p4",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p15",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p9",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p19",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p3",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p6",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-09-p8",
+    "idMenuDia": "menu-2026-11-09",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p1",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p2",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p5",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p16",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p17",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p20",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p21",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p22",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p23",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-10-p25",
+    "idMenuDia": "menu-2026-11-10",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p7",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p10",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p11",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p18",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p4",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p9",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p19",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p24",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p3",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-11-p26",
+    "idMenuDia": "menu-2026-11-11",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p12",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p13",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p14",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p15",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p16",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p20",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p21",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p6",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p22",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-12-p27",
+    "idMenuDia": "menu-2026-11-12",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p1",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p2",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p5",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p17",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p18",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p9",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p19",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p23",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p24",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-13-p8",
+    "idMenuDia": "menu-2026-11-13",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p7",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p10",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p11",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p4",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p15",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p20",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p21",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p3",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p6",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-16-p25",
+    "idMenuDia": "menu-2026-11-16",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p12",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p13",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p14",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p16",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p17",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p9",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p19",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p22",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p23",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-17-p26",
+    "idMenuDia": "menu-2026-11-17",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p1",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p2",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p5",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p18",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p4",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p20",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p21",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p24",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p3",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-18-p27",
+    "idMenuDia": "menu-2026-11-18",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p7",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p10",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p11",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p15",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p16",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p9",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p19",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p6",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p22",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-19-p8",
+    "idMenuDia": "menu-2026-11-19",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p12",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p13",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p14",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p17",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p18",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p20",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p21",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p23",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p24",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-20-p25",
+    "idMenuDia": "menu-2026-11-20",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p1",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p2",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p5",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p4",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p15",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p9",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p19",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p3",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p6",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-23-p26",
+    "idMenuDia": "menu-2026-11-23",
+    "idPlato": "p26",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p7",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p10",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p11",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p16",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p17",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p20",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p21",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p22",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p23",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-24-p27",
+    "idMenuDia": "menu-2026-11-24",
+    "idPlato": "p27",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p12",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p12",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p13",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p13",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p14",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p14",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p18",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p4",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p4",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p9",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p19",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p24",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p3",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p3",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-25-p8",
+    "idMenuDia": "menu-2026-11-25",
+    "idPlato": "p8",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p1",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p1",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p2",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p2",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p5",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p5",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p15",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p15",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p16",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p16",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p20",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p20",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p21",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p21",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p6",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p6",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p22",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p22",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-26-p25",
+    "idMenuDia": "menu-2026-11-26",
+    "idPlato": "p25",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p7",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p7",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p10",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p10",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p11",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p11",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p17",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p17",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p18",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p18",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p9",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p9",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p19",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p19",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p23",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p23",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p24",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p24",
+    "stockDisponible": 80
+  },
+  {
+    "id": "menu-2026-11-27-p26",
+    "idMenuDia": "menu-2026-11-27",
+    "idPlato": "p26",
     "stockDisponible": 80
   }
 ]

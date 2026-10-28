@@ -3,13 +3,13 @@
     "id": "p1",
     "nombre": "Milanesa con puré",
     "descripcion": "Ternera · puré · ensalada",
-    "categoria": "clásico"
+    "categoria": "carnes"
   },
   {
     "id": "p2",
     "nombre": "Pollo al limón",
     "descripcion": "Grillado · arroz · zanahorias",
-    "categoria": "clásico"
+    "categoria": "carnes"
   },
   {
     "id": "p3",
@@ -21,13 +21,13 @@
     "id": "p4",
     "nombre": "Pasta al pesto",
     "descripcion": "Fideos · pesto · cherry",
-    "categoria": "clásico"
+    "categoria": "pastas"
   },
   {
     "id": "p5",
     "nombre": "Carne al horno",
     "descripcion": "Con papas y verduras",
-    "categoria": "clásico"
+    "categoria": "carnes"
   },
   {
     "id": "p6",
@@ -39,18 +39,126 @@
     "id": "p7",
     "nombre": "Cazuela de pollo",
     "descripcion": "Con arroz y caldo",
-    "categoria": "clásico"
+    "categoria": "carnes"
   },
   {
     "id": "p8",
     "nombre": "Revuelto gramajo",
     "descripcion": "Papas · jamón · huevo",
-    "categoria": "clásico"
+    "categoria": "minutas"
   },
   {
     "id": "p9",
     "nombre": "Ensalada completa",
     "descripcion": "Vegetal · proteína de soja",
+    "categoria": "ensaladas"
+  },
+  {
+    "id": "p10",
+    "nombre": "Bife de chorizo",
+    "descripcion": "Con papas rústicas y chimichurri",
+    "categoria": "carnes"
+  },
+  {
+    "id": "p11",
+    "nombre": "Pechuga a la plancha",
+    "descripcion": "Con arroz primavera",
+    "categoria": "carnes"
+  },
+  {
+    "id": "p12",
+    "nombre": "Estofado de carne",
+    "descripcion": "Con polenta cremosa",
+    "categoria": "carnes"
+  },
+  {
+    "id": "p13",
+    "nombre": "Albóndigas con salsa",
+    "descripcion": "Carne vacuna · puré de calabaza",
+    "categoria": "carnes"
+  },
+  {
+    "id": "p14",
+    "nombre": "Suprema napolitana",
+    "descripcion": "Jamón · muzzarella · papas fritas",
+    "categoria": "carnes"
+  },
+  {
+    "id": "p15",
+    "nombre": "Ravioles de ricota",
+    "descripcion": "Salsa fileto · queso rallado",
+    "categoria": "pastas"
+  },
+  {
+    "id": "p16",
+    "nombre": "Ñoquis a la bolognesa",
+    "descripcion": "Salsa de carne · queso",
+    "categoria": "pastas"
+  },
+  {
+    "id": "p17",
+    "nombre": "Fideos con tuco y pollo",
+    "descripcion": "Pollo desmenuzado · tuco casero",
+    "categoria": "pastas"
+  },
+  {
+    "id": "p18",
+    "nombre": "Canelones de verdura",
+    "descripcion": "Ricota · espinaca · salsa blanca",
+    "categoria": "pastas"
+  },
+  {
+    "id": "p19",
+    "nombre": "Ensalada César con pollo",
+    "descripcion": "Lechuga · crutones · parmesano",
+    "categoria": "ensaladas"
+  },
+  {
+    "id": "p20",
+    "nombre": "Ensalada mediterránea",
+    "descripcion": "Tomate · aceitunas · queso feta",
+    "categoria": "ensaladas"
+  },
+  {
+    "id": "p21",
+    "nombre": "Ensalada de lentejas",
+    "descripcion": "Lentejas · zanahoria · huevo duro",
+    "categoria": "ensaladas"
+  },
+  {
+    "id": "p22",
+    "nombre": "Hamburguesa de lentejas",
+    "descripcion": "Con arroz integral y verduras",
     "categoria": "vegetariano"
+  },
+  {
+    "id": "p23",
+    "nombre": "Wok de vegetales",
+    "descripcion": "Salteado con arroz yamaní",
+    "categoria": "vegetariano"
+  },
+  {
+    "id": "p24",
+    "nombre": "Berenjenas rellenas",
+    "descripcion": "Gratinadas con queso",
+    "categoria": "vegetariano"
+  },
+  {
+    "id": "p25",
+    "nombre": "Tortilla de papas",
+    "descripcion": "Con ensalada mixta",
+    "categoria": "minutas"
+  },
+  {
+    "id": "p26",
+    "nombre": "Empanadas de carne",
+    "descripcion": "Tres unidades al horno",
+    "categoria": "minutas"
+  },
+  {
+    "id": "p27",
+    "nombre": "Omelette de jamón y queso",
+    "descripcion": "Con ensalada de tomate",
+    "categoria": "minutas"
   }
 ]

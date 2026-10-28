@@ -77,8 +77,8 @@ try {
   await page.locator("#comment").fill("Sin sal agregada, por favor.");
   await page.waitForFunction(
     () =>
-      [...document.querySelectorAll(".meal-art img")].length === 3 &&
-      [...document.querySelectorAll(".meal-art img")].every(
+      document.querySelectorAll("details.menu-group").length >= 3 &&
+      [...document.querySelectorAll("details[open] .meal-art img")].every(
         (img) => img.complete && img.naturalWidth > 0,
       ),
   );
@@ -125,7 +125,9 @@ try {
       .textContent.includes("disponibles"),
   );
   await shot("10-admin");
-  // Los tres estados del fetch se prueban sin modificar los archivos JSON.
+  // Los estados del fetch se prueban sin modificar los archivos JSON.
+  // El botón de reintento solo aparece cuando la carga falló.
+  assert.equal(await page.locator("#catalog-retry").isHidden(), true);
   let release;
   await page.route("**/data/platos.json", async (route) => {
     await new Promise((resolve) => {
@@ -133,7 +135,7 @@ try {
     });
     await route.fulfill({ json: [] });
   });
-  await click("Actualizar catálogo");
+  await page.reload();
   await page.waitForFunction(() =>
     document.querySelector("#catalog-state").textContent.includes("Cargando"),
   );
@@ -149,34 +151,47 @@ try {
   await page.route("**/data/platos.json", (route) =>
     route.fulfill({ status: 404, body: "No existe" }),
   );
-  await click("Actualizar catálogo");
+  await page.reload();
   await page.waitForFunction(() =>
     document
       .querySelector("#catalog-state")
       .textContent.includes("No se pudo cargar"),
   );
+  assert.equal(await page.locator("#catalog-retry").isVisible(), true);
   await page.unroute("**/data/platos.json");
   await page.route("**/data/platos.json", (route) =>
     route.fulfill({ body: "{invalido", contentType: "application/json" }),
   );
-  await click("Actualizar catálogo");
+  await click("Reintentar carga del catálogo");
   await page.waitForFunction(() =>
     document
       .querySelector("#catalog-state")
       .textContent.includes("JSON válido"),
   );
   await page.unroute("**/data/platos.json");
-  await click("Actualizar catálogo");
+  await click("Reintentar carga del catálogo");
   await page.waitForFunction(() =>
     document
       .querySelector("#catalog-state")
       .textContent.includes("disponibles"),
   );
-  await page.locator("#week").fill("26/10/2026");
-  await page.locator("#week").dispatchEvent("change");
+  assert.equal(await page.locator("#catalog-retry").isHidden(), true);
+  // Sin día elegido no se puede buscar ni agregar nada.
+  assert.equal(await page.locator("#catalog-search").isDisabled(), true);
+  assert.equal(await page.locator("#catalog-add").isDisabled(), true);
+  await page.locator("#month").selectOption("2026-11");
+  await page.locator("#week").selectOption("2026-11-30");
   await click("Publicar menú");
   await message("borrador antes");
-  await page.locator("#catalog-day").selectOption("2026-10-26");
+  await page.locator("#catalog-day").selectOption("2026-11-30");
+  assert.equal(await page.locator("#catalog-search").isDisabled(), false);
+  // El buscador y el filtro por categoría reducen la tabla.
+  await page.locator("#catalog-category").selectOption("pastas");
+  assert.ok((await page.locator("[name=catalog-plate]").count()) < 10);
+  await page.locator("#catalog-search").fill("ñoquis");
+  assert.equal(await page.locator("[name=catalog-plate]").count(), 1);
+  await page.locator("#catalog-search").fill("");
+  await page.locator("#catalog-category").selectOption("");
   await page.locator("[name=catalog-plate]").nth(0).check();
   await page.locator("[name=catalog-plate]").nth(1).check();
   await click("Agregar selección al día");
@@ -211,8 +226,8 @@ try {
   await go("usuarios.html");
   await shot("12-usuarios");
   await go("consolidado.html");
-  await page.locator("#report-date").fill("19/10/2026");
-  await page.locator("#report-date").dispatchEvent("change");
+  await page.locator("#week").selectOption("2026-10-19");
+  await page.locator("#report-day").selectOption("0");
   await click("Generar consolidado");
   await page.waitForFunction(() =>
     document.querySelector("#total").textContent.includes("1"),

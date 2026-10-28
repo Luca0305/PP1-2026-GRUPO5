@@ -46,3 +46,55 @@ export function bindWeeks(getWeek, changeWeek) {
     });
   }
 }
+
+// ── Selección por mes y semana (administrador) ──
+// Las semanas se muestran como "Semana 1", "Semana 2"… de cada mes, sin números de fecha.
+export const monthOf = (iso) => iso.slice(0, 7);
+export const weeksOfMonth = (month) => monthWeeks(`${month}-01`);
+export function monthLabel(month) {
+  const text = new Intl.DateTimeFormat("es-AR", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${month}-01T12:00:00Z`));
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+// Meses seleccionables: el anterior, el actual y los dos siguientes.
+export function monthChoices(today = clock().today) {
+  const [year, month] = today.slice(0, 7).split("-").map(Number);
+  return [-1, 0, 1, 2].map((offset) => {
+    const d = new Date(Date.UTC(year, month - 1 + offset, 1));
+    return d.toISOString().slice(0, 7);
+  });
+}
+// Meses que contienen algún día hábil de una semana (una semana puede cruzar dos meses).
+export const monthsOfWeek = (week) => [
+  ...new Set([0, 1, 2, 3, 4].map((i) => monthOf(addDays(week, i)))),
+];
+export function monthForWeek(week, preferred) {
+  const months = monthsOfWeek(week);
+  return months.includes(preferred) ? preferred : months[0];
+}
+export function weekNumber(week, month) {
+  return weeksOfMonth(month).indexOf(week) + 1;
+}
+export function weekTitle(week, preferred = monthOf(week)) {
+  const month = monthForWeek(week, preferred);
+  return `Semana ${weekNumber(week, month)} de ${monthLabel(month)}`;
+}
+export function fillMonthWeekSelects(monthSelect, weekSelect, month, week) {
+  monthSelect.innerHTML = monthChoices()
+    .concat(monthChoices().includes(month) ? [] : [month])
+    .sort()
+    .map(
+      (value) =>
+        `<option value="${value}" ${value === month ? "selected" : ""}>${monthLabel(value)}</option>`,
+    )
+    .join("");
+  weekSelect.innerHTML = weeksOfMonth(month)
+    .map(
+      (value, i) =>
+        `<option value="${value}" ${value === week ? "selected" : ""}>Semana ${i + 1}</option>`,
+    )
+    .join("");
+}

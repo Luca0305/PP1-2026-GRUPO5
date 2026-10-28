@@ -1,7 +1,7 @@
 import {
   readDB,
   user,
-  closed,
+  closedFor,
   dateLabel,
   escapeHTML as esc,
   changeOrder,
@@ -9,6 +9,7 @@ import {
   monday,
 } from "./core.js";
 import { $, stepper, run, message, confirmAction } from "./ui.js";
+const AVISO_MS = 4000;
 export function init() {
   stepper(2);
   function render() {
@@ -33,7 +34,7 @@ export function init() {
       ? orders
           .map(
             (o) =>
-              `<article class="order-card" id="pedido-${o.id}"><div class="order-top"><h2>${esc(dateLabel(o.date))}</h2><span class="badge ${o.status.toLowerCase()}">${o.status}</span></div><h3>${esc(o.plate)}</h3><p>${o.comment ? `Comentario: ${esc(o.comment)}` : "Sin comentarios adicionales."}</p>${o.status === "Cancelado" ? '<p class="help">Este pedido fue cancelado y no se incluye en el consolidado.</p>' : closed(o.date) ? `<p class="help">Plazo cerrado.${o.status === "Borrador" ? " No se confirmó a tiempo y no se enviará al proveedor." : ""}</p>` : `<div class="actions">${o.status === "Borrador" ? `<button data-action="confirm" data-id="${o.id}">Confirmar pedido</button>` : ""}<a class="button secondary" href="menu-pedido.html?editar=${o.id}">Modificar</a><button class="danger" data-action="cancel" data-id="${o.id}">Cancelar pedido</button></div>`}</article>`,
+              `<article class="order-card" id="pedido-${o.id}"><div class="order-top"><h2>${esc(dateLabel(o.date))}</h2><span class="badge ${o.status.toLowerCase()}">${o.status}</span></div><h3>${esc(o.plate)}</h3><p>${o.comment ? `Comentario: ${esc(o.comment)}` : "Sin comentarios adicionales."}</p>${o.status === "Cancelado" ? '<p class="help">Este pedido fue cancelado y no se incluye en el consolidado.</p>' : closedFor(db, o.userId, o.date) ? `<p class="help">Plazo cerrado.${o.status === "Borrador" ? " No se confirmó a tiempo y no se enviará al proveedor." : ""}</p>` : `<div class="actions">${o.status === "Borrador" ? `<button data-action="confirm" data-id="${o.id}">Confirmar pedido</button>` : ""}<a class="button secondary" href="menu-pedido.html?editar=${o.id}">Modificar</a><button class="danger" data-action="cancel" data-id="${o.id}">Cancelar pedido</button></div>`}</article>`,
           )
           .join("")
       : '<div class="empty"><h2>Todavía no hay pedidos</h2><p>No hay resultados para este filtro. <a href="menu-pedido.html">Elegí tu próximo almuerzo</a>.</p></div>';
@@ -63,10 +64,13 @@ export function init() {
         return;
       changeOrder(b.dataset.id, b.dataset.action);
       render();
+      // El aviso se borra solo a los pocos segundos.
       message(
         confirm
           ? "Pedido confirmado. Tu vianda quedó reservada."
           : "Pedido cancelado.",
+        "success",
+        AVISO_MS,
       );
     }, b);
   });

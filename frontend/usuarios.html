@@ -61,6 +61,45 @@
           <tbody id="users-body"></tbody>
         </table>
       </section>
+      <details class="panel collapsible exceptions">
+        <summary>
+          <span>Excepciones de horario (<span id="exception-count">0</span>)</span>
+          <small>Habilitá a un empleado a pedir fuera del corte de las 10:00</small>
+        </summary>
+        <p>
+          Si un empleado cambia sus planes a último momento, avisa por email y
+          vos le habilitás ese día: podrá modificar su asistencia y elegir su
+          vianda aunque haya pasado el horario de corte.
+        </p>
+        <form id="exception-form" novalidate>
+          <div class="toolbar">
+            <div class="field">
+              <label for="exception-user">Empleado</label
+              ><select id="exception-user" name="exception-user" required></select>
+            </div>
+            <div class="field">
+              <label for="exception-date">Día</label
+              ><select id="exception-date" name="exception-date" required></select>
+            </div>
+            <button type="submit" id="grant-exception">Habilitar excepción</button>
+          </div>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <caption>
+              Excepciones vigentes
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Empleado</th>
+                <th scope="col">Día</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="exception-body"></tbody>
+          </table>
+        </div>
+      </details>
       <section class="panel narrow">
         <h2 id="user-form-title">Autorizar nuevo usuario</h2>
         <form id="user-form" novalidate>

@@ -30,7 +30,7 @@
       <div class="page-heading">
         <div>
           <span class="eyebrow">PEDIDOS DEL EQUIPO</span>
-          <h1>Consolidado diario</h1>
+          <h1>Consolidado de pedidos</h1>
           <p>
             Agrupá los pedidos confirmados y prepará el detalle para el
             proveedor.
@@ -42,10 +42,17 @@
       </div>
       <div class="toolbar">
         <div class="field">
-          <label for="report-date">Fecha del pedido</label
-          ><input id="report-date" name="report-date" type="date" required />
+          <label for="month">Mes</label><select id="month" name="month"></select>
+        </div>
+        <div class="field">
+          <label for="week">Semana</label><select id="week" name="week"></select>
+        </div>
+        <div class="field">
+          <label for="report-day">Día</label
+          ><select id="report-day" name="report-day"></select>
         </div>
         <button type="button" id="generate-report">Generar consolidado</button>
+        <button type="button" id="download-csv">Descargar planilla (CSV)</button>
       </div>
       <p id="report-status" class="help" aria-live="polite"></p>
       <section class="panel table-wrap">
@@ -55,6 +62,7 @@
           </caption>
           <thead>
             <tr>
+              <th scope="col">Fecha</th>
               <th scope="col">Plato</th>
               <th scope="col">Cantidad</th>
               <th scope="col">Comentarios del equipo</th>
@@ -63,14 +71,31 @@
           <tbody id="report-body"></tbody>
         </table>
       </section>
-      <div class="actions">
-        <button type="button" id="download-csv">Descargar CSV</button
-        ><button type="button" id="print-report" class="secondary">
-          Imprimir / Guardar PDF
-        </button>
-      </div>
+      <details class="panel collapsible saved-orders">
+        <summary>
+          <span>Pedidos guardados (<span id="saved-total">0</span>)</span>
+          <small>Quién pidió qué, con su comentario</small>
+        </summary>
+        <div class="table-wrap">
+          <table>
+            <caption>
+              Pedidos guardados de la selección (borradores y confirmados)
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Empleado</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Plato</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Comentario</th>
+              </tr>
+            </thead>
+            <tbody id="saved-body"></tbody>
+          </table>
+        </div>
+      </details>
       <p class="note">
-        Descargá el archivo para compartirlo con el proveedor. El envío
+        Descargá la planilla para compartirla con el proveedor. El envío
         automático estará disponible al conectar el servicio de notificaciones.
       </p>
     </main>

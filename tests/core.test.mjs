@@ -270,7 +270,8 @@ test("avisos incluyen todos los días pendientes aunque uno ya esté confirmado"
 test("pedido borrador, confirmación, duplicado y stock", () => {
   const o = core.saveOrder({ date, optionId: "p0", comment: "Sin sal" });
   assert.equal(o.status, "Borrador");
-  assert.equal(core.available(core.readDB(), "p0"), 1);
+  // Un pedido guardado, aun en borrador, ya reserva una porción.
+  assert.equal(core.available(core.readDB(), "p0"), 0);
   assert.throws(
     () => core.saveOrder({ date, optionId: "p0", comment: "" }),
     /Ya tenés/,
@@ -442,4 +443,65 @@ test("fallo de almacenamiento no informa éxito", () => {
   } finally {
     localStorage.setItem = original;
   }
+});
+test("stock compartido: el pedido guardado de uno descuenta para el resto", () => {
+  const db = core.readDB();
+  db.users.push({
+    id: "emp2",
+    name: "Otra Persona",
+    email: "emp2@example.com",
+    role: "empleado",
+    active: true,
+  });
+  db.attendance.emp2 = { [week]: [date] };
+  core.saveDB(db);
+  core.saveOrder({ date, optionId: "p0", comment: "" });
+  sessionStorage.setItem(core.SESSION_KEY, "emp2");
+  assert.equal(core.available(core.readDB(), "p0"), 0);
+  assert.throws(
+    () => core.saveOrder({ date, optionId: "p0", comment: "" }),
+    /no tiene stock/,
+  );
+  // Al cancelarse el pedido de la primera persona, la porción se libera.
+  sessionStorage.setItem(core.SESSION_KEY, "emp");
+  const first = core.readDB().orders[0];
+  core.changeOrder(first.id, "cancel");
+  assert.equal(core.available(core.readDB(), "p0"), 1);
+});
+test("excepciones de horario: solo el administrador las habilita y levantan el corte", () => {
+  const late = new Date("2026-10-15T12:00:00Z"),
+    day = "2026-10-14";
+  assert.equal(core.closedFor(core.readDB(), "emp", day, late), true);
+  assert.throws(() => core.grantException("emp", date), /sesión/);
+  sessionStorage.setItem(core.SESSION_KEY, "admin");
+  assert.throws(() => core.grantException("admin", date), /empleado activo/);
+  assert.throws(() => core.grantException("emp", "2020-01-01"), /hábil|hoy/);
+  core.grantException("emp", date);
+  assert.equal(core.hasException(core.readDB(), "emp", date), true);
+  const db = core.readDB();
+  db.exceptions.emp[day] = "2026-10-14T12:00:00Z";
+  assert.equal(core.closedFor(db, "emp", day, late), false);
+  assert.equal(core.closedFor(db, "emp", core.addDays(day, 1), new Date("2026-10-16T12:00:00Z")), true);
+  core.revokeException("emp", date);
+  assert.equal(core.hasException(core.readDB(), "emp", date), false);
+});
+test("consolidado por semana agrupa por día y plato", () => {
+  const second = core.addDays(date, 1);
+  const db = core.readDB();
+  db.attendance.emp[week] = [date, second];
+  core.saveDB(db);
+  const a = core.saveOrder({ date, optionId: "p0", comment: "" });
+  const b = core.saveOrder({ date: second, optionId: "p1", comment: "Sin sal" });
+  core.changeOrder(a.id, "confirm");
+  core.changeOrder(b.id, "confirm");
+  const days = [0, 1, 2, 3, 4].map((i) => core.addDays(week, i));
+  const rows = reportRows(core.readDB(), days);
+  assert.deepEqual(
+    rows.map((r) => [r.date, r.plate, r.count]),
+    [
+      [date, "Plato 0", 1],
+      [second, "Plato 1", 1],
+    ],
+  );
+  assert.equal(reportRows(core.readDB(), second).length, 1);
 });

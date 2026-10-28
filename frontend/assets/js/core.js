@@ -10,6 +10,16 @@ import {
 export const DB_KEY = "sistemaPedidos:v1";
 export const SESSION_KEY = "sistemaPedidos:sesion";
 export const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+// Categorías del catálogo de platos, en el orden en que se muestran.
+export const CATEGORIES = {
+  carnes: "Carnes",
+  pastas: "Pastas",
+  ensaladas: "Ensaladas",
+  vegetariano: "Vegetarianos",
+  minutas: "Minutas",
+  otros: "Otros",
+};
+export const categoryLabel = (key) => CATEGORIES[key] || CATEGORIES.otros;
 export const PASSWORD_HELP =
   "Entre 8 y 64 caracteres, con mayúscula, minúscula, número y símbolo (! @ # $ % & *). Sin espacios.";
 export const uid = () => crypto.randomUUID();
@@ -200,6 +210,7 @@ export async function initDB() {
           name: plato.nombre,
           description: plato.descripcion,
           stock: opcion.stockDisponible,
+          category: plato.categoria || "otros",
           vegetarian: plato.categoria === "vegetariano",
           glutenFree: false,
         });
@@ -230,6 +241,7 @@ export async function initDB() {
     attendance: {},
     holidays,
     reports: {},
+    exceptions: {},
   };
   if (localStorage.getItem(DB_KEY)) return readDB();
   saveDB(db);
@@ -363,6 +375,38 @@ export async function login(email, password) {
   );
   return current;
 }
+// Excepciones de horario: el administrador habilita a un empleado a operar en un día
+// aunque ya haya pasado el corte de las 10:00 (por ejemplo, un cambio de último momento).
+export const hasException = (db, userId, date) =>
+  Boolean(db.exceptions?.[userId]?.[date]);
+export const closedFor = (db, userId, date, now = new Date()) =>
+  closed(date, now) && !hasException(db, userId, date);
+export function grantException(userId, date) {
+  const db = readDB();
+  requireUser("admin", db);
+  const target = db.users.find((u) => u.id === userId);
+  if (!target || target.role !== "empleado" || !target.active || target.pending)
+    throw new Error("Elegí un empleado activo.");
+  if (!validDate(date) || !DAYS.some((_, i) => addDays(monday(date), i) === date))
+    throw new Error("Elegí un día hábil válido.");
+  if (date < clock().today)
+    throw new Error("Solo se puede habilitar el día de hoy o uno futuro.");
+  if (db.holidays[date])
+    throw new Error("Ese día no tiene servicio, no admite excepciones.");
+  db.exceptions ||= {};
+  db.exceptions[userId] ||= {};
+  db.exceptions[userId][date] = new Date().toISOString();
+  saveDB(db);
+}
+export function revokeException(userId, date) {
+  const db = readDB();
+  requireUser("admin", db);
+  if (db.exceptions?.[userId]) {
+    delete db.exceptions[userId][date];
+    if (!Object.keys(db.exceptions[userId]).length) delete db.exceptions[userId];
+  }
+  saveDB(db);
+}
 export const attendanceFor = (db, id, week) => db.attendance[id]?.[week] || [];
 export function setAttendance(week, dates) {
   const db = readDB(),
@@ -379,11 +423,12 @@ export function setAttendance(week, dates) {
   const previous = attendanceFor(db, u.id, week);
   if (
     [...new Set([...previous, ...dates])].some(
-      (d) => closed(d) && previous.includes(d) !== dates.includes(d),
+      (d) =>
+        closedFor(db, u.id, d) && previous.includes(d) !== dates.includes(d),
     )
   )
     throw new Error(
-      "No se puede cambiar la asistencia después de las 10:00 del día correspondiente.",
+      "No se puede cambiar la asistencia después de las 10:00 del día correspondiente. Si es una urgencia, pedile una excepción al administrador.",
     );
   if (
     db.orders.some(
@@ -406,20 +451,18 @@ export function available(db, optionId, excluding) {
     .flatMap((m) => m.days.flatMap((d) => d.options))
     .find((o) => o.id === optionId);
   if (!option) return 0;
-  return (
-    option.stock -
-    db.orders.filter(
-      (o) =>
-        o.optionId === optionId &&
-        o.status === "Confirmado" &&
-        o.id !== excluding,
-    ).length
-  );
+  // Un pedido guardado (borrador o confirmado) ya reserva una porción.
+  return option.stock - reserved(db, optionId, excluding);
 }
+export const reserved = (db, optionId, excluding) =>
+  db.orders.filter(
+    (o) =>
+      o.optionId === optionId && o.status !== "Cancelado" && o.id !== excluding,
+  ).length;
 export function validateOrder(db, u, { date, optionId, comment }, excluding) {
-  if (!validDate(date) || closed(date))
+  if (!validDate(date) || closedFor(db, u.id, date))
     throw new Error(
-      "El plazo para este pedido terminó: el corte es a las 10:00 de cada día.",
+      "El plazo para este pedido terminó: el corte es a las 10:00 de cada día. Si es una urgencia, pedile una excepción al administrador.",
     );
   if (db.holidays[date])
     throw new Error("Ese día es feriado o no tiene servicio.");
@@ -494,7 +537,7 @@ export function changeOrder(id, action) {
     (o) => o.id === id && o.userId === u.id && o.status !== "Cancelado",
   );
   if (!o) throw new Error("El pedido ya no está disponible.");
-  if (closed(o.date))
+  if (closedFor(db, u.id, o.date))
     throw new Error("El pedido está cerrado: el plazo terminó a las 10:00.");
   if (action === "confirm") {
     validateOrder(db, u, o, o.id);
@@ -542,12 +585,9 @@ export function saveMenu(menu) {
         throw new Error(
           "Revisá los platos: nombre hasta 60 caracteres, descripción hasta 140 y stock entero de 0 a 9999.",
         );
-      const confirmed = db.orders.filter(
-        (o) => o.optionId === op.id && o.status === "Confirmado",
-      ).length;
-      if (op.stock < confirmed)
+      if (op.stock < reserved(db, op.id))
         throw new Error(
-          "El stock no puede ser menor que los pedidos confirmados.",
+          "El stock no puede ser menor que los pedidos ya guardados.",
         );
     }
     const linked = db.orders.filter(
@@ -598,7 +638,7 @@ export function pendingDays(db, userId, now = new Date()) {
   return [...new Set(Object.values(db.attendance[userId] || {}).flat())]
     .sort()
     .flatMap((date) => {
-      if (closed(date, now) || db.holidays[date]) return [];
+      if (closedFor(db, userId, date, now) || db.holidays[date]) return [];
       const order = db.orders.find(
         (o) =>
           o.userId === userId && o.date === date && o.status !== "Cancelado",

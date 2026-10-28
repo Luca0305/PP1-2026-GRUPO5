@@ -6,7 +6,7 @@ import {
   user,
   monday,
   addDays,
-  closed,
+  closedFor,
   attendanceFor,
   setAttendance,
   validDate,
@@ -27,7 +27,7 @@ export function init() {
       const date = addDays(week, i),
         holiday = db.holidays[date];
       if (!inCurrentMonth(date)) return "";
-      return `<label class="attendance-day"><input type="checkbox" name="days" value="${date}" ${saved.includes(date) ? "checked" : ""} ${closed(date) || holiday ? "disabled" : ""}><span>${day}</span><small>${holiday ? esc(holiday) : closed(date) ? "Plazo cerrado" : `${formatDate(date)}`}</small></label>`;
+      return `<label class="attendance-day"><input type="checkbox" name="days" value="${date}" ${saved.includes(date) ? "checked" : ""} ${closedFor(db, u.id, date) || holiday ? "disabled" : ""}><span>${day}</span><small>${holiday ? esc(holiday) : closedFor(db, u.id, date) ? "Plazo cerrado" : `${formatDate(date)}`}</small></label>`;
     }).join("");
   }
   bindWeeks(
