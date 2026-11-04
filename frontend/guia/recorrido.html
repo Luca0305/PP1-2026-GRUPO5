@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Recorrido paso a paso · SistemaPedidos</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="recorrido.css" />
+  </head>
+  <body class="ready">
+    <header class="app-header">
+      <a class="brand" href="../login.html">SistemaPedidos</a
+      ><a href="../index.html">Volver al índice de revisión</a>
+    </header>
+    <main class="walkthrough">
+      <p class="eyebrow">GUÍA PARA LA EXPOSICIÓN</p>
+      <h1>Del registro al pedido confirmado</h1>
+      <p>
+        Recorrido de una sesión de demostración. Las capturas no crean cuentas
+        ni modifican tus datos. Para practicar de verdad, abrí el login en otra
+        pestaña.
+      </p>
+      <div class="walk-layout">
+        <section class="panel walk-controls" aria-labelledby="step-title">
+          <label for="step-select">Ir a un paso</label
+          ><select id="step-select"></select>
+          <p id="step-count" class="eyebrow" aria-live="polite"></p>
+          <h2 id="step-title"></h2>
+          <p id="step-description"></p>
+          <h3>Qué comprobar</h3>
+          <p id="step-check"></p>
+          <div class="actions">
+            <button id="previous" type="button" class="secondary">
+              ← Anterior</button
+            ><button id="next" type="button">Siguiente →</button>
+          </div>
+          <p class="help">
+            También podés usar las flechas del teclado. Abrí la captura para
+            verla en tamaño completo.
+          </p>
+          <a href="../login.html" target="_blank" rel="noopener"
+            >Practicar en la aplicación ↗</a
+          >
+        </section>
+        <figure>
+          <a id="full-image" target="_blank" rel="noopener"
+            ><img id="step-image" width="1440" height="1000" alt=""
+          /></a>
+          <figcaption id="step-caption"></figcaption>
+        </figure>
+      </div>
+      <details class="panel">
+        <summary>Ramas del recorrido para mostrar al profesor</summary>
+        <ul>
+          <li>
+            Modificar un confirmado: Mis pedidos → Modificar → cambiar plato →
+            Guardar cambios → confirmar nuevamente. El cambio vuelve a borrador.
+          </li>
+          <li>
+            Cancelar: Mis pedidos → Cancelar pedido → Volver conserva el pedido;
+            Sí, cancelar libera la porción.
+          </li>
+          <li>
+            Probar errores: apellido vacío, email duplicado, contraseña
+            inválida, confirmación distinta, login sin registro y acceso
+            administrativo como empleado.
+          </li>
+          <li>
+            Después de las 10:00 elegí un día futuro: el sistema respeta el
+            corte de Argentina.
+          </li>
+          <li>
+            Para probar carga, vacío y error del catálogo: consultar el informe
+            de revisión en docs/revision-final.md.
+          </li>
+        </ul>
+      </details>
+    </main>
+    <noscript>Activá JavaScript para utilizar el recorrido.</noscript>
+    <script type="module" src="recorrido.js"></script>
+  </body>
+</html>

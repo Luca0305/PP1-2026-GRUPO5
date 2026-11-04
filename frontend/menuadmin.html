@@ -1,55 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SistemaPedidos — Administrar / Publicar menús</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body data-rol="admin">
-
-  <header class="navbar-admin">
-    <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
-    <div class="user-info">
-      <a href="consolidado.html">Consolidado</a>
-      <a href="calendario-feriados.html">Feriados</a>
-      <a href="usuarios.html">Usuarios</a>
-      <span data-usuario></span>
-      <a href="#" data-logout class="btn-logout">Cerrar Sesión</a>
-    </div>
-  </header>
-
-  <main class="container-admin">
-    <h2>Administrar / Publicar menús</h2>
-    <p class="subtitulo">Elegí una semana, cargá las opciones de cada día y publicá el menú para que los empleados puedan pedir.</p>
-
-    <section class="menu-lista">
-      <h3>Menús por semana</h3>
-      <div id="menu-lista"></div>
-    </section>
-
-    <form id="form-menu" novalidate>
-
-      <div class="menu-form-header">
-        <h3 id="form-titulo"></h3>
-        <button type="button" class="btn-duplicar" id="btn-duplicar">Duplicar semana anterior</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Administrar menús · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="menuadmin" data-required="admin">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">ADMINISTRACIÓN</span>
+          <h1>Menús de la semana</h1>
+          <p>
+            Prepará las opciones en borrador y publicalas cuando estén listas.
+          </p>
+        </div>
+        <span id="menu-status" class="pill"></span>
       </div>
-
-      <section class="menu-semana menu-semana-admin" id="menu-dias"></section>
-
-      <aside>
-        <p>Un menú queda en <strong>Borrador</strong> hasta que lo publiques. Recién ahí lo ven los empleados en la pantalla de pedidos. Un día sin opciones queda sin servicio.</p>
-      </aside>
-
-      <div class="actions-footer">
-        <button type="button" class="btn btn-secondary" id="btn-guardar-borrador">Guardar borrador</button>
-        <button type="submit" class="btn btn-success">Publicar menú</button>
+      <div class="toolbar">
+        <div class="field">
+          <label for="month">Mes</label><select id="month" name="month"></select>
+        </div>
+        <div class="field">
+          <label for="week">Semana</label><select id="week" name="week"></select>
+        </div>
+        <button type="button" id="duplicate-menu" class="secondary">
+          Duplicar semana anterior
+        </button>
       </div>
-
-    </form>
-  </main>
-
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/menuadmin.js"></script>
-</body>
+      <details class="panel collapsible" open>
+        <summary>
+          <span id="catalog-title">Agregar desde el catálogo</span>
+          <small>Buscá, filtrá y tildá platos</small>
+        </summary>
+        <p>
+          Elegí primero el día de la semana. Después tildá uno o varios platos
+          y agregalos. Guardá el menú para aplicar el cambio.
+        </p>
+        <p id="catalog-state" role="status"></p>
+        <div class="toolbar">
+          <div class="field">
+            <label for="catalog-day">Día</label
+            ><select id="catalog-day" required></select>
+          </div>
+          <button type="button" id="catalog-retry" class="secondary" hidden>
+            Reintentar carga del catálogo
+          </button>
+        </div>
+        <p id="catalog-hint" class="note">
+          Elegí un día para habilitar la búsqueda y la selección de platos.
+        </p>
+        <fieldset id="catalog-tools" class="catalog-tools" disabled>
+          <legend>Platos disponibles</legend>
+          <div class="toolbar">
+            <div class="field grow">
+              <label for="catalog-search">Buscar plato</label
+              ><input
+                id="catalog-search"
+                type="search"
+                placeholder="Ej.: pollo, ñoquis, ensalada"
+                autocomplete="off"
+              />
+            </div>
+            <div class="field">
+              <label for="catalog-category">Categoría</label
+              ><select id="catalog-category">
+                <option value="">Todas las categorías</option>
+              </select>
+            </div>
+            <button type="button" id="catalog-add" disabled>
+              Agregar selección al día
+            </button>
+          </div>
+          <p id="catalog-count" class="help" aria-live="polite"></p>
+          <div class="table-wrap catalog-table-wrap">
+            <table class="catalog-table">
+              <thead>
+                <tr>
+                  <th scope="col"><span class="sr-only">Elegir</span></th>
+                  <th scope="col">Plato</th>
+                  <th scope="col">Categoría</th>
+                  <th scope="col">Descripción</th>
+                </tr>
+              </thead>
+              <tbody id="catalog-list"></tbody>
+            </table>
+          </div>
+        </fieldset>
+      </details>
+      <details class="panel collapsible">
+        <summary>
+          <span>Menús guardados (<span id="saved-count">0</span>)</span>
+          <small>Seleccioná una semana para verla en el editor</small>
+        </summary>
+        <div id="saved-menus" class="catalog-list"></div>
+      </details>
+      <form id="menu-form" novalidate>
+        <div id="admin-days" class="admin-days"></div>
+        <p class="note">
+          Completá los días abiertos o marcá Sin servicio. Los días que ya
+          pasaron no hace falta completarlos. Los platos con pedidos activos
+          se conservan; podés agregar nuevas opciones.
+        </p>
+        <div class="actions">
+          <button type="button" id="save-draft" class="secondary">
+            Guardar borrador</button
+          ><button type="submit" id="publish-menu">Publicar menú</button>
+        </div>
+      </form>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos</span
+      >
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
 </html>

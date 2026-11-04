@@ -1,209 +1,416 @@
-// Administrar / Publicar menús (solo Administrador).
-// Cada semana se edita, se guarda como Borrador o se publica. Lo publicado
-// reemplaza al menú de platos.json y lo ven los empleados al pedir.
-
-const listaSemanas = document.getElementById('menu-lista');
-const formMenu = document.getElementById('form-menu');
-const contenedorDias = document.getElementById('menu-dias');
-const tituloForm = document.getElementById('form-titulo');
-
-let base = [];        // platos.json
-let feriados = [];
-let semanaEditando = null;
-
-// ── Datos de cada semana ──
-
-function menuDeBase(lunes) {
-  const dias = {};
-  base.filter((p) => lunesDe(p.fecha) === lunes).forEach((p) => {
-    (dias[p.dia] = dias[p.dia] || []).push({ nombre: p.nombre, descripcion: p.descripcion, vegetariano: false, sinTacc: false });
+import { cargarPlatos } from "./datos.js";
+import { formatDate, CATEGORIES, categoryLabel, clock } from "./core.js";
+import {
+  fillMonthWeekSelects,
+  monthForWeek,
+  weeksOfMonth,
+  weekTitle,
+} from "./semanas.js";
+import {
+  DAYS,
+  uid,
+  readDB,
+  monday,
+  addDays,
+  closed,
+  saveMenu,
+  escapeHTML as esc,
+} from "./core.js";
+import { $, run, bindForm, message, confirmAction } from "./ui.js";
+export function init() {
+  let week = monday(),
+    month = monthForWeek(week, clock().today.slice(0, 7)),
+    loaded,
+    dirty = false;
+  const openDays = new Set(); // días desplegados en el editor
+  const plain = (text) =>
+    String(text)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  const empty = (week) => ({
+    week,
+    status: "Borrador",
+    days: DAYS.map((_, i) => ({
+      date: addDays(week, i),
+      noService: false,
+      options: [],
+    })),
   });
-  return { estado: 'Publicado', dias };
-}
-
-function hayPlatos(menu) {
-  return Object.values(menu.dias).some((lista) => lista.length > 0);
-}
-
-// Lo guardado por el admin gana; si no, el menú base; si no, una semana vacía
-function menuDe(lunes) {
-  const admin = obtenerMenusAdmin()[lunes];
-  if (admin) return admin;
-  const deBase = menuDeBase(lunes);
-  return hayPlatos(deBase) ? deBase : { estado: 'Borrador', dias: {} };
-}
-
-function listaDeSemanas() {
-  const conocidas = new Set([...base.map((p) => lunesDe(p.fecha)), ...Object.keys(obtenerMenusAdmin())]);
-  const ordenadas = [...conocidas].sort();
-  const siguiente = ordenadas.length ? sumarDias(ordenadas[ordenadas.length - 1], 7) : lunesDe(aISO(new Date()));
-  conocidas.add(siguiente); // siempre se puede armar la semana que sigue
-  return [...conocidas].sort().reverse();
-}
-
-// ── Lista de semanas ──
-
-function dibujarLista() {
-  listaSemanas.innerHTML = '';
-  listaDeSemanas().forEach((lunes) => {
-    const estado = menuDe(lunes).estado;
-    const fila = document.createElement('div');
-    fila.className = 'menu-lista-item';
-    fila.innerHTML = `
-      <div>
-        <span class="semana">${rangoSemana(lunes)}</span>
-        <strong class="badge ${estado === 'Publicado' ? 'estado-confirmado' : 'estado-borrador'}">${estado}</strong>
-      </div>
-      <div class="acciones"><button type="button" class="btn-modificar" data-lunes="${lunes}">${lunes === semanaEditando ? 'Editando' : 'Editar'}</button></div>`;
-    listaSemanas.appendChild(fila);
+  function optionHTML(o, locked) {
+    return `<div class="option-editor" data-id="${o.id}" data-plate-id="${esc(o.idPlato || "")}"><div class="field"><label for="name-${o.id}">Nombre del plato</label><input id="name-${o.id}" data-field="name" value="${esc(o.name)}" maxlength="60" ${locked ? "disabled" : ""}></div><div class="field"><label for="description-${o.id}">Descripción</label><input id="description-${o.id}" data-field="description" value="${esc(o.description)}" maxlength="140" ${locked ? "disabled" : ""}></div><div class="field"><label for="category-${o.id}">Categoría</label><select id="category-${o.id}" data-field="category" ${locked ? "disabled" : ""}>${Object.entries(CATEGORIES).map(([key, label]) => `<option value="${key}" ${(o.category || "otros") === key ? "selected" : ""}>${label}</option>`).join("")}</select></div><div class="field"><label for="stock-${o.id}">Porciones</label><input id="stock-${o.id}" data-field="stock" value="${o.stock}" type="number" min="0" max="9999" step="1" ${locked ? "disabled" : ""}></div><div class="option-flags"><label class="inline-check"><input type="checkbox" data-field="vegetarian" ${o.vegetarian ? "checked" : ""} ${locked ? "disabled" : ""}>Vegetariano</label><label class="inline-check"><input type="checkbox" data-field="glutenFree" ${o.glutenFree ? "checked" : ""} ${locked ? "disabled" : ""}>Sin TACC</label><button type="button" class="danger" data-remove ${locked ? "disabled" : ""}>Quitar opción</button></div></div>`;
+  }
+  const optionCount = (n) => (n === 1 ? "1 opción" : `${n} opciones`);
+  function daySummary(day) {
+    return day.noService ? "Sin servicio" : optionCount(day.options.length);
+  }
+  function render(menu) {
+    const db = readDB();
+    fillMonthWeekSelects($("#month"), $("#week"), month, week);
+    $("#publish-menu").textContent =
+      loaded.status === "Publicado"
+        ? "Guardar cambios publicados"
+        : "Publicar menú";
+    $("#saved-menus").innerHTML = db.menus.length
+      ? [...db.menus]
+          .sort((a, b) => a.week.localeCompare(b.week))
+          .map(
+            (item) =>
+              `<article><h3>${weekTitle(item.week, month)}</h3><span class="badge ${item.status.toLowerCase()}">${item.status}</span><p>${item.days.filter((day) => !day.noService).length} días con servicio</p><details><summary>Días y opciones</summary><ul>${item.days.map((day, i) => `<li><strong>${DAYS[i]}</strong>: ${day.noService ? "Sin servicio" : day.options.map((option) => esc(option.name)).join(", ") || "Sin opciones"}</li>`).join("")}</ul></details><button type="button" class="secondary" data-open-week="${item.week}">Ver semana</button></article>`,
+          )
+          .join("")
+      : '<p class="empty">No hay menús guardados. Armá una semana y guardala como borrador.</p>';
+    $("#saved-count").textContent = db.menus.length;
+    $("#menu-status").textContent = loaded.status;
+    $("#menu-status").className = `badge ${loaded.status.toLowerCase()}`;
+    // El día es obligatorio: sin elegirlo, el catálogo queda deshabilitado.
+    const chosenDay = $("#catalog-day").value;
+    $("#catalog-day").innerHTML =
+      '<option value="">Elegí un día</option>' +
+      menu.days
+        .map((dia, i) => ({ dia, i }))
+        .filter(({ dia }) => !closed(dia.date))
+        .map(
+          ({ dia, i }) =>
+            `<option value="${dia.date}" ${dia.date === chosenDay ? "selected" : ""}>${DAYS[i]}</option>`,
+        )
+        .join("");
+    syncCatalog();
+    $("#admin-days").innerHTML = menu.days
+      .map((day, i) => {
+        const locked = closed(day.date),
+          holiday = db.holidays[day.date];
+        return `<details class="admin-day" data-date="${day.date}" ${openDays.has(day.date) ? "open" : ""}><summary><span class="admin-day-title">${DAYS[i]} <small>${formatDate(day.date)}</small></span><span class="admin-day-count">${daySummary(day)}</span></summary><div class="admin-day-body"><label class="inline-check"><input type="checkbox" data-no-service ${day.noService ? "checked" : ""} ${locked ? "disabled" : ""}>Sin servicio</label>${holiday ? `<p class="note">Sin servicio por calendario: ${esc(holiday)}</p>` : ""}${locked ? '<p class="help">Día cerrado: solo lectura.</p>' : ""}<div class="day-options">${day.options.map((o) => optionHTML(o, locked)).join("")}</div><button type="button" class="secondary" data-add ${locked ? "disabled" : ""}>+ Agregar opción</button></div></details>`;
+      })
+      .join("");
+  }
+  function refreshDay(section) {
+    const options = section.querySelectorAll(".option-editor").length;
+    section.querySelector(".admin-day-count").textContent = section.querySelector(
+      "[data-no-service]",
+    ).checked
+      ? "Sin servicio"
+      : optionCount(options);
+  }
+  $("#admin-days").addEventListener(
+    "toggle",
+    (e) => {
+      const section = e.target.closest?.(".admin-day");
+      if (!section) return;
+      if (section.open) openDays.add(section.dataset.date);
+      else openDays.delete(section.dataset.date);
+    },
+    true,
+  );
+  $("#admin-days").addEventListener("change", (e) => {
+    if (e.target.matches("[data-no-service]"))
+      refreshDay(e.target.closest(".admin-day"));
   });
-}
-
-listaSemanas.addEventListener('click', (e) => {
-  const boton = e.target.closest('button[data-lunes]');
-  if (!boton) return;
-  abrirSemana(boton.dataset.lunes);
-  formMenu.scrollIntoView({ behavior: 'smooth' });
-});
-
-// ── Formulario ──
-
-function crearOpcion(o = {}) {
-  const div = document.createElement('div');
-  div.className = 'opcion';
-  div.innerHTML = `
-    <input type="text" class="op-nombre" placeholder="Nombre del plato" maxlength="60">
-    <input type="text" class="op-desc" placeholder="Descripción" maxlength="100">
-    <div class="etiquetas">
-      <label><input type="checkbox" class="op-veg"> Vegetariano</label>
-      <label><input type="checkbox" class="op-tacc"> Sin TACC</label>
-      <button type="button" class="btn-quitar">Quitar</button>
-    </div>`;
-  div.querySelector('.op-nombre').value = o.nombre || '';
-  div.querySelector('.op-desc').value = o.descripcion || '';
-  div.querySelector('.op-veg').checked = Boolean(o.vegetariano);
-  div.querySelector('.op-tacc').checked = Boolean(o.sinTacc);
-  return div;
-}
-
-function llenarDias(dias) {
-  contenedorDias.innerHTML = '';
-  ORDEN_DIAS.forEach((dia, i) => {
-    const fecha = sumarDias(semanaEditando, i);
-    const articulo = document.createElement('article');
-    articulo.dataset.dia = dia;
-    articulo.innerHTML = `<h4>${dia} <time datetime="${fecha}">${formatearFecha(fecha)}</time></h4>`;
-
-    const feriado = feriados.find((f) => f.fecha === fecha && f.feriado);
-    if (feriado) {
-      articulo.innerHTML += `<p class="estado-vacio">Feriado${feriado.motivo ? `: ${escapar(feriado.motivo)}` : ''}. Sin servicio.</p>`;
-    } else {
-      (dias[dia] || []).forEach((o) => articulo.appendChild(crearOpcion(o)));
-      articulo.insertAdjacentHTML('beforeend', '<button type="button" class="btn-agregar-opcion">+ Agregar opción</button>');
+  $("#saved-menus").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-open-week]");
+    if (!button) return;
+    goToWeek(button.dataset.openWeek);
+  });
+  let catalogo = [];
+  const picked = new Set(); // platos tildados, se conservan al filtrar
+  function filteredCatalog() {
+    const term = plain($("#catalog-search").value.trim()),
+      category = $("#catalog-category").value;
+    return catalogo.filter(
+      (plato) =>
+        (!category || (plato.categoria || "otros") === category) &&
+        (!term || plain(`${plato.nombre} ${plato.descripcion}`).includes(term)),
+    );
+  }
+  function crearFilaPlato(plato) {
+    return `<tr><td data-label="Elegir"><input type="checkbox" name="catalog-plate" id="plate-${esc(plato.id)}" value="${esc(plato.id)}" aria-label="Elegir ${esc(plato.nombre)}" ${picked.has(String(plato.id)) ? "checked" : ""}></td><td data-label="Plato"><label for="plate-${esc(plato.id)}">${esc(plato.nombre)}</label></td><td data-label="Categoría">${esc(categoryLabel(plato.categoria))}</td><td data-label="Descripción">${esc(plato.descripcion)}</td></tr>`;
+  }
+  function renderCatalogo() {
+    const lista = filteredCatalog();
+    $("#catalog-list").innerHTML = lista.length
+      ? lista.map(crearFilaPlato).join("")
+      : `<tr><td colspan="4">${catalogo.length ? "Ningún plato coincide con la búsqueda o el filtro." : "No hay platos para mostrar."}</td></tr>`;
+    $("#catalog-count").textContent = catalogo.length
+      ? `Mostrando ${lista.length} de ${catalogo.length} platos.`
+      : "";
+    syncCatalog();
+  }
+  // Sin un día elegido no se puede buscar, tildar ni agregar nada.
+  function syncCatalog() {
+    const hasDay = Boolean($("#catalog-day").value);
+    $("#catalog-tools").disabled = !hasDay;
+    $("#catalog-add").disabled = !hasDay || !catalogo.length;
+    $("#catalog-hint").hidden = hasDay;
+  }
+  async function cargarCatalogo() {
+    const estado = $("#catalog-state");
+    estado.textContent = "Cargando catálogo…";
+    estado.className = "help";
+    estado.setAttribute("role", "status");
+    $("#catalog-retry").hidden = true;
+    try {
+      catalogo = await cargarPlatos();
+      estado.textContent = catalogo.length
+        ? `${catalogo.length} platos disponibles.`
+        : "Todavía no hay platos en el catálogo. Podés cargar una opción manualmente abajo.";
+      $("#catalog-category").innerHTML =
+        '<option value="">Todas las categorías</option>' +
+        Object.entries(CATEGORIES)
+          .filter(([key]) =>
+            catalogo.some((plato) => (plato.categoria || "otros") === key),
+          )
+          .map(([key, label]) => `<option value="${key}">${label}</option>`)
+          .join("");
+    } catch (error) {
+      catalogo = [];
+      estado.className = "message error";
+      estado.setAttribute("role", "alert");
+      estado.textContent = error.message;
+      // El reintento solo aparece cuando la carga falló.
+      $("#catalog-retry").hidden = false;
     }
-    contenedorDias.appendChild(articulo);
+    renderCatalogo();
+  }
+  $("#catalog-retry").addEventListener("click", cargarCatalogo);
+  $("#catalog-search").addEventListener("input", renderCatalogo);
+  $("#catalog-category").addEventListener("change", renderCatalogo);
+  $("#catalog-day").addEventListener("change", syncCatalog);
+  $("#catalog-list").addEventListener("change", (e) => {
+    if (!e.target.matches('[name="catalog-plate"]')) return;
+    if (e.target.checked) picked.add(e.target.value);
+    else picked.delete(e.target.value);
   });
-}
-
-function abrirSemana(lunes) {
-  semanaEditando = lunes;
-  const menu = menuDe(lunes);
-  tituloForm.textContent = `Cargar opciones — ${rangoSemana(lunes)} (${menu.estado})`;
-  llenarDias(menu.dias);
-  dibujarLista();
-}
-
-function leerFormulario() {
-  const dias = {};
-  contenedorDias.querySelectorAll('article').forEach((articulo) => {
-    const opciones = [...articulo.querySelectorAll('.opcion')].map((o) => ({
-      nombre: o.querySelector('.op-nombre').value.trim(),
-      descripcion: o.querySelector('.op-desc').value.trim(),
-      vegetariano: o.querySelector('.op-veg').checked,
-      sinTacc: o.querySelector('.op-tacc').checked,
-    }));
-    if (opciones.length) dias[articulo.dataset.dia] = opciones;
-  });
-  return dias;
-}
-
-contenedorDias.addEventListener('click', (e) => {
-  const agregar = e.target.closest('.btn-agregar-opcion');
-  if (agregar) agregar.before(crearOpcion());
-  const quitar = e.target.closest('.btn-quitar');
-  if (quitar) quitar.closest('.opcion').remove();
-});
-
-function guardarMenu(estado) {
-  const menus = obtenerMenusAdmin();
-  menus[semanaEditando] = { estado, dias: leerFormulario() };
-  if (!guardarMenusAdmin(menus)) return false;
-  abrirSemana(semanaEditando);
-  return true;
-}
-
-// ── Acciones ──
-
-document.getElementById('btn-guardar-borrador').addEventListener('click', async () => {
-  if (menuDe(semanaEditando).estado === 'Publicado') {
-    const ok = await confirmar({
-      titulo: 'Pasar a borrador',
-      mensaje: 'Esta semana ya está publicada. Si la guardás como borrador, los empleados dejan de verla hasta que la publiques de nuevo. ¿Continuar?',
-      textoConfirmar: 'Sí, pasar a borrador',
+  $("#catalog-add").addEventListener("click", (event) =>
+    run(() => {
+      const fecha = $("#catalog-day").value;
+      if (!fecha) throw new Error("Elegí un día antes de agregar platos.");
+      if (closed(fecha)) throw new Error("Elegí un día cuyo plazo esté abierto.");
+      const elegidos = [...picked]
+        .map((id) => catalogo.find((plato) => String(plato.id) === id))
+        .filter(Boolean);
+      if (!elegidos.length)
+        throw new Error("Elegí al menos un plato del catálogo.");
+      const dia = document.querySelector(`.admin-day[data-date="${fecha}"]`);
+      if (
+        readDB().holidays[fecha] ||
+        dia.querySelector("[data-no-service]").checked
+      )
+        throw new Error(
+          "Este día no tiene servicio. Habilitalo antes de agregar opciones.",
+        );
+      for (const plato of elegidos) {
+        if (
+          [...dia.querySelectorAll("[data-plate-id]")].some(
+            (row) => row.dataset.plateId === String(plato.id),
+          )
+        )
+          continue;
+        dia.querySelector(".day-options").insertAdjacentHTML(
+          "beforeend",
+          optionHTML(
+            {
+              id: uid(),
+              idPlato: plato.id,
+              name: plato.nombre,
+              description: plato.descripcion,
+              category: plato.categoria || "otros",
+              stock: 80,
+              vegetarian: plato.categoria === "vegetariano",
+              glutenFree: false,
+            },
+            false,
+          ),
+        );
+      }
+      picked.clear();
+      renderCatalogo();
+      dia.open = true;
+      openDays.add(fecha);
+      refreshDay(dia);
+      dirty = true;
+      message(
+        "Selección aplicada al día, sin repetir platos existentes. Guardá el menú para aplicar el cambio.",
+      );
+      dia.scrollIntoView({ block: "center" });
+    }, event.currentTarget),
+  );
+  function open() {
+    loaded = structuredClone(
+      readDB().menus.find((m) => m.week === week) || empty(week),
+    );
+    dirty = false;
+    render(loaded);
+  }
+  function read(status) {
+    return {
+      week,
+      status,
+      days: [...document.querySelectorAll(".admin-day")].map((section, i) => {
+        if (closed(section.dataset.date)) return loaded.days[i];
+        return {
+          date: section.dataset.date,
+          noService: section.querySelector("[data-no-service]").checked,
+          options: [...section.querySelectorAll(".option-editor")].map(
+            (row) => ({
+              id: row.dataset.id,
+              ...(row.dataset.plateId ? { idPlato: row.dataset.plateId } : {}),
+              category: row.querySelector("[data-field=category]").value,
+              name: row.querySelector("[data-field=name]").value.trim(),
+              description: row
+                .querySelector("[data-field=description]")
+                .value.trim(),
+              stock:
+                row.querySelector("[data-field=stock]").value === ""
+                  ? NaN
+                  : Number(row.querySelector("[data-field=stock]").value),
+              vegetarian: row.querySelector("[data-field=vegetarian]").checked,
+              glutenFree: row.querySelector("[data-field=glutenFree]").checked,
+            }),
+          ),
+        };
+      }),
+    };
+  }
+  // Cambia de mes/semana avisando si hay cambios sin guardar.
+  async function goToWeek(nextWeek, nextMonth) {
+    await run(async () => {
+      if (
+        dirty &&
+        !(await confirmAction(
+          "Cambiar de semana",
+          "Los cambios que todavía no guardaste se perderán. ¿Continuar?",
+          "Cambiar semana",
+        ))
+      ) {
+        fillMonthWeekSelects($("#month"), $("#week"), month, week);
+        return;
+      }
+      month = monthForWeek(nextWeek, nextMonth || month);
+      week = nextWeek;
+      openDays.clear();
+      open();
     });
-    if (!ok) return;
   }
-  if (guardarMenu('Borrador')) notificarOk('Borrador guardado.');
-});
-
-formMenu.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const dias = leerFormulario();
-
-  if (Object.keys(dias).length === 0) {
-    notificarError('Cargá al menos una opción antes de publicar el menú.');
-    return;
-  }
-  for (const dia of Object.keys(dias)) {
-    if (dias[dia].some((o) => !o.nombre)) {
-      notificarError(`Hay una opción del ${dia.toLowerCase()} sin nombre de plato.`);
+  $("#month").addEventListener("change", () => {
+    const next = $("#month").value,
+      weeks = weeksOfMonth(next);
+    goToWeek(weeks.includes(monday()) ? monday() : weeks[0], next);
+  });
+  $("#week").addEventListener("change", () => goToWeek($("#week").value));
+  $("#menu-form").addEventListener("input", () => {
+    dirty = true;
+  });
+  $("#admin-days").addEventListener("click", (e) =>
+    run(async () => {
+      const add = e.target.closest("[data-add]"),
+        remove = e.target.closest("[data-remove]");
+      if (add) {
+        add.previousElementSibling.insertAdjacentHTML(
+          "beforeend",
+          optionHTML(
+            {
+              id: uid(),
+              name: "",
+              description: "",
+              stock: 80,
+              vegetarian: false,
+              glutenFree: false,
+            },
+            false,
+          ),
+        );
+        dirty = true;
+        refreshDay(add.closest(".admin-day"));
+      }
+      if (
+        remove &&
+        (await confirmAction(
+          "Quitar opción",
+          "Se quitará del formulario. El cambio se aplica cuando guardes o publiques.",
+          "Quitar",
+        ))
+      ) {
+        const section = remove.closest(".admin-day");
+        remove.closest(".option-editor").remove();
+        dirty = true;
+        refreshDay(section);
+      }
+    }),
+  );
+  $("#duplicate-menu").addEventListener("click", (e) =>
+    run(async () => {
+      const previous = readDB().menus.find((m) => m.week === addDays(week, -7));
+      if (!previous)
+        throw new Error("No hay un menú guardado para la semana anterior.");
+      if (
+        !(await confirmAction(
+          "Duplicar semana anterior",
+          "Se reemplazarán las opciones de los días abiertos. Revisalas antes de guardar.",
+          "Duplicar",
+        ))
+      )
+        return;
+      const menu = read("Borrador");
+      menu.days = menu.days.map((d, i) =>
+        closed(d.date)
+          ? d
+          : {
+              ...d,
+              noService: previous.days[i].noService,
+              options: previous.days[i].options.map((o) => ({
+                ...o,
+                id: uid(),
+              })),
+            },
+      );
+      render(menu);
+      dirty = true;
+    }, e.currentTarget),
+  );
+  $("#save-draft").addEventListener("click", (e) =>
+    run(async () => {
+      if (
+        loaded.status === "Publicado" &&
+        !(await confirmAction(
+          "Retirar publicación",
+          "El menú dejará de estar visible para empleados. Solo es posible si no tiene pedidos activos.",
+          "Guardar borrador",
+        ))
+      )
+        return;
+      saveMenu(read("Borrador"));
+      open();
+      message(
+        "Borrador guardado. Los empleados no lo ven hasta que lo publiques.",
+      );
+    }, e.currentTarget),
+  );
+  bindForm("#menu-form", async () => {
+    if (!readDB().menus.some((menu) => menu.week === week))
+      throw new Error("Guardá el menú como borrador antes de publicarlo.");
+    const updating = loaded.status === "Publicado";
+    if (
+      !(await confirmAction(
+        updating ? "Guardar cambios publicados" : "Publicar menú",
+        `Los empleados verán las opciones de: ${weekTitle(week, month)}. ¿Continuar?`,
+        updating ? "Guardar" : "Publicar",
+      ))
+    )
       return;
+    saveMenu(read("Publicado"));
+    open();
+    message(
+      updating
+        ? "Cambios guardados en el menú publicado."
+        : "Menú publicado. Ya está disponible para los empleados.",
+    );
+  });
+  window.addEventListener("beforeunload", (e) => {
+    if (dirty) {
+      e.preventDefault();
+      e.returnValue = "";
     }
-  }
-
-  const ok = await confirmar({
-    titulo: 'Publicar menú',
-    mensaje: `Los empleados van a ver el menú de la ${rangoSemana(semanaEditando).toLowerCase()} y podrán hacer pedidos. ¿Publicar?`,
-    textoConfirmar: 'Sí, publicar',
   });
-  if (!ok) return;
-  if (guardarMenu('Publicado')) notificarOk('Menú publicado. Ya lo ven los empleados.');
-});
-
-document.getElementById('btn-duplicar').addEventListener('click', async () => {
-  const anterior = menuDe(sumarDias(semanaEditando, -7));
-  if (!hayPlatos(anterior)) {
-    notificarError('La semana anterior no tiene opciones para copiar.');
-    return;
-  }
-  const ok = await confirmar({
-    titulo: 'Duplicar semana anterior',
-    mensaje: 'Se van a reemplazar las opciones que están en pantalla por las de la semana anterior. Después tenés que guardar o publicar. ¿Continuar?',
-    textoConfirmar: 'Sí, duplicar',
-  });
-  if (!ok) return;
-  llenarDias(anterior.dias);
-  notificarOk('Opciones copiadas. Revisalas y guardá o publicá.');
-});
-
-async function iniciar() {
-  try {
-    base = await cargarPlatosBase();
-  } catch (error) {
-    notificarError('No se pudo cargar el menú base. Podés armar semanas nuevas igual.');
-  }
-  feriados = await traerFeriados();
-  abrirSemana(listaDeSemanas()[0]);
+  open();
+  cargarCatalogo();
 }
-
-iniciar();

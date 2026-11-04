@@ -1,75 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <title>SistemaPedidos — Mi Asistencia Semanal</title>
-</head>
-<body data-rol="empleado">
-
-  <header>
-    <h1>SistemaPedidos</h1>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="asistencia.html">Asistencia</a>
-      <a href="menu-pedido.html">Menú</a>
-      <a href="mis-pedidos.html">Mis pedidos</a>
-      <a href="mi-perfil.html">Mi perfil</a>
-    </nav>
-    <p><span data-usuario></span> · <a href="#" data-logout>Cerrar sesión</a></p>
-  </header>
-
-  <main>
-    <h2>Mi Asistencia Semanal</h2>
-    <p>Marcá los días de la semana que vas a asistir a la oficina (podés elegir uno solo o varios).</p>
-
-    <form id="form-asistencia" novalidate>
-
-      <section>
-        <label>
-          <input type="checkbox" name="dias" value="lunes"> Lunes
-        </label>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Mi asistencia · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="asistencia" data-required="empleado">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div id="steps" class="steps"></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">ORGANIZÁ TU SEMANA</span>
+          <h1>Mi asistencia</h1>
+          <p>Elegí los días en los que vas a estar en la oficina.</p>
+        </div>
+        <span class="large-icon" aria-hidden="true">▦</span>
+      </div>
+      <section class="panel">
+        <div
+          class="week-navigation"
+          role="group"
+          aria-label="Semanas del mes actual"
+        >
+          <p id="week-label" aria-live="polite"></p>
+          <div class="actions">
+            <button type="button" class="secondary" id="previous-week">
+              ← Semana anterior</button
+            ><button type="button" class="secondary" id="next-week">
+              Semana siguiente →
+            </button>
+          </div>
+          <p class="help">Semanas del mes actual.</p>
+        </div>
+        <form id="asistencia-form" novalidate>
+          <fieldset>
+            <legend>Días presenciales</legend>
+            <div id="attendance-days" class="attendance-days"></div>
+          </fieldset>
+          <p class="note">
+            Podés cambiar cada día hasta las 10:00. Si ya tiene un pedido,
+            cancelalo antes de quitar la asistencia.
+          </p>
+          <button type="submit">Guardar y elegir menú →</button>
+        </form>
       </section>
-
-      <section>
-        <label>
-          <input type="checkbox" name="dias" value="martes"> Martes
-        </label>
-      </section>
-
-      <section>
-        <label>
-          <input type="checkbox" name="dias" value="miercoles"> Miércoles
-        </label>
-      </section>
-
-      <section>
-        <label>
-          <input type="checkbox" name="dias" value="jueves"> Jueves
-        </label>
-      </section>
-
-      <section>
-        <label>
-          <input type="checkbox" name="dias" value="viernes"> Viernes
-        </label>
-      </section>
-
-      <aside>
-        <p>Los cambios impactan sobre el menú de la próxima semana.</p>
-      </aside>
-
-      <button type="submit">Confirmar Cambios</button>
-
-    </form>
-
-  </main>
-
-  <footer>
-    <small>© 2026 SistemaPedidos</small>
-  </footer>
-
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/asistencia.js"></script>
-</body>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos</span>
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
 </html>

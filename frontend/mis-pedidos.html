@@ -1,41 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <title>SistemaPedidos — Mis pedidos</title>
-</head>
-<body data-rol="empleado">
-
-  <header>
-    <h1>SistemaPedidos</h1>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="asistencia.html">Asistencia</a>
-      <a href="menu-pedido.html">Menú</a>
-      <a href="mis-pedidos.html">Mis pedidos</a>
-      <a href="mi-perfil.html">Mi perfil</a>
-    </nav>
-    <p><span data-usuario></span> · <a href="#" data-logout>Cerrar sesión</a></p>
-  </header>
-
-  <main>
-    <h2>Mis pedidos</h2>
-    <p>Consultá, confirmá, modificá o cancelá tus pedidos antes del horario de corte.</p>
-
-    <section class="lista-pedidos"></section>
-
-    <aside>
-      <p>ℹ️ Podés confirmar, modificar o cancelar hasta las 10:00 hs del día correspondiente.</p>
-    </aside>
-
-  </main>
-
-  <footer>
-    <small>© 2026 SistemaPedidos</small>
-  </footer>
-
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/mis-pedidos.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Mis pedidos · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="mis-pedidos" data-required="empleado">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div id="steps" class="steps"></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">TU SEMANA, RESUELTA</span>
+          <h1>Mis pedidos</h1>
+          <p>
+            Revisá y confirmá tus borradores. Podés modificar o cancelar hasta
+            las 10:00 de cada día.
+          </p>
+        </div>
+        <a class="button" href="menu-pedido.html">+ Nuevo pedido</a>
+      </div>
+      <div class="toolbar">
+        <label for="order-filter">Mostrar</label
+        ><select id="order-filter">
+          <option value="">Todos los pedidos</option>
+          <option>Borrador</option>
+          <option>Confirmado</option>
+          <option>Cancelado</option>
+        </select>
+      </div>
+      <section
+        id="pending-orders"
+        class="pending-panel"
+        aria-live="polite"
+        hidden
+      ></section>
+      <div id="orders" class="orders"></div>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos</span
+      >
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
 </html>

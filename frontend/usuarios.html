@@ -1,62 +1,157 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SistemaPedidos — Gestión de usuarios</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body data-rol="admin">
-
-  <header class="navbar-admin">
-    <div class="logo">SistemaPedidos <span>| Panel Administrador</span></div>
-    <div class="user-info">
-      <a href="menuadmin.html">Menús</a>
-      <a href="consolidado.html">Consolidado</a>
-      <a href="calendario-feriados.html">Feriados</a>
-      <span data-usuario></span>
-      <a href="#" data-logout class="btn-logout">Cerrar Sesión</a>
-    </div>
-  </header>
-
-  <main class="container-admin">
-    <h2>Gestión de usuarios</h2>
-    <p class="subtitulo">Dá de alta, modificá o desactivá las cuentas. Una cuenta desactivada no puede iniciar sesión.</p>
-
-    <table class="table-consolidado tabla-apilada">
-      <thead>
-        <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
-      </thead>
-      <tbody id="usuarios-cuerpo"></tbody>
-    </table>
-
-    <form id="form-usuario" class="form-usuario" novalidate>
-      <h3 id="form-usuario-titulo">Nuevo usuario</h3>
-
-      <label for="u-nombre">Nombre completo</label>
-      <input type="text" id="u-nombre" placeholder="Nombre y apellido">
-
-      <label for="u-email">Email</label>
-      <input type="email" id="u-email" placeholder="usuario@empresa.com">
-
-      <label for="u-rol">Rol</label>
-      <select id="u-rol">
-        <option value="empleado">Empleado</option>
-        <option value="admin">Administrador</option>
-      </select>
-
-      <label for="u-password" id="u-password-label">Contraseña inicial</label>
-      <input type="password" id="u-password" autocomplete="new-password">
-      <p class="fortaleza" id="u-ayuda">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo.</p>
-
-      <div class="actions-footer">
-        <button type="button" class="btn btn-secondary" id="btn-cancelar-edicion" hidden>Cancelar edición</button>
-        <button type="submit" class="btn btn-success" id="btn-guardar-usuario">Crear usuario</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Gestión de usuarios · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="usuarios" data-required="admin">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">ADMINISTRACIÓN DEL EQUIPO</span>
+          <h1>Usuarios</h1>
+          <p>Creá cuentas, actualizá roles y gestioná el acceso al sistema.</p>
+        </div>
       </div>
-    </form>
-  </main>
-
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/usuarios.js"></script>
-</body>
+      <div class="toolbar">
+        <div class="field">
+          <label for="search-users">Buscar por nombre o email</label
+          ><input
+            id="search-users"
+            name="search-users"
+            type="search"
+            placeholder="Buscar usuario…"
+          />
+        </div>
+      </div>
+      <section class="panel table-wrap">
+        <table>
+          <caption>
+            Personas registradas
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Nombre y email</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-body"></tbody>
+        </table>
+      </section>
+      <details class="panel collapsible exceptions">
+        <summary>
+          <span>Excepciones de horario (<span id="exception-count">0</span>)</span>
+          <small>Habilitá a un empleado a pedir fuera del corte de las 10:00</small>
+        </summary>
+        <p>
+          Si un empleado cambia sus planes a último momento, avisa por email y
+          vos le habilitás ese día: podrá modificar su asistencia y elegir su
+          vianda aunque haya pasado el horario de corte.
+        </p>
+        <form id="exception-form" novalidate>
+          <div class="toolbar">
+            <div class="field">
+              <label for="exception-user">Empleado</label
+              ><select id="exception-user" name="exception-user" required></select>
+            </div>
+            <div class="field">
+              <label for="exception-date">Día</label
+              ><select id="exception-date" name="exception-date" required></select>
+            </div>
+            <button type="submit" id="grant-exception">Habilitar excepción</button>
+          </div>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <caption>
+              Excepciones vigentes
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Empleado</th>
+                <th scope="col">Día</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="exception-body"></tbody>
+          </table>
+        </div>
+      </details>
+      <section class="panel narrow">
+        <h2 id="user-form-title">Autorizar nuevo usuario</h2>
+        <form id="user-form" novalidate>
+          <div class="field">
+            <label for="name">Nombre completo</label
+            ><input
+              id="name"
+              name="name"
+              type="text"
+              required
+              maxlength="80"
+              autocomplete="name"
+            />
+          </div>
+          <div class="field">
+            <label for="email">Email</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              required
+              maxlength="254"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field">
+            <label for="role">Rol</label
+            ><select id="role" name="role">
+              <option value="empleado">Empleado</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <p class="help" id="user-password-note">
+            Autorizá el email y el rol. La persona completará el registro y
+            elegirá su propia contraseña.
+          </p>
+          <div class="actions">
+            <button type="submit" id="save-user">Guardar autorización</button
+            ><button type="button" class="secondary" id="cancel-user" hidden>
+              Cancelar edición
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos</span
+      >
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
 </html>
