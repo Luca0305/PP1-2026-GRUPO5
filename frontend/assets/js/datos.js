@@ -1,4 +1,8 @@
 // Datos externos: una función por fuente. El render recibe objetos, no hace fetch.
+// Backend Spring Boot. Es la URL completa porque el frontend corre en Live
+// Server (5500/5502) y Spring en el 8080: son dos servidores distintos.
+export const API = "http://localhost:8080/api";
+
 export async function cargarJSON(ruta) {
   const respuesta = await fetch(ruta, { cache: "no-store" });
   if (!respuesta.ok)
@@ -36,6 +40,33 @@ export async function cargarPlatos() {
     ids.add(String(plato.id));
   }
   return platos;
+}
+
+// Catálogo de platos desde MySQL, pasando por el backend (GET /api/platos).
+// Lo usa Administrar menús. Los menús iniciales siguen saliendo de los JSON
+// hasta que existan /api/menus y /api/menu-platos (ver docs/4ta-entrega).
+export async function cargarPlatosDesdeAPI() {
+  let respuesta;
+  try {
+    respuesta = await fetch(`${API}/platos`, { cache: "no-store" });
+  } catch {
+    throw new Error(
+      "No se pudo conectar con el servidor. Revisá que el backend esté iniciado y reintentá.",
+    );
+  }
+  // Un 404 o 500 no entra al catch del fetch: se revisa respuesta.ok.
+  if (!respuesta.ok)
+    throw new Error(`El servidor respondió con un error (HTTP ${respuesta.status}).`);
+  let platos;
+  try {
+    platos = await respuesta.json();
+  } catch {
+    throw new Error("El servidor no devolvió JSON válido.");
+  }
+  if (!Array.isArray(platos))
+    throw new Error("El catálogo de platos debe ser una lista.");
+  // La descripción puede venir null desde la base (columna opcional).
+  return platos.map((plato) => ({ ...plato, descripcion: plato.descripcion ?? "" }));
 }
 
 // Los nombres MenuDia y MenuPlato y sus relaciones están en la ficha de JS 05.

@@ -10,6 +10,15 @@ Frontend de pedidos de almuerzos de Práctica Profesionalizante I. HTML, CSS, Ja
 
 `frontend/index.html` es el índice académico con enlaces a las pantallas y la limpieza de pruebas. El login es la entrada al sistema. No abrir los HTML con doble clic: los módulos y la carga de JSON necesitan un servidor local.
 
+## Backend (4ta entrega, en curso)
+
+1. Crear la base: correr entero `backend/db/tp-pedidos-provisorio.sql` (provisorio hasta tener el `tp-pedidos.sql` oficial). Crea `pp1_pedidos`.
+2. Si MySQL tiene contraseña, cargarla en la variable de entorno `DB_PASSWORD` (nunca en el repo).
+3. Desde `backend/`: `./mvnw spring-boot:run`. Tiene que terminar en `Started PedidosApplication`.
+4. Probar `http://localhost:8080/api/platos`. El catálogo de **Administrar menús** ya lee de ahí; con Spring apagado muestra el estado de error con reintento.
+
+Si el puerto 8080 está ocupado (por ejemplo, por Steam), cerrar ese programa o usar `server.port=8081` y cambiar `API` en `frontend/assets/js/datos.js`. Detalle en [docs/4ta-entrega](docs/4ta-entrega/README.md).
+
 ## Cuentas y datos
 
 No hay cuentas ni contraseñas predefinidas. Registrarse y después iniciar sesión. El email `proadmin@gmail.com` está autorizado como administrador en `frontend/data/empresa.json`: debe completar el registro y elegir su contraseña. Los demás registros son empleados; el administrador puede gestionar autorizaciones y cuentas desde Usuarios.

@@ -1,4 +1,4 @@
-import { cargarPlatos } from "./datos.js";
+import { cargarPlatosDesdeAPI } from "./datos.js";
 import { formatDate, CATEGORIES, categoryLabel, clock } from "./core.js";
 import {
   fillMonthWeekSelects,
@@ -149,7 +149,7 @@ export function init() {
     estado.setAttribute("role", "status");
     $("#catalog-retry").hidden = true;
     try {
-      catalogo = await cargarPlatos();
+      catalogo = await cargarPlatosDesdeAPI();
       estado.textContent = catalogo.length
         ? `${catalogo.length} platos disponibles.`
         : "Todavía no hay platos en el catálogo. Podés cargar una opción manualmente abajo.";
