@@ -20,12 +20,11 @@ import {
 import { $, stepper, bindForm, message, run } from "./ui.js";
 import { api, estadoTexto } from "./api.js";
 
-// Ilustraciones de los platos: frontend/assets/img/platos/ilustraciones/<nombre-del-plato>.svg
+// Todos los platos se muestran con su ilustración:
+// frontend/assets/img/platos/ilustraciones/<nombre-del-plato>.svg
 // Los platos nuevos traen esa ruta en su columna imagen; los 6 del script traen otra
 // (assets/img/milanesa.jpg, que no existe), así que para esos se arma desde el nombre.
 const ILUSTRACIONES = "assets/img/platos/ilustraciones/";
-// Platos del script que tienen foto real en el frontend (nombre en el script → plantilla).
-const FOTOS_REALES = { "Milanesa con puré": "Milanesa con puré", "Tarta de verdura": "Tarta de verduras" };
 const slug = (texto) =>
   texto
     .normalize("NFD")
@@ -77,11 +76,6 @@ export async function init() {
   }
 
   function photo(opcion) {
-    // Primero, las fotos reales que ya tenía el frontend (plantillas de menu-pedido.html).
-    const real = [...document.querySelectorAll("template[data-meal-name]")].find(
-      (item) => item.dataset.mealName === (FOTOS_REALES[opcion.nombre] || opcion.nombre),
-    );
-    if (real) return real.innerHTML;
     const src = opcion.imagen?.startsWith(ILUSTRACIONES)
       ? opcion.imagen
       : `${ILUSTRACIONES}${slug(opcion.nombre)}.svg`;

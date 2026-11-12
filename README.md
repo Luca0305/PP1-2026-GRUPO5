@@ -45,7 +45,7 @@ La hora de corte es **10:00 de Argentina** y se cambia en `application.propertie
 | `frontend/*.html` + `assets/js/<pantalla>.js` | Una pantalla, un módulo |
 | `frontend/assets/js/api.js` | Única puerta al backend (`fetch`) |
 | `frontend/assets/js/core.js`, `ui.js`, `validation.js`, `semanas.js`, `dates.js` | Sesión, fechas, menú, validaciones y piezas compartidas |
-| `frontend/assets/img/platos/` | Fotos y ilustraciones de los platos ([autores y licencias](frontend/assets/img/platos/README.md)) |
+| `frontend/assets/img/platos/ilustraciones/` | Ilustración original de cada plato ([cómo se arman](frontend/assets/img/platos/README.md)) |
 | `docs/` | Documentación de cada entrega y colección de Postman |
 | `tests/` | Pruebas del frontend (`npm test`) |
 
