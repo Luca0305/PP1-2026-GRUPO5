@@ -37,7 +37,7 @@
             sin salir de esta pantalla.
           </p>
         </div>
-        <span class="pill">Corte · 10:00 hs</span>
+        <span class="pill">Corte · <span data-hora-corte>10:00</span> hs</span>
       </div>
       <div class="toolbar">
         <div
@@ -66,6 +66,7 @@
       <form id="pedido-form" novalidate>
         <div id="menu-options" class="menu-options"></div>
         <div id="order-details" class="panel" hidden>
+          <p id="edit-note" class="note" hidden></p>
           <div class="field">
             <label for="comment">Comentarios o preferencias (opcional)</label
             ><input
@@ -78,6 +79,8 @@
           </div>
           <p class="help">
             Máximo 200 caracteres. Informá cualquier restricción alimentaria.
+            <strong>Guardar y confirmar</strong> confirma tu pedido de la semana
+            completo (todos los días que tengas en borrador).
           </p>
           <div class="actions">
             <button type="submit" id="confirm-order">Confirmar pedido</button
