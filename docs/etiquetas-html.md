@@ -1,5 +1,7 @@
 # Etiquetas utilizadas en el frontend
 
+> **Documento histórico de la 3ra entrega (prototipo con `localStorage`).** En la 4ta entrega los datos pasaron a MySQL y se quitaron los restos del prototipo: `frontend/data/*.json`, `frontend/guia/`, la limpieza de pruebas de `index.html` y los módulos `accounts.js`, `recovery.js`, `revision.js` y `limpieza.js`. Siguen en el historial de Git. Estado actual: [docs/4ta-entrega](4ta-entrega/README.md).
+
 Inventario del código final al 15/10/2026: **51 tipos de elementos HTML y 5 elementos SVG**. Se inspeccionaron los HTML, plantillas de texto de JavaScript y llamadas createElement. Incluye aplicación, índice, guía y créditos; excluye documentación Markdown, pruebas y archivos de terceros. Los números de línea son referencias de esta revisión.
 
 Una etiqueta es la marca (`<p>`); el elemento es la unidad completa (`<p>Texto</p>`). La apertura y el cierre no cuentan como tipos distintos. CSS puede cambiar la presentación en bloque o en línea; eso no cambia la semántica de la etiqueta.

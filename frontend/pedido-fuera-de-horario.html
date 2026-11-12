@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F3B78" />
+    <title>Pedido fuera de horario · SistemaPedidos</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/bootstrap-grid.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="pedido-fuera-de-horario" data-required="admin">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header id="app-header" class="app-header">
+      <a class="brand" href="login.html">SistemaPedidos</a>
+    </header>
+    <main id="main" class="main">
+      <p id="loading" role="status">Cargando…</p>
+      <div
+        id="message"
+        class="message"
+        tabindex="-1"
+        role="status"
+        hidden
+      ></div>
+      <div id="reminder" class="note" role="status" hidden></div>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">ADMINISTRACIÓN</span>
+          <h1>Pedido fuera de horario</h1>
+          <p>
+            Cargale el pedido a un empleado que no llegó a pedir antes del
+            corte de las <span data-hora-corte>10:00</span>. El pedido queda
+            <strong>confirmado</strong> y entra directo en el consolidado.
+          </p>
+        </div>
+      </div>
+      <form id="fuera-horario-form" class="panel" novalidate>
+        <div class="row g-3">
+          <div class="field col-12 col-md-6">
+            <label for="empleado">Empleado</label>
+            <select id="empleado" name="empleado" required></select>
+          </div>
+          <div class="field col-12 col-md-6">
+            <label for="dia">Día</label>
+            <select id="dia" name="dia" required></select>
+          </div>
+          <div class="field col-12">
+            <label for="plato">Plato</label>
+            <select id="plato" name="plato" required></select>
+          </div>
+          <div class="field col-12">
+            <label for="comentario">Comentario (opcional)</label>
+            <textarea
+              id="comentario"
+              name="comentario"
+              maxlength="200"
+              rows="2"
+              placeholder="Ej.: avisó a las 10:15, sin sal"
+            ></textarea>
+          </div>
+        </div>
+        <p class="note">
+          Se respetan el menú publicado de ese día y las porciones disponibles.
+          Se registra la asistencia del empleado; si tenía ese día en borrador,
+          se reemplaza por este pedido.
+        </p>
+        <button type="submit">Cargar pedido confirmado</button>
+      </form>
+      <section id="cargado" class="panel saved-order" tabindex="-1" hidden>
+        <h2>Pedido cargado</h2>
+        <div id="cargado-resumen"></div>
+        <a class="button secondary" href="consolidado.html">Ver consolidado →</a>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>© 2026 SistemaPedidos</span
+      >
+    </footer>
+    <noscript
+      >Activá JavaScript para iniciar sesión y gestionar tus pedidos.</noscript
+    >
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>

@@ -27,14 +27,15 @@ Tag final: `v4-entrega`.
 
 ## Cómo ejecutar
 
-### 1. Base de datos (MySQL Workbench)
+### 1. Base de datos (un solo archivo)
 
-1. **File → Open SQL Script…** → `backend/db/tp-pedidos.sql` (el script oficial de la cátedra) → ejecutar **todo** (rayo sin cursor).
-   *XAMPP (MariaDB 10.4):* el script oficial usa una collation de MySQL 8 y falla con "Collation desconocida". En ese caso usar `backend/db/tp-pedidos-xampp.sql`, idéntico salvo esa línea.
-2. **File → Open SQL Script…** → `backend/db/datos-demo.sql` → ejecutar **todo**.
-   Agrega 52 platos (38 propios + 14 del prototipo) para todo tipo de persona y menús **publicados** del 11/11 al 30/11/2026 con 12 opciones por día: los del script son de la semana del 26/10, que ya pasó y el corte de las 10:00 no deja pedir.
-   No modifica el script oficial; si se vuelve a correr `tp-pedidos.sql`, se vuelve a correr este.
-3. Verificación: `SELECT COUNT(*) FROM menu_dia;` → **18** · `SELECT COUNT(*) FROM menu_plato;` → **196** · `SELECT COUNT(*) FROM plato;` → **58**.
+**File → Open SQL Script…** → `backend/db/pp1_pedidos-completo.sql` → ejecutar **todo** (rayo sin cursor). Crea `pp1_pedidos` desde cero y deja todo listo.
+
+- Es el script oficial de la cátedra (`tp-pedidos.sql`) seguido de `datos-demo.sql`: 52 platos más (38 propios + 14 del prototipo) para todo tipo de persona y menús **publicados** del 11/11 al 30/11/2026 con 12 opciones por día (los menús del script son de la semana del 26/10, que ya pasó).
+- Única diferencia con el oficial: intercalación `utf8mb4_unicode_ci` en vez de `utf8mb4_0900_ai_ci`, para que corra igual en MySQL 8 y en XAMPP (MariaDB). Las entidades no dependen de la intercalación: `ddl-auto=validate` pasa igual.
+- Los dos archivos separados siguen en `backend/db/` sin cambios (el oficial, tal cual lo dio la cátedra).
+- Verificación: `SELECT COUNT(*) FROM plato;` → **58** · `SELECT COUNT(*) FROM menu_dia;` → **18** · `SELECT COUNT(*) FROM menu_plato;` → **196**.
+- Con XAMPP, desde la terminal: `C:\xampp\mysql\bin\mysql.exe -u root --default-character-set=utf8mb4 -e "source backend/db/pp1_pedidos-completo.sql"`. Spring muestra un aviso `HHH000511` por la versión de MariaDB: es inofensivo.
 
 ### 2. Backend (Spring Boot, puerto 8080)
 
@@ -153,7 +154,7 @@ backend/src/main/java/com/grupo5/pedidos/
 | El **consolidado** cuenta solo `CONFIRMADO` y solo lo ve el administrador | `ConsolidadoService` |
 | Modificar un día **confirmado** lo devuelve a **borrador** (hay que confirmarlo de nuevo); se puede **cancelar un solo día** | `PedidoService` |
 | Usuarios: no podés cambiar tu rol ni desactivarte; siempre queda un administrador activo; correo único | `UsuarioService` |
-| Feriados: solo fechas abiertas; con pedidos activos no se suspende el servicio; si había menú, se despublica | `DiaNoLaborableService` |
+| Feriados: solo fechas abiertas de lunes a viernes; con pedidos activos no se suspende el servicio; si había menú, se despublica | `DiaNoLaborableService` |
 | Menús: un plato con pedidos no se quita ni baja de lo reservado; con pedidos no se despublica; sin repetidos | `MenuAdminService` |
 
 **Cómo usamos `pedido` y `pedido_dia`**: `pedido` es la cabecera de **la semana** del empleado y `pedido_dia` tiene una fila por día (igual que los datos del script, donde cada empleado tiene un pedido con varios días). Se arma en BORRADOR día por día; al confirmar, se confirma la semana completa. Si después necesita agregar otro día, se arma otro pedido.

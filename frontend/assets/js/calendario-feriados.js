@@ -35,6 +35,9 @@ export async function init() {
     const fecha = data.get("date");
     const motivo = String(data.get("reason") || "").trim();
     if (!fecha) throw new Error("Elegí una fecha.");
+    if ([0, 6].includes(new Date(`${fecha}T12:00:00Z`).getUTCDay()))
+      throw new Error("Sábados y domingos ya no tienen servicio: elegí un día de lunes a viernes.");
+    if (closed(fecha)) throw new Error("Elegí una fecha cuyo plazo todavía esté abierto.");
     if (!motivo || motivo.length > 120) throw new Error("Ingresá un motivo de hasta 120 caracteres.");
     if (dias.some((d) => d.fecha === fecha) && editingDate !== fecha)
       throw new Error("Ya existe un cierre en esa fecha. Usá Editar motivo para modificarlo.");

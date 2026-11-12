@@ -1,5 +1,5 @@
 import { enhanceDates } from "./dates.js";
-import { initDB, user, home, configurarHoraCorte, horaCorteTexto } from "./core.js";
+import { user, home, configurarHoraCorte, horaCorteTexto } from "./core.js";
 import { pedir } from "./api.js";
 import { shell, message } from "./ui.js";
 // La hora de corte la manda el backend; si no responde (por ejemplo en login con
@@ -15,11 +15,21 @@ async function cargarConfiguracion() {
     .querySelectorAll("[data-hora-corte]")
     .forEach((el) => (el.textContent = horaCorteTexto()));
 }
+// El prototipo de la 3ra entrega guardaba todo en localStorage. Ahora los datos
+// están en MySQL: se borran esas claves viejas para que no quede nada colgado.
+function limpiarPrototipo() {
+  try {
+    for (const clave of Object.keys(localStorage))
+      if (clave.startsWith("sistemaPedidos:")) localStorage.removeItem(clave);
+  } catch {
+    // navegador sin acceso a localStorage: no hay nada que limpiar
+  }
+}
 async function start() {
   try {
+    limpiarPrototipo();
     await cargarConfiguracion();
-    const db = await initDB(),
-      u = user(db),
+    const u = user(),
       role = document.body.dataset.required;
     if (role && !u) {
       location.replace("login.html");
