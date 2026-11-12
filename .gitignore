@@ -5,3 +5,6 @@ playwright-report/
 
 output/
 tmp/
+
+# Configuración local de VS Code con DB_PASSWORD: nunca se sube
+.vscode/launch.json

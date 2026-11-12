@@ -1948,3 +1948,42 @@ details.collapsible > .table-wrap {
   text-align: left;
   padding-left: 34px;
 }
+
+/* 4ta entrega: un pedido (semana) con sus días adentro */
+.order-lines {
+  list-style: none;
+  margin: 0.75rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.order-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(79, 59, 120, 0.06);
+}
+.order-line .actions {
+  margin: 0;
+}
+
+/* Campos bloqueados (platos del catálogo, días cerrados): que se note que no se editan */
+input:disabled,
+textarea:disabled {
+  background: #f3f1ee;
+  color: #6f6a73;
+  cursor: not-allowed;
+}
+
+/* Tablas: las acciones alineadas con el texto de la fila */
+td .actions {
+  margin: 0;
+  flex-wrap: wrap;
+}
+#users-body td {
+  vertical-align: middle;
+}

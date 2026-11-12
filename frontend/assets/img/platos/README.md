@@ -118,3 +118,8 @@ https://creativecommons.org/licenses/by-sa/4.0
 
 https://commons.wikimedia.org/wiki/File:Bowl_of_vegetable_salad_001.jpg
 
+
+## Ilustraciones (4ta entrega)
+
+`ilustraciones/` tiene una ilustración SVG original por plato del menú (44), dibujada para este
+proyecto con `ilustraciones/generar.py`. No usa imágenes de terceros.

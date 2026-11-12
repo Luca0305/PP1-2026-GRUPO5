@@ -125,11 +125,12 @@ try {
       .textContent.includes("disponibles"),
   );
   await shot("10-admin");
-  // Los estados del fetch se prueban sin modificar los archivos JSON.
+  // Los estados del fetch a /api/platos se prueban interceptando la respuesta.
+  // La última carga necesita el backend Spring iniciado (puerto 8080).
   // El botón de reintento solo aparece cuando la carga falló.
   assert.equal(await page.locator("#catalog-retry").isHidden(), true);
   let release;
-  await page.route("**/data/platos.json", async (route) => {
+  await page.route("**/api/platos", async (route) => {
     await new Promise((resolve) => {
       release = resolve;
     });
@@ -147,19 +148,19 @@ try {
       .textContent.includes("Todavía no hay"),
   );
   assert.equal(await page.locator("#catalog-add").isDisabled(), true);
-  await page.unroute("**/data/platos.json");
-  await page.route("**/data/platos.json", (route) =>
+  await page.unroute("**/api/platos");
+  await page.route("**/api/platos", (route) =>
     route.fulfill({ status: 404, body: "No existe" }),
   );
   await page.reload();
   await page.waitForFunction(() =>
     document
       .querySelector("#catalog-state")
-      .textContent.includes("No se pudo cargar"),
+      .textContent.includes("HTTP 404"),
   );
   assert.equal(await page.locator("#catalog-retry").isVisible(), true);
-  await page.unroute("**/data/platos.json");
-  await page.route("**/data/platos.json", (route) =>
+  await page.unroute("**/api/platos");
+  await page.route("**/api/platos", (route) =>
     route.fulfill({ body: "{invalido", contentType: "application/json" }),
   );
   await click("Reintentar carga del catálogo");
@@ -168,7 +169,7 @@ try {
       .querySelector("#catalog-state")
       .textContent.includes("JSON válido"),
   );
-  await page.unroute("**/data/platos.json");
+  await page.unroute("**/api/platos");
   await click("Reintentar carga del catálogo");
   await page.waitForFunction(() =>
     document
