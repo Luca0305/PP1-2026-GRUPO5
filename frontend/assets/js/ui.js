@@ -3,14 +3,13 @@ import { readDate } from "./dates.js";
 import {
   escapeHTML as esc,
   PASSWORD_HELP,
-  SESSION_KEY,
-  readDB,
+  cerrarSesion,
   user,
   home,
   clock,
-  attendanceFor,
-  monday,
+  horaCorteTexto,
 } from "./core.js";
+import { api } from "./api.js";
 export const $ = (selector) => document.querySelector(selector);
 export const icons = {
   settings:
@@ -183,8 +182,9 @@ export function shell(u) {
   const nav = u
     ? u.role === "admin"
       ? [
-          ["menuadmin", "Menús"],
           ["consolidado", "Consolidado"],
+          ["menuadmin", "Menús"],
+          ["pedido-fuera-de-horario", "Fuera de horario"],
           ["calendario-feriados", "Feriados"],
           ["usuarios", "Usuarios"],
         ]
@@ -200,14 +200,15 @@ export function shell(u) {
     "mis-pedidos": "bag",
     menuadmin: "meal",
     consolidado: "report",
+    "pedido-fuera-de-horario": "bag",
     "calendario-feriados": "attendance",
     usuarios: "person",
   };
   document.body.dataset.role = u?.role || "public";
   $("#app-header").innerHTML =
-    `<a class="brand" href="${u ? home(u) : "login.html"}" aria-label="SistemaPedidos, inicio"><img class="brand-logo" src="assets/img/logo.png" alt="SistemaPedidos" width="1536" height="1024"></a>${u ? `<nav aria-label="Navegación principal">${nav.map(([key, label]) => `<a href="${key}.html" ${key === page ? 'aria-current="page"' : ""}>${icons[navIcons[key]]}<span>${label}</span></a>`).join("")}</nav><div class="account"><a class="profile-link" href="mi-perfil.html" ${page === "mi-perfil" ? 'aria-current="page"' : ""}><span class="profile-role" role="img" aria-label="${u.role === "admin" ? "Administrador" : "Empleado"}" title="${u.role === "admin" ? "Administrador" : "Empleado"}">${icons.person}</span><span><span class="account-name">${esc(u.name)}</span><small>${icons.settings}Mi perfil y preferencias</small></span></a><button id="logout" class="text-button">Cerrar sesión</button></div>` : ""}`;
+    `<a class="brand" href="${u ? home(u) : "login.html"}" aria-label="SistemaPedidos, inicio"><img class="brand-logo" src="assets/img/logo.png" alt="SistemaPedidos" width="1536" height="1024"></a>${u ? `<nav aria-label="Navegación principal">${nav.map(([key, label]) => `<a href="${key}.html" ${key === page ? 'aria-current="page"' : ""}>${icons[navIcons[key]] || ""}<span>${label}</span></a>`).join("")}</nav><div class="account"><a class="profile-link" href="mi-perfil.html" ${page === "mi-perfil" ? 'aria-current="page"' : ""}><span class="profile-role" role="img" aria-label="${u.role === "admin" ? "Administrador" : "Empleado"}" title="${u.role === "admin" ? "Administrador" : "Empleado"}">${icons.person}</span><span><span class="account-name">${esc(u.name)}</span><small>${icons.settings}Mi perfil y preferencias</small></span></a><button id="logout" class="text-button">Cerrar sesión</button></div>` : ""}`;
   $("#logout")?.addEventListener("click", () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    cerrarSesion();
     redirect("login.html", "Cerraste tu sesión.");
   });
   const notice = sessionStorage.getItem("sistemaPedidos:aviso");
@@ -233,33 +234,37 @@ export function shell(u) {
   }
   window.addEventListener("storage", revalidate);
   window.addEventListener("pageshow", revalidate);
+  // Recordatorio del empleado (como en el prototipo): en los últimos 15 minutos antes del
+  // corte, si hoy viene y todavía no confirmó su almuerzo. Los datos salen del backend.
   if (u?.role === "empleado") {
-    const reminder = () => {
-      const c = clock(),
-        db = readDB();
-      if (
-        c.hour === 9 &&
-        c.minute >= 45 &&
-        attendanceFor(db, u.id, monday()).includes(c.today) &&
-        !db.orders.some(
-          (o) =>
-            o.userId === u.id &&
-            o.date === c.today &&
-            o.status === "Confirmado",
-        )
-      ) {
-        const box = $("#reminder");
-        box.hidden = false;
-        box.innerHTML =
-          'Te falta confirmar el almuerzo de hoy. Tenés tiempo hasta las 10:00. <a href="mis-pedidos.html">Revisar mis pedidos</a>';
-      } else $("#reminder").hidden = true;
-    };
-    reminder();
-    setInterval(() => {
+    const recordatorio = async () => {
+      const box = $("#reminder");
+      if (!box) return;
+      const c = clock();
+      const [hora, minuto] = horaCorteTexto().split(":").map(Number);
+      const faltan = hora * 60 + minuto - (c.hour * 60 + c.minute);
+      if (faltan <= 0 || faltan > 15) {
+        box.hidden = true;
+        return;
+      }
       try {
-        reminder();
-      } catch {}
-    }, 30000);
+        const [asistencias, pedidos] = await Promise.all([
+          api.asistencias(u.id, c.today, c.today),
+          api.pedidos(u.id),
+        ]);
+        const viene = asistencias.some((a) => a.asiste);
+        const confirmado = pedidos.some(
+          (p) => p.estado === "CONFIRMADO" && p.dias.some((d) => d.fechaEntrega === c.today),
+        );
+        box.hidden = !viene || confirmado;
+        if (!box.hidden)
+          box.innerHTML = `Te falta confirmar el almuerzo de hoy. Tenés tiempo hasta las ${horaCorteTexto()}. <a href="mis-pedidos.html">Revisar mis pedidos</a>`;
+      } catch {
+        box.hidden = true; // sin servidor no se muestra nada
+      }
+    };
+    recordatorio();
+    setInterval(recordatorio, 60000);
   }
 }
 export function stepper(step) {
