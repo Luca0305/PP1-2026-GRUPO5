@@ -1,0 +1,59 @@
+package com.grupo5.pedidos.entidad;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+/**
+ * La cabecera del pedido: quién, cuándo lo armó y en qué estado.
+ * estado es VARCHAR(20) + CHECK en el script: BORRADOR, CONFIRMADO o CANCELADO.
+ * Las líneas (una por día) están en pedido_dia.
+ */
+@Entity
+@Table(name = "pedido")
+public class Pedido {
+
+    public static final String BORRADOR = "BORRADOR";
+    public static final String CONFIRMADO = "CONFIRMADO";
+    public static final String CANCELADO = "CANCELADO";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_pedido")
+    private Long id;
+
+    @Column(nullable = false)
+    private Long idUsuario;
+
+    @Column(nullable = false)
+    private LocalDate fechaPedido;
+
+    @Column(nullable = false, length = 20)
+    private String estado;
+
+    public Pedido() {
+    }
+
+    public Pedido(Long idUsuario, LocalDate fechaPedido, String estado) {
+        this.idUsuario = idUsuario;
+        this.fechaPedido = fechaPedido;
+        this.estado = estado;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+
+    public LocalDate getFechaPedido() { return fechaPedido; }
+    public void setFechaPedido(LocalDate fechaPedido) { this.fechaPedido = fechaPedido; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+}

@@ -61,58 +61,42 @@
           <tbody id="users-body"></tbody>
         </table>
       </section>
-      <details class="panel collapsible exceptions">
-        <summary>
-          <span>Excepciones de horario (<span id="exception-count">0</span>)</span>
-          <small>Habilitá a un empleado a pedir fuera del corte de las 10:00</small>
-        </summary>
+      <section class="panel exceptions">
+        <h2>¿Alguien no llegó a pedir?</h2>
         <p>
-          Si un empleado cambia sus planes a último momento, avisa por email y
-          vos le habilitás ese día: podrá modificar su asistencia y elegir su
-          vianda aunque haya pasado el horario de corte.
+          Si un empleado se olvidó de pedir o cambió sus planes después del
+          corte de las <span data-hora-corte>10:00</span>, avisa y vos le
+          cargás el pedido desde <strong>Pedido fuera de horario</strong>.
+          Queda confirmado y entra en el consolidado.
         </p>
-        <form id="exception-form" novalidate>
-          <div class="toolbar">
-            <div class="field">
-              <label for="exception-user">Empleado</label
-              ><select id="exception-user" name="exception-user" required></select>
-            </div>
-            <div class="field">
-              <label for="exception-date">Día</label
-              ><select id="exception-date" name="exception-date" required></select>
-            </div>
-            <button type="submit" id="grant-exception">Habilitar excepción</button>
-          </div>
-        </form>
-        <div class="table-wrap">
-          <table>
-            <caption>
-              Excepciones vigentes
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">Empleado</th>
-                <th scope="col">Día</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="exception-body"></tbody>
-          </table>
-        </div>
-      </details>
+        <a class="button secondary" href="pedido-fuera-de-horario.html">Ir a Pedido fuera de horario →</a>
+      </section>
       <section class="panel narrow">
         <h2 id="user-form-title">Autorizar nuevo usuario</h2>
         <form id="user-form" novalidate>
-          <div class="field">
-            <label for="name">Nombre completo</label
-            ><input
-              id="name"
-              name="name"
-              type="text"
-              required
-              maxlength="80"
-              autocomplete="name"
-            />
+          <div class="row gx-3">
+            <div class="field col-12 col-md-6">
+              <label for="name">Nombre(s)</label
+              ><input
+                id="name"
+                name="name"
+                type="text"
+                required
+                maxlength="60"
+                autocomplete="off"
+              />
+            </div>
+            <div class="field col-12 col-md-6">
+              <label for="last-name">Apellido(s)</label
+              ><input
+                id="last-name"
+                name="last-name"
+                type="text"
+                required
+                maxlength="60"
+                autocomplete="off"
+              />
+            </div>
           </div>
           <div class="field">
             <label for="email">Email</label
@@ -128,8 +112,8 @@
           <div class="field">
             <label for="role">Rol</label
             ><select id="role" name="role">
-              <option value="empleado">Empleado</option>
-              <option value="admin">Administrador</option>
+              <option value="EMPLEADO">Empleado</option>
+              <option value="ADMINISTRADOR">Administrador</option>
             </select>
           </div>
           <p class="help" id="user-password-note">

@@ -1,97 +1,176 @@
-import { cargarPlatos } from "./datos.js";
-import { formatDate, CATEGORIES, categoryLabel, clock } from "./core.js";
-import {
-  fillMonthWeekSelects,
-  monthForWeek,
-  weeksOfMonth,
-  weekTitle,
-} from "./semanas.js";
+// Administrar menús (administrador), contra menu_dia + menu_plato + plato:
+//   GET /api/menus/admin?idUsuario&desde&hasta  → menús de la semana/mes, publicados o no
+//   PUT /api/menus/semana                       → guarda la semana (borrador o publicada)
+//   GET /api/platos                             → catálogo para elegir platos
+// Reglas (en el backend): solo días con plazo abierto; un día sin servicio no lleva menú;
+// un plato con pedidos no se quita ni baja de lo reservado; con pedidos no se despublica.
+import { cargarPlatosDesdeAPI } from "./datos.js";
 import {
   DAYS,
+  CATEGORIES,
+  categoryLabel,
+  clock,
+  user,
   uid,
-  readDB,
   monday,
   addDays,
   closed,
-  saveMenu,
+  formatDate,
   escapeHTML as esc,
 } from "./core.js";
+import { fillMonthWeekSelects, monthForWeek, weeksOfMonth, weekTitle } from "./semanas.js";
 import { $, run, bindForm, message, confirmAction } from "./ui.js";
-export function init() {
+import { api } from "./api.js";
+
+const PORCIONES_POR_DEFECTO = 20;
+
+export async function init() {
+  const yo = user();
   let week = monday(),
     month = monthForWeek(week, clock().today.slice(0, 7)),
-    loaded,
+    loaded = [], // los 5 días de la semana tal como vinieron del backend
+    feriados = {},
     dirty = false;
-  const openDays = new Set(); // días desplegados en el editor
+  const openDays = new Set();
   const plain = (text) =>
     String(text)
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[̀-ͯ]/g, "")
       .toLowerCase();
-  const empty = (week) => ({
-    week,
-    status: "Borrador",
-    days: DAYS.map((_, i) => ({
-      date: addDays(week, i),
-      noService: false,
-      options: [],
-    })),
-  });
+
+  // ── Una opción del día. Si viene del catálogo (idPlato), sus datos no se editan acá. ──
   function optionHTML(o, locked) {
-    return `<div class="option-editor" data-id="${o.id}" data-plate-id="${esc(o.idPlato || "")}"><div class="field"><label for="name-${o.id}">Nombre del plato</label><input id="name-${o.id}" data-field="name" value="${esc(o.name)}" maxlength="60" ${locked ? "disabled" : ""}></div><div class="field"><label for="description-${o.id}">Descripción</label><input id="description-${o.id}" data-field="description" value="${esc(o.description)}" maxlength="140" ${locked ? "disabled" : ""}></div><div class="field"><label for="category-${o.id}">Categoría</label><select id="category-${o.id}" data-field="category" ${locked ? "disabled" : ""}>${Object.entries(CATEGORIES).map(([key, label]) => `<option value="${key}" ${(o.category || "otros") === key ? "selected" : ""}>${label}</option>`).join("")}</select></div><div class="field"><label for="stock-${o.id}">Porciones</label><input id="stock-${o.id}" data-field="stock" value="${o.stock}" type="number" min="0" max="9999" step="1" ${locked ? "disabled" : ""}></div><div class="option-flags"><label class="inline-check"><input type="checkbox" data-field="vegetarian" ${o.vegetarian ? "checked" : ""} ${locked ? "disabled" : ""}>Vegetariano</label><label class="inline-check"><input type="checkbox" data-field="glutenFree" ${o.glutenFree ? "checked" : ""} ${locked ? "disabled" : ""}>Sin TACC</label><button type="button" class="danger" data-remove ${locked ? "disabled" : ""}>Quitar opción</button></div></div>`;
+    const catalogo = Boolean(o.idPlato);
+    const fijo = locked || catalogo;
+    const reservadas = o.reservadas || 0;
+    return `<div class="option-editor" data-id="${o.key}" data-plate-id="${esc(o.idPlato || "")}" data-reservadas="${reservadas}"><div class="field"><label for="name-${o.key}">Nombre del plato</label><input id="name-${o.key}" data-field="name" value="${esc(o.nombre || "")}" maxlength="120" ${fijo ? "disabled" : ""}></div><div class="field"><label for="description-${o.key}">Descripción</label><input id="description-${o.key}" data-field="description" value="${esc(o.descripcion || "")}" maxlength="300" ${fijo ? "disabled" : ""}></div><div class="field"><label for="category-${o.key}">Categoría</label><select id="category-${o.key}" data-field="category" ${fijo ? "disabled" : ""}>${Object.entries(CATEGORIES).map(([key, label]) => `<option value="${esc(key)}" ${(o.categoria || "otros") === key ? "selected" : ""}>${label}</option>`).join("")}</select></div><div class="field"><label for="stock-${o.key}">Porciones</label><input id="stock-${o.key}" data-field="stock" value="${o.stockDisponible}" type="number" min="${reservadas}" max="9999" step="1" ${locked ? "disabled" : ""}></div><div class="option-flags"><span class="help">${catalogo ? "Del catálogo" : "Plato nuevo: se agrega al catálogo al guardar"}${reservadas ? ` · ${reservadas} ${reservadas === 1 ? "porción reservada" : "porciones reservadas"}` : ""}</span><button type="button" class="danger" data-remove ${locked || reservadas ? "disabled" : ""} title="${reservadas ? "Tiene pedidos: no se puede quitar" : ""}">Quitar opción</button></div></div>`;
   }
-  const optionCount = (n) => (n === 1 ? "1 opción" : `${n} opciones`);
-  function daySummary(day) {
-    return day.noService ? "Sin servicio" : optionCount(day.options.length);
+  const optionCount = (n) => (n === 0 ? "Sin menú" : n === 1 ? "1 opción" : `${n} opciones`);
+
+  function estadoSemana(dias) {
+    const conMenu = dias.filter((d) => d.menu && d.menu.opciones.length);
+    if (!conMenu.length) return "Sin cargar";
+    return conMenu.every((d) => d.menu.publicado) ? "Publicado" : "Borrador";
   }
-  function render(menu) {
-    const db = readDB();
-    fillMonthWeekSelects($("#month"), $("#week"), month, week);
-    $("#publish-menu").textContent =
-      loaded.status === "Publicado"
-        ? "Guardar cambios publicados"
-        : "Publicar menú";
-    $("#saved-menus").innerHTML = db.menus.length
-      ? [...db.menus]
-          .sort((a, b) => a.week.localeCompare(b.week))
-          .map(
-            (item) =>
-              `<article><h3>${weekTitle(item.week, month)}</h3><span class="badge ${item.status.toLowerCase()}">${item.status}</span><p>${item.days.filter((day) => !day.noService).length} días con servicio</p><details><summary>Días y opciones</summary><ul>${item.days.map((day, i) => `<li><strong>${DAYS[i]}</strong>: ${day.noService ? "Sin servicio" : day.options.map((option) => esc(option.name)).join(", ") || "Sin opciones"}</li>`).join("")}</ul></details><button type="button" class="secondary" data-open-week="${item.week}">Ver semana</button></article>`,
-          )
+
+  async function renderGuardados() {
+    const semanas = weeksOfMonth(month);
+    const menus = await api.menusAdmin(yo.id, semanas[0], addDays(semanas.at(-1), 4));
+    const porSemana = new Map(semanas.map((s) => [s, []]));
+    for (const m of menus) {
+      const lunes = monday(m.fecha);
+      if (porSemana.has(lunes)) porSemana.get(lunes).push(m);
+    }
+    const conMenus = [...porSemana].filter(([, lista]) => lista.some((m) => m.opciones.length));
+    $("#saved-count").textContent = conMenus.length;
+    $("#saved-menus").innerHTML = conMenus.length
+      ? conMenus
+          .map(([lunes, lista]) => {
+            const dias = [0, 1, 2, 3, 4].map((i) => ({ fecha: addDays(lunes, i), menu: lista.find((m) => m.fecha === addDays(lunes, i)) }));
+            const estado = estadoSemana(dias);
+            return `<article><h3>${weekTitle(lunes, month)}</h3><span class="badge ${estado === "Publicado" ? "publicado" : "borrador"}">${estado}</span><p>${dias.filter((d) => d.menu?.opciones.length).length} días con menú</p><details><summary>Días y opciones</summary><ul>${dias.map((d, i) => `<li><strong>${DAYS[i]}</strong>: ${d.menu?.opciones.length ? d.menu.opciones.map((o) => esc(o.nombre)).join(", ") : feriados[d.fecha] ? "Sin servicio" : "Sin menú"}</li>`).join("")}</ul></details><button type="button" class="secondary" data-open-week="${lunes}">Ver semana</button></article>`;
+          })
           .join("")
-      : '<p class="empty">No hay menús guardados. Armá una semana y guardala como borrador.</p>';
-    $("#saved-count").textContent = db.menus.length;
-    $("#menu-status").textContent = loaded.status;
-    $("#menu-status").className = `badge ${loaded.status.toLowerCase()}`;
-    // El día es obligatorio: sin elegirlo, el catálogo queda deshabilitado.
+      : '<p class="empty">No hay menús cargados este mes. Armá una semana y guardala como borrador.</p>';
+  }
+
+  function render(dias) {
+    fillMonthWeekSelects($("#month"), $("#week"), month, week);
+    const estado = estadoSemana(dias);
+    $("#publish-menu").textContent = estado === "Publicado" ? "Guardar cambios publicados" : "Publicar menú";
+    $("#menu-status").textContent = estado;
+    $("#menu-status").className = `badge ${estado === "Publicado" ? "publicado" : "borrador"}`;
     const chosenDay = $("#catalog-day").value;
     $("#catalog-day").innerHTML =
       '<option value="">Elegí un día</option>' +
-      menu.days
-        .map((dia, i) => ({ dia, i }))
-        .filter(({ dia }) => !closed(dia.date))
-        .map(
-          ({ dia, i }) =>
-            `<option value="${dia.date}" ${dia.date === chosenDay ? "selected" : ""}>${DAYS[i]}</option>`,
-        )
+      dias
+        .map((d, i) => ({ d, i }))
+        .filter(({ d }) => !closed(d.fecha) && !feriados[d.fecha])
+        .map(({ d, i }) => `<option value="${d.fecha}" ${d.fecha === chosenDay ? "selected" : ""}>${DAYS[i]} ${formatDate(d.fecha)}</option>`)
         .join("");
     syncCatalog();
-    $("#admin-days").innerHTML = menu.days
-      .map((day, i) => {
-        const locked = closed(day.date),
-          holiday = db.holidays[day.date];
-        return `<details class="admin-day" data-date="${day.date}" ${openDays.has(day.date) ? "open" : ""}><summary><span class="admin-day-title">${DAYS[i]} <small>${formatDate(day.date)}</small></span><span class="admin-day-count">${daySummary(day)}</span></summary><div class="admin-day-body"><label class="inline-check"><input type="checkbox" data-no-service ${day.noService ? "checked" : ""} ${locked ? "disabled" : ""}>Sin servicio</label>${holiday ? `<p class="note">Sin servicio por calendario: ${esc(holiday)}</p>` : ""}${locked ? '<p class="help">Día cerrado: solo lectura.</p>' : ""}<div class="day-options">${day.options.map((o) => optionHTML(o, locked)).join("")}</div><button type="button" class="secondary" data-add ${locked ? "disabled" : ""}>+ Agregar opción</button></div></details>`;
+    $("#admin-days").innerHTML = dias
+      .map((d, i) => {
+        const feriado = feriados[d.fecha];
+        const locked = closed(d.fecha) || Boolean(feriado);
+        const opciones = (d.opciones || []).map((o) => optionHTML(o, locked)).join("");
+        const sinServicio = d.sinServicio || Boolean(feriado);
+        return `<details class="admin-day" data-date="${d.fecha}" ${openDays.has(d.fecha) ? "open" : ""}><summary><span class="admin-day-title">${DAYS[i]} <small>${formatDate(d.fecha)}</small></span><span class="admin-day-count">${sinServicio ? "Sin servicio" : optionCount((d.opciones || []).length)}</span></summary><div class="admin-day-body"><label class="inline-check"><input type="checkbox" data-no-service ${sinServicio ? "checked" : ""} ${locked ? "disabled" : ""}>Sin servicio (sin menú este día)</label>${feriado ? `<p class="note">Sin servicio por calendario: ${esc(feriado)}. Para cargar menú, habilitá el día en Feriados.</p>` : ""}${closed(d.fecha) ? '<p class="help">Día cerrado: solo lectura.</p>' : ""}<div class="day-options">${opciones}</div><button type="button" class="secondary" data-add ${locked ? "disabled" : ""}>+ Agregar opción a mano</button></div></details>`;
       })
       .join("");
   }
+
   function refreshDay(section) {
     const options = section.querySelectorAll(".option-editor").length;
-    section.querySelector(".admin-day-count").textContent = section.querySelector(
-      "[data-no-service]",
-    ).checked
+    section.querySelector(".admin-day-count").textContent = section.querySelector("[data-no-service]").checked
       ? "Sin servicio"
       : optionCount(options);
   }
+
+  // Lo que vino del backend → forma del editor.
+  function aEditor(menus) {
+    return [0, 1, 2, 3, 4].map((i) => {
+      const fecha = addDays(week, i);
+      const menu = menus.find((m) => m.fecha === fecha);
+      return {
+        fecha,
+        menu,
+        sinServicio: false,
+        opciones: (menu?.opciones || []).map((o) => ({ ...o, key: uid() })),
+      };
+    });
+  }
+
+  async function open() {
+    const [menus, listaFeriados] = await Promise.all([
+      api.menusAdmin(yo.id, week, addDays(week, 4)),
+      api.diasNoLaborables(),
+    ]);
+    feriados = Object.fromEntries(listaFeriados.map((f) => [f.fecha, f.motivo || "Sin servicio"]));
+    loaded = aEditor(menus);
+    dirty = false;
+    render(loaded);
+    await renderGuardados();
+  }
+
+  // Lee el formulario: solo los días abiertos y sin feriado (los demás no se tocan).
+  function read(publicado) {
+    const dias = [...document.querySelectorAll(".admin-day")]
+      .filter((section) => !closed(section.dataset.date) && !feriados[section.dataset.date])
+      .map((section) => {
+        const sinServicio = section.querySelector("[data-no-service]").checked;
+        const opciones = sinServicio
+          ? []
+          : [...section.querySelectorAll(".option-editor")].map((row) => {
+              const stockTexto = row.querySelector("[data-field=stock]").value;
+              const stock = stockTexto === "" ? NaN : Number(stockTexto);
+              const nombre = row.querySelector("[data-field=name]").value.trim();
+              if (!Number.isInteger(stock) || stock < 0 || stock > 9999)
+                throw new Error(`Revisá las porciones de «${nombre || "una opción"}»: un número entero de 0 a 9999.`);
+              if (stock < Number(row.dataset.reservadas))
+                throw new Error(`«${nombre}» ya tiene ${row.dataset.reservadas} porciones reservadas: no puede tener menos.`);
+              if (!row.dataset.plateId && !nombre) throw new Error("Hay una opción sin nombre de plato.");
+              return row.dataset.plateId
+                ? { idPlato: Number(row.dataset.plateId), stockDisponible: stock }
+                : {
+                    nombre,
+                    descripcion: row.querySelector("[data-field=description]").value.trim(),
+                    categoria: row.querySelector("[data-field=category]").value,
+                    stockDisponible: stock,
+                  };
+            });
+        return { fecha: section.dataset.date, opciones };
+      });
+    return { idUsuario: yo.id, lunes: week, publicado, dias };
+  }
+
+  async function guardar(publicado) {
+    const datos = read(publicado);
+    await api.guardarSemanaMenu(datos);
+    await open();
+  }
+
+  // ── Eventos del editor ──
   $("#admin-days").addEventListener(
     "toggle",
     (e) => {
@@ -103,16 +182,16 @@ export function init() {
     true,
   );
   $("#admin-days").addEventListener("change", (e) => {
-    if (e.target.matches("[data-no-service]"))
-      refreshDay(e.target.closest(".admin-day"));
+    if (e.target.matches("[data-no-service]")) refreshDay(e.target.closest(".admin-day"));
   });
   $("#saved-menus").addEventListener("click", (event) => {
     const button = event.target.closest("[data-open-week]");
-    if (!button) return;
-    goToWeek(button.dataset.openWeek);
+    if (button) goToWeek(button.dataset.openWeek);
   });
+
+  // ── Catálogo ──
   let catalogo = [];
-  const picked = new Set(); // platos tildados, se conservan al filtrar
+  const picked = new Set();
   function filteredCatalog() {
     const term = plain($("#catalog-search").value.trim()),
       category = $("#catalog-category").value;
@@ -130,12 +209,9 @@ export function init() {
     $("#catalog-list").innerHTML = lista.length
       ? lista.map(crearFilaPlato).join("")
       : `<tr><td colspan="4">${catalogo.length ? "Ningún plato coincide con la búsqueda o el filtro." : "No hay platos para mostrar."}</td></tr>`;
-    $("#catalog-count").textContent = catalogo.length
-      ? `Mostrando ${lista.length} de ${catalogo.length} platos.`
-      : "";
+    $("#catalog-count").textContent = catalogo.length ? `Mostrando ${lista.length} de ${catalogo.length} platos.` : "";
     syncCatalog();
   }
-  // Sin un día elegido no se puede buscar, tildar ni agregar nada.
   function syncCatalog() {
     const hasDay = Boolean($("#catalog-day").value);
     $("#catalog-tools").disabled = !hasDay;
@@ -149,24 +225,21 @@ export function init() {
     estado.setAttribute("role", "status");
     $("#catalog-retry").hidden = true;
     try {
-      catalogo = await cargarPlatos();
+      catalogo = (await cargarPlatosDesdeAPI()).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
       estado.textContent = catalogo.length
         ? `${catalogo.length} platos disponibles.`
-        : "Todavía no hay platos en el catálogo. Podés cargar una opción manualmente abajo.";
+        : "Todavía no hay platos en el catálogo. Podés cargar una opción a mano abajo.";
       $("#catalog-category").innerHTML =
         '<option value="">Todas las categorías</option>' +
         Object.entries(CATEGORIES)
-          .filter(([key]) =>
-            catalogo.some((plato) => (plato.categoria || "otros") === key),
-          )
-          .map(([key, label]) => `<option value="${key}">${label}</option>`)
+          .filter(([key]) => catalogo.some((plato) => (plato.categoria || "otros") === key))
+          .map(([key, label]) => `<option value="${esc(key)}">${label}</option>`)
           .join("");
     } catch (error) {
       catalogo = [];
       estado.className = "message error";
       estado.setAttribute("role", "alert");
       estado.textContent = error.message;
-      // El reintento solo aparece cuando la carga falló.
       $("#catalog-retry").hidden = false;
     }
     renderCatalogo();
@@ -185,42 +258,30 @@ export function init() {
       const fecha = $("#catalog-day").value;
       if (!fecha) throw new Error("Elegí un día antes de agregar platos.");
       if (closed(fecha)) throw new Error("Elegí un día cuyo plazo esté abierto.");
-      const elegidos = [...picked]
-        .map((id) => catalogo.find((plato) => String(plato.id) === id))
-        .filter(Boolean);
-      if (!elegidos.length)
-        throw new Error("Elegí al menos un plato del catálogo.");
+      const elegidos = [...picked].map((id) => catalogo.find((plato) => String(plato.id) === id)).filter(Boolean);
+      if (!elegidos.length) throw new Error("Elegí al menos un plato del catálogo.");
       const dia = document.querySelector(`.admin-day[data-date="${fecha}"]`);
-      if (
-        readDB().holidays[fecha] ||
-        dia.querySelector("[data-no-service]").checked
-      )
-        throw new Error(
-          "Este día no tiene servicio. Habilitalo antes de agregar opciones.",
-        );
+      if (feriados[fecha] || dia.querySelector("[data-no-service]").checked)
+        throw new Error("Este día está marcado sin servicio. Destildá «Sin servicio» antes de agregar opciones.");
+      let agregados = 0;
       for (const plato of elegidos) {
-        if (
-          [...dia.querySelectorAll("[data-plate-id]")].some(
-            (row) => row.dataset.plateId === String(plato.id),
-          )
-        )
-          continue;
+        if ([...dia.querySelectorAll("[data-plate-id]")].some((row) => row.dataset.plateId === String(plato.id))) continue;
         dia.querySelector(".day-options").insertAdjacentHTML(
           "beforeend",
           optionHTML(
             {
-              id: uid(),
+              key: uid(),
               idPlato: plato.id,
-              name: plato.nombre,
-              description: plato.descripcion,
-              category: plato.categoria || "otros",
-              stock: 80,
-              vegetarian: plato.categoria === "vegetariano",
-              glutenFree: false,
+              nombre: plato.nombre,
+              descripcion: plato.descripcion,
+              categoria: plato.categoria || "otros",
+              stockDisponible: PORCIONES_POR_DEFECTO,
+              reservadas: 0,
             },
             false,
           ),
         );
+        agregados++;
       }
       picked.clear();
       renderCatalogo();
@@ -229,58 +290,20 @@ export function init() {
       refreshDay(dia);
       dirty = true;
       message(
-        "Selección aplicada al día, sin repetir platos existentes. Guardá el menú para aplicar el cambio.",
+        agregados
+          ? `Se agregaron ${agregados} platos (sin repetir los que ya estaban). Guardá el menú para aplicar el cambio.`
+          : "Esos platos ya estaban en el día.",
       );
       dia.scrollIntoView({ block: "center" });
     }, event.currentTarget),
   );
-  function open() {
-    loaded = structuredClone(
-      readDB().menus.find((m) => m.week === week) || empty(week),
-    );
-    dirty = false;
-    render(loaded);
-  }
-  function read(status) {
-    return {
-      week,
-      status,
-      days: [...document.querySelectorAll(".admin-day")].map((section, i) => {
-        if (closed(section.dataset.date)) return loaded.days[i];
-        return {
-          date: section.dataset.date,
-          noService: section.querySelector("[data-no-service]").checked,
-          options: [...section.querySelectorAll(".option-editor")].map(
-            (row) => ({
-              id: row.dataset.id,
-              ...(row.dataset.plateId ? { idPlato: row.dataset.plateId } : {}),
-              category: row.querySelector("[data-field=category]").value,
-              name: row.querySelector("[data-field=name]").value.trim(),
-              description: row
-                .querySelector("[data-field=description]")
-                .value.trim(),
-              stock:
-                row.querySelector("[data-field=stock]").value === ""
-                  ? NaN
-                  : Number(row.querySelector("[data-field=stock]").value),
-              vegetarian: row.querySelector("[data-field=vegetarian]").checked,
-              glutenFree: row.querySelector("[data-field=glutenFree]").checked,
-            }),
-          ),
-        };
-      }),
-    };
-  }
-  // Cambia de mes/semana avisando si hay cambios sin guardar.
+
+  // ── Semana / mes ──
   async function goToWeek(nextWeek, nextMonth) {
     await run(async () => {
       if (
         dirty &&
-        !(await confirmAction(
-          "Cambiar de semana",
-          "Los cambios que todavía no guardaste se perderán. ¿Continuar?",
-          "Cambiar semana",
-        ))
+        !(await confirmAction("Cambiar de semana", "Los cambios que todavía no guardaste se perderán. ¿Continuar?", "Cambiar semana"))
       ) {
         fillMonthWeekSelects($("#month"), $("#week"), month, week);
         return;
@@ -288,7 +311,7 @@ export function init() {
       month = monthForWeek(nextWeek, nextMonth || month);
       week = nextWeek;
       openDays.clear();
-      open();
+      await open();
     });
   }
   $("#month").addEventListener("change", () => {
@@ -305,30 +328,20 @@ export function init() {
       const add = e.target.closest("[data-add]"),
         remove = e.target.closest("[data-remove]");
       if (add) {
+        const section = add.closest(".admin-day");
+        if (section.querySelector("[data-no-service]").checked)
+          throw new Error("Este día está marcado sin servicio. Destildá «Sin servicio» para agregar opciones.");
         add.previousElementSibling.insertAdjacentHTML(
           "beforeend",
-          optionHTML(
-            {
-              id: uid(),
-              name: "",
-              description: "",
-              stock: 80,
-              vegetarian: false,
-              glutenFree: false,
-            },
-            false,
-          ),
+          optionHTML({ key: uid(), nombre: "", descripcion: "", categoria: "otros", stockDisponible: PORCIONES_POR_DEFECTO, reservadas: 0 }, false),
         );
         dirty = true;
-        refreshDay(add.closest(".admin-day"));
+        refreshDay(section);
+        add.previousElementSibling.lastElementChild.querySelector("[data-field=name]").focus();
       }
       if (
         remove &&
-        (await confirmAction(
-          "Quitar opción",
-          "Se quitará del formulario. El cambio se aplica cuando guardes o publiques.",
-          "Quitar",
-        ))
+        (await confirmAction("Quitar opción", "Se quitará del formulario. El cambio se aplica cuando guardes o publiques.", "Quitar"))
       ) {
         const section = remove.closest(".admin-day");
         remove.closest(".option-editor").remove();
@@ -339,71 +352,60 @@ export function init() {
   );
   $("#duplicate-menu").addEventListener("click", (e) =>
     run(async () => {
-      const previous = readDB().menus.find((m) => m.week === addDays(week, -7));
-      if (!previous)
-        throw new Error("No hay un menú guardado para la semana anterior.");
+      const anterior = await api.menusAdmin(yo.id, addDays(week, -7), addDays(week, -3));
+      if (!anterior.some((m) => m.opciones.length)) throw new Error("No hay un menú cargado para la semana anterior.");
       if (
         !(await confirmAction(
           "Duplicar semana anterior",
-          "Se reemplazarán las opciones de los días abiertos. Revisalas antes de guardar.",
+          "Se reemplazarán las opciones de los días abiertos con las de la semana anterior. Revisalas antes de guardar.",
           "Duplicar",
         ))
       )
         return;
-      const menu = read("Borrador");
-      menu.days = menu.days.map((d, i) =>
-        closed(d.date)
-          ? d
-          : {
-              ...d,
-              noService: previous.days[i].noService,
-              options: previous.days[i].options.map((o) => ({
-                ...o,
-                id: uid(),
-              })),
-            },
-      );
-      render(menu);
+      const dias = loaded.map((d, i) => {
+        if (closed(d.fecha) || feriados[d.fecha]) return d;
+        const previo = anterior.find((m) => m.fecha === addDays(week, i - 7));
+        const actuales = d.opciones;
+        // Las opciones con pedidos se conservan; se suman las de la semana anterior.
+        const conPedidos = actuales.filter((o) => o.reservadas > 0);
+        const nuevas = (previo?.opciones || [])
+          .filter((o) => !conPedidos.some((c) => c.idPlato === o.idPlato))
+          .map((o) => ({ ...o, key: uid(), reservadas: 0 }));
+        return { ...d, sinServicio: false, opciones: [...conPedidos, ...nuevas] };
+      });
+      render(dias);
       dirty = true;
+      message("Semana anterior copiada en el formulario. Guardá o publicá para aplicarla.");
     }, e.currentTarget),
   );
   $("#save-draft").addEventListener("click", (e) =>
     run(async () => {
+      const publicado = estadoSemana(loaded) === "Publicado";
       if (
-        loaded.status === "Publicado" &&
+        publicado &&
         !(await confirmAction(
-          "Retirar publicación",
-          "El menú dejará de estar visible para empleados. Solo es posible si no tiene pedidos activos.",
+          "Volver a borrador",
+          "El menú dejará de estar visible para los empleados. Solo es posible en los días sin pedidos activos.",
           "Guardar borrador",
         ))
       )
         return;
-      saveMenu(read("Borrador"));
-      open();
-      message(
-        "Borrador guardado. Los empleados no lo ven hasta que lo publiques.",
-      );
+      await guardar(false);
+      message("Borrador guardado. Los empleados no lo ven hasta que lo publiques.");
     }, e.currentTarget),
   );
   bindForm("#menu-form", async () => {
-    if (!readDB().menus.some((menu) => menu.week === week))
-      throw new Error("Guardá el menú como borrador antes de publicarlo.");
-    const updating = loaded.status === "Publicado";
+    const actualizando = estadoSemana(loaded) === "Publicado";
     if (
       !(await confirmAction(
-        updating ? "Guardar cambios publicados" : "Publicar menú",
+        actualizando ? "Guardar cambios publicados" : "Publicar menú",
         `Los empleados verán las opciones de: ${weekTitle(week, month)}. ¿Continuar?`,
-        updating ? "Guardar" : "Publicar",
+        actualizando ? "Guardar" : "Publicar",
       ))
     )
       return;
-    saveMenu(read("Publicado"));
-    open();
-    message(
-      updating
-        ? "Cambios guardados en el menú publicado."
-        : "Menú publicado. Ya está disponible para los empleados.",
-    );
+    await guardar(true);
+    message(actualizando ? "Cambios guardados en el menú publicado." : "Menú publicado. Ya está disponible para los empleados.");
   });
   window.addEventListener("beforeunload", (e) => {
     if (dirty) {
@@ -411,6 +413,6 @@ export function init() {
       e.returnValue = "";
     }
   });
-  open();
+  await open();
   cargarCatalogo();
 }

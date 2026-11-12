@@ -8,15 +8,17 @@ import {
   fieldError,
   clearFieldError,
 } from "./ui.js";
+// M1 · Acceso. Registro: POST /api/auth/registro · Login: POST /api/auth/login.
 export function init() {
   const registration = document.body.dataset.page === "registro";
-  passwordChecklist($("#password"), $("#password-rules"));
-  $("#email").addEventListener("blur", () => {
-    const error = emailError($("#email").value);
-    if (error && $("#email").value) fieldError($("#email"), error);
-    else clearFieldError($("#email"));
-  });
   if (registration) {
+    // La política de contraseña y de email se muestra y valida solo al registrarse.
+    passwordChecklist($("#password"), $("#password-rules"));
+    $("#email").addEventListener("blur", () => {
+      const error = emailError($("#email").value);
+      if (error && $("#email").value) fieldError($("#email"), error);
+      else clearFieldError($("#email"));
+    });
     $("#nombre").addEventListener("blur", () => {
       const error = nameError($("#nombre").value);
       if (error && $("#nombre").value) fieldError($("#nombre"), error);

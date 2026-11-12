@@ -1,0 +1,1783 @@
+{
+  "info": {
+    "name": "SistemaPedidos · G5 · 4ta entrega",
+    "description": "Endpoints del backend (Spring Boot, puerto 8080) contra la base pp1_pedidos.\n\nOrden sugerido: correr backend/db/tp-pedidos.sql y backend/db/datos-demo.sql, iniciar Spring y ejecutar las carpetas de arriba hacia abajo.\n\nUsuarios del script (contraseña cambiar123): 1 Laura (ADMINISTRADOR), 2 Martín, 3 Lucía, 4 Diego, 5 Carolina (EMPLEADO).\n\nLos pedidos de M4 usan la semana del 23/11/2026 (menús de datos-demo.sql) para que el corte de las 10:00 no los rechace durante la entrega.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "idPedido",
+      "value": ""
+    },
+    {
+      "key": "idDia",
+      "value": ""
+    },
+    {
+      "key": "idMenuDia",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "M1 · Acceso",
+      "item": [
+        {
+          "name": "Login Martín (empleado)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "200 con el usuario, sin contraseña.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"martin.sosa@empresa.com.ar\",\n  \"contrasena\": \"cambiar123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"no devuelve la contraseña\", () => pm.expect(pm.response.json()).to.not.have.property(\"contrasena\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Laura (administradora)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"laura.gimenez@empresa.com.ar\",\n  \"contrasena\": \"cambiar123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login con clave incorrecta → 401",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"martin.sosa@empresa.com.ar\",\n  \"contrasena\": \"otra\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/registro",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "description": "201: se crea como EMPLEADO; la contraseña se guarda como huella PBKDF2.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellido\": \"Pérez\",\n  \"correo\": \"ana.perez{{$timestamp}}@gmail.com\",\n  \"contrasena\": \"Hola123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registro inválido → 400 (Bean Validation)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/registro",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"A\",\n  \"apellido\": \"\",\n  \"correo\": \"no-es-mail\",\n  \"contrasena\": \"corta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Recuperar contraseña (Lucía)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/recuperar",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "recuperar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"lucia.fernandez@empresa.com.ar\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"token\", pm.response.json().correoSimulado.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "¿Enlace vigente?",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/auth/recuperar/{{token}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "recuperar",
+                "{{token}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Restablecer contraseña",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/restablecer",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "restablecer"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{token}}\",\n  \"contrasena\": \"Nueva123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reusar el enlace → 404",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/restablecer",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "restablecer"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{token}}\",\n  \"contrasena\": \"Otra123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "M2 · Mis días",
+      "item": [
+        {
+          "name": "Días no laborables de noviembre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/dias-no-laborables?desde=2026-11-01&hasta=2026-11-30",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dias-no-laborables"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-11-30"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Asistencia de Lucía (script) → 27/10 asiste=false",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/asistencias?idUsuario=3&desde=2026-10-26&hasta=2026-10-30",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "asistencias"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "3"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-26"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-30"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Guardar semana del 23/11 de Martín",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/asistencias/semana",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "asistencias",
+                "semana"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 2,\n  \"semana\": \"2026-11-23\",\n  \"fechas\": [\n    \"2026-11-23\",\n    \"2026-11-24\",\n    \"2026-11-25\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Feriado → 409",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/asistencias/semana",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "asistencias",
+                "semana"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 2,\n  \"semana\": \"2026-11-16\",\n  \"fechas\": [\n    \"2026-11-20\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sin días → 400",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/asistencias/semana",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "asistencias",
+                "semana"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 2,\n  \"semana\": \"2026-11-23\",\n  \"fechas\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "M3 · Mis menús",
+      "item": [
+        {
+          "name": "Menú publicado del 27/10 (cruce 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/menus?fecha=2026-10-27",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "menus"
+              ],
+              "query": [
+                {
+                  "key": "fecha",
+                  "value": "2026-10-27"
+                }
+              ]
+            },
+            "description": "Pollo al horno (20), Ñoquis (15), Wok (10)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Menú del 02/11 (no publicado) → []",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/menus?fecha=2026-11-02",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "menus"
+              ],
+              "query": [
+                {
+                  "key": "fecha",
+                  "value": "2026-11-02"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"vacío\", () => pm.expect(pm.response.json()).to.have.length(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Menús de la semana del 23/11",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/menus?desde=2026-11-23&hasta=2026-11-27",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "menus"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-11-23"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-11-27"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const m = pm.response.json(); if (m.length) pm.collectionVariables.set(\"idMenuDia\", m[0].id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "M4 · Mi pedido",
+      "item": [
+        {
+          "name": "Guardar lunes 23/11 en BORRADOR",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/pedidos",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "description": "Necesita la asistencia del 23/11 (carpeta M2) y el idMenuDia (carpeta M3).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 2,\n  \"idMenuDia\": {{idMenuDia}},\n  \"idPlato\": 1,\n  \"comentario\": \"Sin sal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "const p = pm.response.json(); pm.collectionVariables.set(\"idPedido\", p.id); pm.collectionVariables.set(\"idDia\", p.dias[0].id);",
+                  "pm.test(\"BORRADOR\", () => pm.expect(p.estado).to.eql(\"BORRADOR\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mis pedidos de Lucía (cruce 3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/pedidos?idUsuario=3",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Confirmar",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/pedidos/{{idPedido}}/confirmar?idUsuario=2",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{idPedido}}",
+                "confirmar"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cambiar un día confirmado → 409",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/pedidos",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 2,\n  \"idMenuDia\": {{idMenuDia}},\n  \"idPlato\": 1,\n  \"comentario\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cancelar",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/pedidos/{{idPedido}}/cancelar?idUsuario=2",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{idPedido}}",
+                "cancelar"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Día pasado (26/10, menú 1) → 409",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/pedidos",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 2,\n  \"idMenuDia\": 1,\n  \"idPlato\": 1,\n  \"comentario\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Quitar un día de un borrador",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/pedidos/{{idPedido}}/dias/{{idDia}}?idUsuario=2",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{idPedido}}",
+                "dias",
+                "{{idDia}}"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Solo funciona sobre un pedido en BORRADOR: guardá uno nuevo antes (204)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "M5 · Consolidado",
+      "item": [
+        {
+          "name": "Consolidado del 28/10 (cruce 2)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/consolidado?idUsuario=1&fecha=2026-10-28",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "consolidado"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "1"
+                },
+                {
+                  "key": "fecha",
+                  "value": "2026-10-28"
+                }
+              ]
+            },
+            "description": "Milanesa con puré 2, Wok de vegetales 1 (solo CONFIRMADO)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consolidado de la semana del 26/10",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/consolidado?idUsuario=1&desde=2026-10-26&hasta=2026-10-30",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "consolidado"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "1"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-26"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-30"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle (quién pidió qué)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/consolidado/detalle?idUsuario=1&fecha=2026-10-26",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "consolidado",
+                "detalle"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "1"
+                },
+                {
+                  "key": "fecha",
+                  "value": "2026-10-26"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Un empleado no puede → 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/consolidado?idUsuario=2&fecha=2026-10-28",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "consolidado"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "2"
+                },
+                {
+                  "key": "fecha",
+                  "value": "2026-10-28"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mejoras · horario y fuera de horario",
+      "item": [
+        {
+          "name": "Configuración (hora de corte)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/configuracion",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "configuracion"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Empleados activos (admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/usuarios/empleados?idUsuario=1",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios",
+                "empleados"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Empleados → 401 si no es admin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/usuarios/empleados?idUsuario=2",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios",
+                "empleados"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pedido fuera de horario para Lucía (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/pedidos/fuera-de-horario",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos",
+                "fuera-de-horario"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idAdministrador\": 1,\n  \"idEmpleado\": 3,\n  \"idMenuDia\": {{idMenuDia}},\n  \"idPlato\": 1,\n  \"comentario\": \"Avisó tarde\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fuera de horario por un empleado → 401",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/pedidos/fuera-de-horario",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos",
+                "fuera-de-horario"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idAdministrador\": 2,\n  \"idEmpleado\": 3,\n  \"idMenuDia\": {{idMenuDia}},\n  \"idPlato\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fuera de horario para un día pasado (menú 1, 26/10) → 409",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/pedidos/fuera-de-horario",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "pedidos",
+                "fuera-de-horario"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idAdministrador\": 1,\n  \"idEmpleado\": 3,\n  \"idMenuDia\": 1,\n  \"idPlato\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Catálogo (BK 02)",
+      "item": [
+        {
+          "name": "Platos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/platos",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "platos"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Plato 99 → 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/platos/99",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "platos",
+                "99"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Administración (usuarios, feriados, menús, perfil)",
+      "item": [
+        {
+          "name": "Usuarios (admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/usuarios?idUsuario=1",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Autorizar usuario (queda pendiente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/usuarios",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idAdministrador\": 1,\n  \"nombre\": \"Ana\",\n  \"apellido\": \"Paz\",\n  \"correo\": \"ana.paz{{$timestamp}}@gmail.com\",\n  \"rol\": \"EMPLEADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Laura no puede desactivarse → 409",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/usuarios/1/activo",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios",
+                "1",
+                "activo"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idAdministrador\": 1,\n  \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil de Carolina (sin cambiar clave)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/usuarios/5/perfil",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios",
+                "5",
+                "perfil"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carolina\",\n  \"apellido\": \"Benítez\",\n  \"correo\": \"carolina.benitez@empresa.com.ar\",\n  \"contrasenaActual\": \"\",\n  \"contrasenaNueva\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil con clave actual incorrecta → 409",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/usuarios/5/perfil",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "usuarios",
+                "5",
+                "perfil"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carolina\",\n  \"apellido\": \"Benítez\",\n  \"correo\": \"carolina.benitez@empresa.com.ar\",\n  \"contrasenaActual\": \"mala\",\n  \"contrasenaNueva\": \"Nueva123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear día sin servicio (30/11)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/dias-no-laborables",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dias-no-laborables"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 1,\n  \"fecha\": \"2026-11-30\",\n  \"motivo\": \"Cierre por mudanza\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Menús de la semana del 23/11 (admin, con borradores)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/menus/admin?idUsuario=1&desde=2026-11-23&hasta=2026-11-27",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "menus",
+                "admin"
+              ],
+              "query": [
+                {
+                  "key": "idUsuario",
+                  "value": "1"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-11-23"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-11-27"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Guardar el miércoles 25/11 en borrador",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/menus/semana",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "menus",
+                "semana"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": 1,\n  \"lunes\": \"2026-11-23\",\n  \"publicado\": false,\n  \"dias\": [\n    {\n      \"fecha\": \"2026-11-25\",\n      \"opciones\": [\n        {\n          \"idPlato\": 1,\n          \"stockDisponible\": 20\n        },\n        {\n          \"nombre\": \"Pizza casera\",\n          \"descripcion\": \"Muzzarella\",\n          \"categoria\": \"minutas\",\n          \"stockDisponible\": 15\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

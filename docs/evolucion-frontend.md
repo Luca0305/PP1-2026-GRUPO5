@@ -1,5 +1,7 @@
 # Integración del frontend para el 15 de octubre de 2026
 
+> **Documento histórico de la 3ra entrega (prototipo con `localStorage`).** En la 4ta entrega los datos pasaron a MySQL y se quitaron los restos del prototipo: `frontend/data/*.json`, `frontend/guia/`, la limpieza de pruebas de `index.html` y los módulos `accounts.js`, `recovery.js`, `revision.js` y `limpieza.js`. Siguen en el historial de Git. Estado actual: [docs/4ta-entrega](4ta-entrega/README.md).
+
 ## Diagnóstico de la copia de trabajo
 
 Se trabajó exclusivamente sobre `PP1-2026-GRUPO5`, rama `pruebas`. La otra carpeta encontrada (`frontend-pedidos`) no se integró, por indicación del responsable del proyecto.
