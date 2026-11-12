@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { nameError, emailError } from "../frontend/assets/js/validation.js";
-import { checkIdentity, login, saveDB } from "../frontend/assets/js/core.js";
+import { checkIdentity, login } from "../frontend/assets/js/core.js";
 test("nombres: tildes, nombres compuestos y separadores legítimos", () => {
   for (const name of [
     "María José Pérez",
@@ -61,33 +61,14 @@ test("correos: errores frecuentes sin bloquear dominios propios", () => {
   ])
     assert.equal(emailError(email), "", email);
 });
-test("login: inexistentes, pendientes e inactivos tienen un único aviso general", async () => {
-  let saved;
-  globalThis.localStorage = {
-    getItem: () => saved,
-    setItem: (_, v) => {
-      saved = v;
-    },
+// 4ta entrega: el login lo resuelve el backend (POST /api/auth/login). En el frontend solo
+// se controla que no falten datos, sin exigir la política del registro (las cuentas del
+// script usan "cambiar123").
+test("login: email y contraseña vacíos se avisan en su campo, sin llamar al backend", async () => {
+  globalThis.sessionStorage = { getItem: () => null, setItem() {}, removeItem() {} };
+  globalThis.fetch = () => {
+    throw new Error("no debería llamar al backend");
   };
-  for (const users of [
-    [],
-    [{ email: "persona@example.com", pending: true, active: true }],
-    [{ email: "persona@example.com", active: false }],
-  ]) {
-    saveDB({
-      version: 1,
-      users,
-      menus: [],
-      orders: [],
-      attendance: {},
-      holidays: {},
-      reports: {},
-    });
-    await assert.rejects(
-      login("persona@example.com", "Valida#2026"),
-      (e) =>
-        !e.field &&
-        e.message.startsWith("Tu cuenta no está registrada o activada."),
-    );
-  }
+  await assert.rejects(login("  ", "algo"), (e) => e.field === "email");
+  await assert.rejects(login("persona@example.com", ""), (e) => e.field === "password");
 });

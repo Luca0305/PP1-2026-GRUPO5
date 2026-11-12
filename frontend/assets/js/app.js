@@ -1,8 +1,23 @@
 import { enhanceDates } from "./dates.js";
-import { initDB, user, home } from "./core.js";
+import { initDB, user, home, configurarHoraCorte, horaCorteTexto } from "./core.js";
+import { pedir } from "./api.js";
 import { shell, message } from "./ui.js";
+// La hora de corte la manda el backend; si no responde (por ejemplo en login con
+// Spring apagado), se usa 10:00 y la pantalla sigue funcionando.
+async function cargarConfiguracion() {
+  try {
+    const configuracion = await pedir("/configuracion");
+    configurarHoraCorte(configuracion?.horaCorte);
+  } catch {
+    // sin servidor: queda la hora por defecto
+  }
+  document
+    .querySelectorAll("[data-hora-corte]")
+    .forEach((el) => (el.textContent = horaCorteTexto()));
+}
 async function start() {
   try {
+    await cargarConfiguracion();
     const db = await initDB(),
       u = user(db),
       role = document.body.dataset.required;
@@ -30,6 +45,7 @@ async function start() {
       menuadmin: "menuadmin",
       "calendario-feriados": "calendario-feriados",
       consolidado: "consolidado",
+      "pedido-fuera-de-horario": "pedido-fuera-de-horario",
       usuarios: "usuarios",
       "mi-perfil": "perfil",
     };

@@ -1,6 +1,10 @@
 # SistemaPedidos · Grupo 5
 
-Frontend de pedidos de almuerzos de Práctica Profesionalizante I. HTML, CSS, JavaScript y JSON, con Bootstrap Grid 5 local. No requiere compilación ni backend para esta demostración.
+Sistema de pedidos de almuerzos de Práctica Profesionalizante I. **Desde la 4ta entrega** el flujo principal (acceso, asistencia, menús, pedido y consolidado) funciona contra el **backend Spring Boot** (`backend/`) y la base **MySQL `pp1_pedidos`**.
+
+👉 **Cómo ejecutar la 4ta entrega, cuentas de prueba, endpoints y recorrido de la demo: [`docs/4ta-entrega/README.md`](docs/4ta-entrega/README.md).**
+
+Lo que sigue describe el prototipo de frontend de la 3ra entrega (almacenamiento local), que se conserva como historial.
 
 ## Ejecutar
 
@@ -10,16 +14,18 @@ Frontend de pedidos de almuerzos de Práctica Profesionalizante I. HTML, CSS, Ja
 
 `frontend/index.html` es el índice académico con enlaces a las pantallas y la limpieza de pruebas. El login es la entrada al sistema. No abrir los HTML con doble clic: los módulos y la carga de JSON necesitan un servidor local.
 
-## Backend (4ta entrega, en curso)
+## Backend (4ta entrega)
 
-1. Crear la base: correr entero `backend/db/tp-pedidos-provisorio.sql` (provisorio hasta tener el `tp-pedidos.sql` oficial). Crea `pp1_pedidos`.
+1. Crear la base: correr entero `backend/db/tp-pedidos.sql` (script oficial) y después `backend/db/datos-demo.sql` (menús publicados de noviembre).
 2. Si MySQL tiene contraseña, cargarla en la variable de entorno `DB_PASSWORD` (nunca en el repo).
 3. Desde `backend/`: `./mvnw spring-boot:run`. Tiene que terminar en `Started PedidosApplication`.
-4. Probar `http://localhost:8080/api/platos`. El catálogo de **Administrar menús** ya lee de ahí; con Spring apagado muestra el estado de error con reintento.
+4. Entrar por `frontend/login.html` con `martin.sosa@empresa.com.ar` / `cambiar123` (empleado) o `laura.gimenez@empresa.com.ar` / `cambiar123` (administradora).
 
-Si el puerto 8080 está ocupado (por ejemplo, por Steam), cerrar ese programa o usar `server.port=8081` y cambiar `API` en `frontend/assets/js/datos.js`. Detalle en [docs/4ta-entrega](docs/4ta-entrega/README.md).
+Si el puerto 8080 está ocupado (por ejemplo, por Steam), cerrar ese programa o usar `server.port=8081` y cambiar `API` en `frontend/assets/js/datos.js`. Detalle completo en [docs/4ta-entrega](docs/4ta-entrega/README.md).
 
-## Cuentas y datos
+## Cuentas y datos (prototipo de la 3ra entrega)
+
+> Desde la 4ta entrega, las cuentas, la asistencia, los pedidos y el consolidado salen de MySQL. Lo que sigue aplica solo a las pantallas del prototipo que quedaron fuera del alcance (Administrar menús, Días sin servicio, Usuarios).
 
 No hay cuentas ni contraseñas predefinidas. Registrarse y después iniciar sesión. El email `proadmin@gmail.com` está autorizado como administrador en `frontend/data/empresa.json`: debe completar el registro y elegir su contraseña. Los demás registros son empleados; el administrador puede gestionar autorizaciones y cuentas desde Usuarios.
 
@@ -77,6 +83,7 @@ Los iconos son SVG definidos en `ui.js`. La tipografía común es Segoe UI, con 
 - [E1: análisis, historias y casos de uso](docs/1er-entrega/analisis.md).
 - [E2: interfaces](docs/2da-entrega/README.md).
 - [E3: capacidades y correspondencia actual](docs/3er-entrega/README.md).
+- [E4: backend integrado](docs/4ta-entrega/README.md).
 
 Se conserva la documentación histórica. El almacenamiento semanal local y la recuperación simulada adaptan el recorrido del prototipo; no reproducen literalmente un backend ni el modelo DTO de la guía 18. Sin servidor no hay correo real, permisos seguros, sincronización entre equipos ni tareas automáticas con la aplicación cerrada.
 

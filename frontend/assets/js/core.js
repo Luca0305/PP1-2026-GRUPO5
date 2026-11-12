@@ -1,5 +1,6 @@
 import { clearPrototype } from "./limpieza.js";
 import { cargarMenusIniciales } from "./datos.js";
+import { api } from "./api.js";
 import {
   FieldError,
   emailError,
@@ -12,11 +13,15 @@ export const SESSION_KEY = "sistemaPedidos:sesion";
 export const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 // Categorías del catálogo de platos, en el orden en que se muestran.
 export const CATEGORIES = {
+  "clásico": "Clásicos",
   carnes: "Carnes",
   pastas: "Pastas",
-  ensaladas: "Ensaladas",
-  vegetariano: "Vegetarianos",
   minutas: "Minutas",
+  vegetariano: "Vegetarianos",
+  vegano: "Veganos",
+  liviano: "Livianos",
+  ensaladas: "Ensaladas",
+  "sin TACC": "Sin TACC",
   otros: "Otros",
 };
 export const categoryLabel = (key) => CATEGORIES[key] || CATEGORIES.otros;
@@ -65,9 +70,20 @@ export function validDate(iso) {
     new Date(`${iso}T12:00:00Z`).toISOString().slice(0, 10) === iso
   );
 }
+// Hora de corte: la define el backend (pedidos.hora-corte, GET /api/configuracion).
+// app.js la carga al abrir cada pantalla; si el servidor no responde, queda 10:00.
+let horaCorte = { hora: 10, minuto: 0 };
+export function configurarHoraCorte(texto) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(texto || "").trim());
+  if (m) horaCorte = { hora: Number(m[1]), minuto: Number(m[2]) };
+}
+export const horaCorteTexto = () =>
+  `${String(horaCorte.hora).padStart(2, "0")}:${String(horaCorte.minuto).padStart(2, "0")}`;
 export function closed(iso, now = new Date()) {
   const c = clock(now);
-  return iso < c.today || (iso === c.today && c.hour >= 10);
+  const pasoElCorte =
+    c.hour > horaCorte.hora || (c.hour === horaCorte.hora && c.minute >= horaCorte.minuto);
+  return iso < c.today || (iso === c.today && pasoElCorte);
 }
 export const DATE_FORMAT = "DD/MM/AAAA";
 export function formatDate(iso) {
@@ -247,21 +263,36 @@ export async function initDB() {
   saveDB(db);
   return db;
 }
-export function user(db = readDB()) {
-  const id = sessionStorage.getItem(SESSION_KEY);
-  return (
-    db.users.find(
-      (u) =>
-        u.id === id &&
-        u.active &&
-        !u.pending &&
-        (u.sessionVersion || 0) ===
-          Number(sessionStorage.getItem("sistemaPedidos:versionSesion") || 0),
-    ) || null
-  );
+// ── Sesión (M1) ──
+// Desde la 4ta entrega la sesión es el usuario que devuelve POST /api/auth/login
+// (tabla usuario de MySQL), guardado en sessionStorage. Se adapta a los nombres que
+// ya usaban las pantallas (name, role) para no reescribir el menú ni la cabecera.
+export function guardarSesion(usuario) {
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(usuario));
 }
-export function requireUser(role, db = readDB()) {
-  const u = user(db);
+export function cerrarSesion() {
+  sessionStorage.removeItem(SESSION_KEY);
+}
+export function user(_db) {
+  let u;
+  try {
+    u = JSON.parse(sessionStorage.getItem(SESSION_KEY) || "null");
+  } catch {
+    return null;
+  }
+  if (!u || typeof u.id !== "number" || !u.activo) return null;
+  return {
+    ...u,
+    name: `${u.nombre} ${u.apellido}`,
+    firstName: u.nombre,
+    lastName: u.apellido,
+    email: u.correo,
+    role: u.rol === "ADMINISTRADOR" ? "admin" : "empleado",
+    active: u.activo,
+  };
+}
+export function requireUser(role) {
+  const u = user();
   if (!u || (role && u.role !== role))
     throw new Error(
       "Tu sesión no tiene acceso a esta acción. Volvé a iniciar sesión.",
@@ -269,7 +300,7 @@ export function requireUser(role, db = readDB()) {
   return u;
 }
 export function home(u) {
-  return u.role === "admin" ? "menuadmin.html" : "asistencia.html";
+  return u.role === "admin" ? "consolidado.html" : "asistencia.html";
 }
 
 // Sin contraseñas en texto plano. La autorización real deberá hacerse en el servidor.
@@ -302,78 +333,39 @@ export async function credential(password) {
 export async function verify(password, record) {
   return record && (await derive(password, record.salt)) === record.hash;
 }
+// M1 · Registro contra el backend. Las validaciones de formato se hacen primero acá
+// (mensajes al lado del campo) y el backend las repite con Bean Validation.
 export async function register({ name, lastName, email, password, confirm }) {
   checkIdentity(name, email, password);
   if (nameError(lastName))
     throw new FieldError("apellido", "Apellido: " + nameError(lastName));
-  const firstName = name.trim();
-  const surname = lastName.trim();
-  name = `${firstName} ${surname}`;
   if (password !== confirm)
     throw new FieldError(
       "confirm",
       "Las contraseñas no coinciden. Repetí exactamente la misma contraseña.",
     );
-  const auth = await credential(password);
-  const db = readDB();
-  const existing = db.users.find((u) => u.email === email.toLowerCase());
-  if (existing && !existing.pending)
-    throw new FieldError(
-      "email",
-      "Este email ya está registrado. Volvé a Iniciar sesión con esa cuenta.",
-    );
-  if (existing && !existing.active)
-    throw new FieldError(
-      "email",
-      "La autorización de esta cuenta está desactivada. Consultá al administrador.",
-    );
-  if (existing)
-    Object.assign(existing, {
-      name,
-      firstName,
-      lastName: surname,
-      auth,
-      pending: false,
+  try {
+    return await api.registrar({
+      nombre: name.trim(),
+      apellido: lastName.trim(),
+      correo: email.trim().toLowerCase(),
+      contrasena: password,
     });
-  else
-    db.users.push({
-      id: uid(),
-      name,
-      firstName,
-      lastName: surname,
-      email: email.toLowerCase(),
-      auth,
-      role: assignedAdmins.includes(email.toLowerCase()) ? "admin" : "empleado",
-      active: true,
-    });
-  saveDB(db);
+  } catch (e) {
+    if (/correo/i.test(e.message)) throw new FieldError("email", e.message);
+    throw e;
+  }
 }
+// M1 · Login contra el backend. Acá no se exige la política de contraseñas del
+// registro: las cuentas del script (por ejemplo laura.gimenez@empresa.com.ar /
+// cambiar123) son anteriores a esa política y tienen que poder entrar.
 export async function login(email, password) {
-  if (emailError(email)) throw new FieldError("email", emailError(email));
-  if (passwordError(password))
-    throw new FieldError("password", passwordError(password));
-  const u = readDB().users.find((u) => u.email === email.toLowerCase());
-  if (!u || u.pending || !u.active)
-    throw new Error(
-      "Tu cuenta no está registrada o activada. Si todavía no completaste el registro, elegí Registrate. Si ya tenés una cuenta, consultá al administrador para recuperar el acceso.",
-    );
-  if (!(await verify(password, u.auth)))
-    throw new FieldError(
-      "password",
-      "La contraseña no coincide con la registrada para este email. Revisala; podés usar el ojo para verla.",
-    );
-  const current = readDB().users.find((x) => x.id === u.id);
-  if (!current?.active || current.auth.hash !== u.auth.hash)
-    throw new FieldError(
-      "email",
-      "La cuenta cambió durante el ingreso. Volvé a intentarlo.",
-    );
-  sessionStorage.setItem(SESSION_KEY, current.id);
-  sessionStorage.setItem(
-    "sistemaPedidos:versionSesion",
-    String(current.sessionVersion || 0),
-  );
-  return current;
+  if (!email || !email.trim())
+    throw new FieldError("email", "Ingresá tu email.");
+  if (!password) throw new FieldError("password", "Ingresá tu contraseña.");
+  const usuario = await api.ingresar(email.trim(), password);
+  guardarSesion(usuario);
+  return user();
 }
 // Excepciones de horario: el administrador habilita a un empleado a operar en un día
 // aunque ya haya pasado el corte de las 10:00 (por ejemplo, un cambio de último momento).

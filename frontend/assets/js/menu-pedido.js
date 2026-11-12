@@ -1,186 +1,181 @@
-import {
-  formatDate,
-  categoryLabel,
-  CATEGORIES,
-  changeOrder,
-  DB_KEY,
-} from "./core.js";
+// M3 · Mis menús + M4 · Mi pedido.
+//   M3: GET /api/menus?desde&hasta  → menús PUBLICADOS de la semana, con opciones y porciones (cruce 1)
+//       (solo se muestran los días que el empleado marcó en M2: GET /api/asistencias)
+//   M4: POST /api/pedidos           → guarda la opción de UN día; el pedido queda en BORRADOR
+//       PUT  /api/pedidos/{id}/confirmar (botón "Guardar y confirmar")
 import { allowedWeek, inCurrentMonth, showWeek, bindWeeks } from "./semanas.js";
 import {
   DAYS,
-  readDB,
+  CATEGORIES,
+  categoryLabel,
   user,
   monday,
   addDays,
-  closedFor,
-  attendanceFor,
-  available,
-  saveOrder,
+  closed,
+  horaCorteTexto,
+  formatDate,
   validDate,
   escapeHTML as esc,
 } from "./core.js";
-import { $, stepper, bindForm, message } from "./ui.js";
-export function init() {
+import { $, stepper, bindForm, message, run } from "./ui.js";
+import { api, estadoTexto } from "./api.js";
+
+// Ilustraciones de los platos: frontend/assets/img/platos/ilustraciones/<nombre-del-plato>.svg
+// Los platos nuevos traen esa ruta en su columna imagen; los 6 del script traen otra
+// (assets/img/milanesa.jpg, que no existe), así que para esos se arma desde el nombre.
+const ILUSTRACIONES = "assets/img/platos/ilustraciones/";
+// Platos del script que tienen foto real en el frontend (nombre en el script → plantilla).
+const FOTOS_REALES = { "Milanesa con puré": "Milanesa con puré", "Tarta de verdura": "Tarta de verduras" };
+const slug = (texto) =>
+  texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+export async function init() {
   stepper(1);
-  const params = new URLSearchParams(location.search),
-    editId = params.get("editar");
-  const edit = readDB().orders.find(
-    (o) =>
-      o.id === editId && o.userId === user().id && o.status !== "Cancelado",
+  const u = user();
+  const params = new URLSearchParams(location.search);
+  const pedida = validDate(params.get("fecha") || "") ? params.get("fecha") : null;
+  let week = allowedWeek(
+    pedida ? monday(pedida) : validDate(params.get("semana") || "") ? monday(params.get("semana")) : monday(),
   );
-  let week = edit
-    ? monday(edit.date)
-    : validDate(params.get("semana") || "")
-      ? monday(params.get("semana"))
-      : monday();
-  week = allowedWeek(week);
-  const requestedDate = params.get("fecha");
-  let selected =
-    edit?.date || (validDate(requestedDate || "") ? requestedDate : null);
+  let selected = pedida;
+  let openGroups = null;
   const drafts = {};
-  if (edit)
-    drafts[edit.date] = { optionId: edit.optionId, comment: edit.comment };
+  // Lo que vino del backend para la semana que se está mirando.
+  let datos = { dias: [], feriados: {}, menus: {}, lineas: {} };
+
+  async function cargar() {
+    const viernes = addDays(week, 4);
+    const [asistencias, feriados, menus, pedidos] = await Promise.all([
+      api.asistencias(u.id, week, viernes),
+      api.diasNoLaborables(week, viernes),
+      api.menus(week, viernes),
+      api.pedidos(u.id),
+    ]);
+    const lineas = {};
+    for (const pedido of pedidos)
+      if (pedido.estado !== "CANCELADO")
+        for (const dia of pedido.dias) lineas[dia.fechaEntrega] = { pedido, dia };
+    datos = {
+      dias: asistencias.filter((a) => a.asiste).map((a) => a.fecha).filter(inCurrentMonth),
+      feriados: Object.fromEntries(feriados.map((f) => [f.fecha, f.motivo || "Sin servicio"])),
+      menus: Object.fromEntries(menus.map((m) => [m.fecha, m])),
+      lineas,
+    };
+  }
+
   function remember() {
-    if (selected)
+    if (selected && $("[name=option]:checked"))
       drafts[selected] = {
-        optionId: $("[name=option]:checked")?.value,
-        comment: $("#comment").value,
+        idPlato: Number($("[name=option]:checked").value),
+        comentario: $("#comment").value,
       };
   }
-  // Categorías abiertas: se conservan entre renders (por ejemplo, al actualizarse el stock).
-  let openGroups = null;
-  function groupByCategory(options) {
-    const groups = new Map();
-    for (const key of Object.keys(CATEGORIES))
-      groups.set(key, []);
-    for (const option of options) {
-      const key = CATEGORIES[option.category] ? option.category : "otros";
-      groups.get(key).push(option);
-    }
+
+  function photo(opcion) {
+    // Primero, las fotos reales que ya tenía el frontend (plantillas de menu-pedido.html).
+    const real = [...document.querySelectorAll("template[data-meal-name]")].find(
+      (item) => item.dataset.mealName === (FOTOS_REALES[opcion.nombre] || opcion.nombre),
+    );
+    if (real) return real.innerHTML;
+    const src = opcion.imagen?.startsWith(ILUSTRACIONES)
+      ? opcion.imagen
+      : `${ILUSTRACIONES}${slug(opcion.nombre)}.svg`;
+    return `<img src="${esc(src)}" alt="Ilustración de ${esc(opcion.nombre)}" width="640" height="360" loading="lazy" onerror="this.remove()">`;
+  }
+
+  function groupByCategory(opciones) {
+    const groups = new Map(Object.keys(CATEGORIES).map((key) => [key, []]));
+    for (const opcion of opciones)
+      groups.get(CATEGORIES[opcion.categoria] ? opcion.categoria : "otros").push(opcion);
     return [...groups].filter(([, list]) => list.length);
   }
-  function groupHTML([key, options], db, isOpen) {
-    const cards = options
+
+  function groupHTML([key, opciones], elegido, propia, isOpen) {
+    const cards = opciones
       .map((o) => {
-        const stock = available(db, o.id, editId);
-        return `<label class="meal-card"><div class="meal-art ${photo(o) ? "" : "meal-art-empty"}">${photo(o)}<input type="radio" name="option" value="${o.id}" ${drafts[selected]?.optionId === o.id ? "checked" : ""} ${stock <= 0 ? "disabled" : ""} aria-label="${esc(o.name)}"></div><div class="meal-content"><h3>${esc(o.name)}</h3><p>${esc(o.description)}</p><div class="meal-tags">${o.vegetarian ? "<span>Vegetariano</span>" : ""}${o.glutenFree ? "<span>Sin TACC</span>" : ""}</div><span class="stock ${stock <= 0 ? "stock-out" : stock <= 10 ? "stock-low" : ""}">${stock > 0 ? `${stock} porciones disponibles` : "Agotado"}</span></div></label>`;
+        // Las porciones "disponibles" ya descuentan mi propio borrador: si es mi plato, lo sumo.
+        const quedan = o.disponibles + (propia && propia.idPlato === o.idPlato ? 1 : 0);
+        const foto = photo(o);
+        return `<label class="meal-card"><div class="meal-art ${foto ? "" : "meal-art-empty"}">${foto}<input type="radio" name="option" value="${o.idPlato}" ${elegido === o.idPlato ? "checked" : ""} ${quedan <= 0 ? "disabled" : ""} aria-label="${esc(o.nombre)}"></div><div class="meal-content"><h3>${esc(o.nombre)}</h3><p>${esc(o.descripcion || "")}</p><div class="meal-tags">${["vegetariano", "vegano"].includes(o.categoria) ? "<span>Vegetariano</span>" : ""}${o.categoria === "vegano" ? "<span>Vegano</span>" : ""}${o.categoria === "sin TACC" ? "<span>Sin TACC</span>" : ""}</div><span class="stock ${quedan <= 0 ? "stock-out" : quedan <= 10 ? "stock-low" : ""}">${quedan > 0 ? `${quedan} porciones disponibles` : "Agotado"}</span></div></label>`;
       })
       .join("");
-    return `<details class="menu-group" data-category="${key}" ${isOpen ? "open" : ""}><summary><span>${esc(categoryLabel(key))}</span><small>${options.length} ${options.length === 1 ? "opción" : "opciones"}</small></summary><div class="menu-group-body">${cards}</div></details>`;
+    return `<details class="menu-group" data-category="${key}" ${isOpen ? "open" : ""}><summary><span>${esc(categoryLabel(key))}</span><small>${opciones.length} ${opciones.length === 1 ? "opción" : "opciones"}</small></summary><div class="menu-group-body">${cards}</div></details>`;
   }
-  function photo(option) {
-    const template = [
-      ...document.querySelectorAll("template[data-meal-name]"),
-    ].find((item) => item.dataset.mealName === option.name);
-    return template?.innerHTML || "";
-  }
+
   function render() {
-    const db = readDB(),
-      u = user(db),
-      dates = attendanceFor(db, u.id, week).filter(inCurrentMonth);
-    showWeek(week, !!editId);
-    $("#edit-attendance")?.setAttribute(
-      "href",
-      `asistencia.html?semana=${week}`,
-    );
-    if (!dates.includes(selected))
-      selected = dates.find((d) => !closedFor(db, u.id, d)) || dates[0];
+    showWeek(week);
+    $("#edit-attendance")?.setAttribute("href", `asistencia.html?semana=${week}`);
+    const dates = datos.dias;
+    if (!dates.includes(selected)) selected = dates.find((d) => !closed(d)) || dates[0];
     $("#menu-days").innerHTML = dates
       .map(
         (date) =>
-          `<button type="button" data-date="${date}" aria-pressed="${date === selected}" ${edit && edit.date !== date ? "disabled" : ""}>${DAYS[(new Date(date + "T12:00:00Z").getUTCDay() + 6) % 7]}<small>${formatDate(date)}</small></button>`,
+          `<button type="button" data-date="${date}" aria-pressed="${date === selected}">${DAYS[(new Date(date + "T12:00:00Z").getUTCDay() + 6) % 7]}<small>${formatDate(date)}</small></button>`,
       )
       .join("");
     $("#order-details").hidden = true;
-    const empty = (text) => {
-      $("#menu-options").innerHTML = `<div class="empty">${text}</div>`;
+    const empty = (html) => {
+      $("#menu-options").innerHTML = `<div class="empty">${html}</div>`;
     };
-    if (edit && !inCurrentMonth(edit.date)) {
-      empty(
-        'Solo se pueden modificar pedidos del mes actual. <a href="mis-pedidos.html">Volver a mis pedidos</a>',
-      );
-      return;
-    }
-    if (!dates.length) {
-      empty(
+    if (!dates.length)
+      return empty(
         `No registraste asistencia para esta semana. <a href="asistencia.html?semana=${week}">Configurar asistencia</a>`,
       );
-      return;
-    }
-    if (closedFor(db, u.id, selected)) {
-      empty(
-        "El plazo de este día terminó. Elegí otro día o una semana próxima.",
-      );
-      return;
-    }
-    if (db.holidays[selected]) {
-      empty(`Sin servicio: ${esc(db.holidays[selected])}.`);
-      return;
-    }
-    const existing = db.orders.find(
-      (o) =>
-        o.userId === u.id &&
-        o.date === selected &&
-        o.status !== "Cancelado" &&
-        o.id !== editId,
-    );
-    if (existing) {
-      empty(
-        `Ya tenés un pedido ${existing.status.toLowerCase()} para este día. <a href="menu-pedido.html?editar=${existing.id}">Modificar pedido</a> · <a href="mis-pedidos.html">Revisar mis pedidos</a>`,
-      );
-      return;
-    }
-    if (editId && !edit) {
-      empty(
-        'No se encontró un pedido válido para modificar. <a href="mis-pedidos.html">Volver a mis pedidos</a>',
-      );
-      return;
-    }
-    const menu = db.menus.find(
-        (m) => m.week === week && m.status === "Publicado",
-      ),
-      day = menu?.days.find((d) => d.date === selected);
-    if (!day) {
-      empty(
-        "Todavía no hay menú publicado para esta semana. Volvé más tarde o consultá al administrador.",
-      );
-      return;
-    }
-    if (day.noService || !day.options.length) {
-      empty("Este día está marcado sin servicio de comedor.");
-      return;
-    }
-    const groups = groupByCategory(day.options);
-    // La primera vez se abre la primera categoría, o la del plato ya elegido.
+    if (closed(selected))
+      return empty(`El plazo de este día terminó (corte ${horaCorteTexto()}). Si no llegaste a pedir, avisale al administrador: puede cargarte el pedido fuera de horario.`);
+    if (datos.feriados[selected])
+      return empty(`Sin servicio: ${esc(datos.feriados[selected])}.`);
+    const propia = datos.lineas[selected];
+    const menu = datos.menus[selected];
+    if (!menu || !menu.opciones.length)
+      return empty("Todavía no hay menú publicado para este día. Volvé más tarde o consultá al administrador.");
+
+    const elegido = drafts[selected]?.idPlato ?? propia?.dia.idPlato;
+    const groups = groupByCategory(menu.opciones);
     if (!openGroups) {
-      const chosen = day.options.find((o) => o.id === drafts[selected]?.optionId);
-      openGroups = new Set([chosen?.category || groups[0][0]]);
+      const chosen = menu.opciones.find((o) => o.idPlato === elegido);
+      openGroups = new Set([chosen ? (CATEGORIES[chosen.categoria] ? chosen.categoria : "otros") : groups[0][0]]);
     }
     $("#menu-options").innerHTML = groups
-      .map((group) => groupHTML(group, db, openGroups.has(group[0])))
+      .map((g) => groupHTML(g, elegido, propia?.dia, openGroups.has(g[0])))
       .join("");
-    $("#comment").value = drafts[selected]?.comment || "";
+    $("#comment").value = drafts[selected]?.comentario ?? propia?.dia.comentario ?? "";
     $("#order-details").hidden = false;
-    $("#save-order").textContent = edit
-      ? "Guardar cambios"
-      : "Guardar borrador";
-    $("#confirm-order").textContent = edit
-      ? "Guardar y confirmar"
-      : "Confirmar pedido";
+    const yaConfirmado = propia?.pedido.estado === "CONFIRMADO";
+    $("#edit-note").hidden = !yaConfirmado;
+    $("#edit-note").innerHTML = yaConfirmado
+      ? `Ya confirmaste <strong>${esc(propia.dia.plato)}</strong> para este día. Si lo cambiás, este día vuelve a <strong>borrador</strong> y tenés que confirmarlo de nuevo antes de las ${horaCorteTexto()}. Los demás días siguen confirmados.`
+      : "";
+    $("#save-order").textContent = propia ? "Guardar cambios (borrador)" : "Guardar borrador";
+    $("#confirm-order").textContent = "Guardar y confirmar";
   }
-  $("#menu-options").addEventListener("toggle", (e) => {
-    const group = e.target.closest?.("details.menu-group");
-    if (!group || !openGroups) return;
-    if (group.open) openGroups.add(group.dataset.category);
-    else openGroups.delete(group.dataset.category);
-  }, true);
+
+  async function recargar() {
+    await cargar();
+    render();
+  }
+
+  $("#menu-options").addEventListener(
+    "toggle",
+    (e) => {
+      const group = e.target.closest?.("details.menu-group");
+      if (!group || !openGroups) return;
+      if (group.open) openGroups.add(group.dataset.category);
+      else openGroups.delete(group.dataset.category);
+    },
+    true,
+  );
   $("#menu-days").addEventListener("click", (e) => {
     const button = e.target.closest("[data-date]");
-    if (button) {
-      remember();
-      selected = button.dataset.date;
-      render();
-    }
+    if (!button) return;
+    remember();
+    selected = button.dataset.date;
+    render();
   });
   bindWeeks(
     () => week,
@@ -188,54 +183,38 @@ export function init() {
       remember();
       week = next;
       selected = null;
-      render();
+      run(recargar);
     },
   );
-  bindForm("#pedido-form", (data, form, submitter) => {
-    if (!data.get("option"))
-      throw new Error("Elegí un plato antes de guardar.");
+  bindForm("#pedido-form", async (data, form, submitter) => {
+    if (!data.get("option")) throw new Error("Elegí un plato antes de guardar.");
+    const menu = datos.menus[selected];
     const confirmar = submitter?.id === "confirm-order";
-    let pedido = saveOrder(
-      {
-        date: selected,
-        optionId: data.get("option"),
-        comment: data.get("comment").trim(),
-      },
-      editId,
+    const fecha = selected;
+    let pedido = await api.guardarDia(
+      u.id,
+      menu.id,
+      Number(data.get("option")),
+      data.get("comment").trim(),
     );
-    if (confirmar) {
-      // Guardar y confirmar es un solo paso: no hace falta pasar por Mis pedidos.
-      changeOrder(pedido.id, "confirm");
-      pedido = readDB().orders.find((o) => o.id === pedido.id);
-    }
-    drafts[pedido.date] = {
-      optionId: pedido.optionId,
-      comment: pedido.comment,
-    };
-    render();
+    // "Guardar y confirmar": el pedido de la semana pasa de BORRADOR a CONFIRMADO.
+    if (confirmar) pedido = await api.confirmar(pedido.id, u.id);
+    delete drafts[fecha];
+    await recargar();
+    const linea = pedido.dias.find((d) => d.fechaEntrega === fecha);
     $("#saved-order").hidden = false;
-    $("#saved-title").textContent = confirmar
-      ? "Pedido confirmado"
-      : "Borrador guardado";
+    $("#saved-title").textContent = confirmar ? "Pedido confirmado" : "Borrador guardado";
     $("#saved-summary").innerHTML =
-      `<h3>${esc(pedido.plate)}</h3><p>${formatDate(pedido.date)} · <span class="badge ${pedido.status.toLowerCase()}">${pedido.status}</span></p><p>${esc(pedido.comment || "Sin comentarios adicionales.")}</p>`;
-    $("#review-saved").textContent = confirmar
-      ? "Ver mis pedidos →"
-      : "Revisar y confirmar pedido →";
+      `<h3>${esc(linea?.plato || "")}</h3><p>${formatDate(fecha)} · <span class="badge ${estadoTexto(pedido.estado).toLowerCase()}">${estadoTexto(pedido.estado)}</span> · Pedido N.º ${pedido.id} (${pedido.dias.length} ${pedido.dias.length === 1 ? "día" : "días"})</p><p>${esc(linea?.comentario || "Sin comentarios adicionales.")}</p>`;
+    $("#review-saved").textContent = confirmar ? "Ver mis pedidos →" : "Revisar y confirmar pedido →";
     $("#review-saved").href = `mis-pedidos.html#pedido-${pedido.id}`;
     message(
       confirmar
-        ? "Pedido confirmado. Tu vianda quedó reservada."
-        : "Borrador guardado. Podés confirmarlo desde Mis pedidos.",
+        ? "Pedido confirmado. Tus viandas quedaron reservadas."
+        : "Borrador guardado en el servidor. Podés confirmarlo desde Mis pedidos.",
     );
     $("#saved-order").focus();
     $("#saved-order").scrollIntoView({ block: "center" });
   });
-  // Stock en tiempo real: si otra pestaña guarda un pedido, se vuelve a calcular.
-  window.addEventListener("storage", (e) => {
-    if (e.key && e.key !== DB_KEY) return;
-    remember();
-    render();
-  });
-  render();
+  await recargar();
 }

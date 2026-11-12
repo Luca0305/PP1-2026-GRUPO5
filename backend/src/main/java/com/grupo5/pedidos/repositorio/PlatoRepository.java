@@ -9,4 +9,9 @@ import com.grupo5.pedidos.entidad.Plato;
  * Ya trae findAll(), findById(...), save(...) y deleteById(...).
  */
 public interface PlatoRepository extends JpaRepository<Plato, Long> {
+
+    // Administrar menús: un plato escrito a mano se reutiliza si ya existe con ese nombre.
+    java.util.Optional<Plato> findFirstByNombreIgnoreCase(String nombre);
+
+    java.util.List<Plato> findAllByOrderByNombreAsc();
 }
