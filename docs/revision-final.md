@@ -1,5 +1,7 @@
 # Revisión del frontend · 15/10/2026
 
+> **Documento histórico de la 3ra entrega (prototipo con `localStorage`).** En la 4ta entrega los datos pasaron a MySQL y se quitaron los restos del prototipo: `frontend/data/*.json`, `frontend/guia/`, la limpieza de pruebas de `index.html` y los módulos `accounts.js`, `recovery.js`, `revision.js` y `limpieza.js`. Siguen en el historial de Git. Estado actual: [docs/4ta-entrega](4ta-entrega/README.md).
+
 Esta revisión corresponde a `PP1-2026-GRUPO5`, rama `pruebas`, con ejecución mediante Live Server. No incluye una entrega de backend ni certifica la aceptación del profesor. El informe distingue el funcionamiento comprobado de las adaptaciones respecto del material.
 
 ## Material revisado

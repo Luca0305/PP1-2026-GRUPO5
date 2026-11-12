@@ -1,5 +1,7 @@
 # Dónde se guardan los datos y cómo empezar de cero
 
+> **Documento histórico de la 3ra entrega (prototipo con `localStorage`).** En la 4ta entrega los datos pasaron a MySQL y se quitaron los restos del prototipo: `frontend/data/*.json`, `frontend/guia/`, la limpieza de pruebas de `index.html` y los módulos `accounts.js`, `recovery.js`, `revision.js` y `limpieza.js`. Siguen en el historial de Git. Estado actual: [docs/4ta-entrega](4ta-entrega/README.md).
+
 ## Ubicación real
 
 Las cuentas **no se escriben en un archivo del repositorio ni en una base de datos remota**. El navegador guarda la estructura JSON en `localStorage`, clave `sistemaPedidos:v1`. Contiene usuarios, pedidos, menús editados, asistencias, feriados, reportes y solicitudes de recuperación. Las contraseñas se representan mediante sal y hash PBKDF2, no texto plano. Esto no es seguridad de producción.
