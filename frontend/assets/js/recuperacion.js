@@ -2,7 +2,8 @@
 //   recuperar.html   → POST /api/auth/recuperar           (genera el enlace)
 //   restablecer.html → GET  /api/auth/recuperar/{token}   (¿sigue vigente?)
 //                      POST /api/auth/restablecer         (guarda la nueva en MySQL)
-// No hay servicio de email: el servidor devuelve el enlace como "correo simulado".
+// No hay servicio de email. Solo en MODO DEMO (pedidos.recuperacion.modo-demo=true) el servidor
+// devuelve el enlace como "correo simulado"; si no, responde solo el mensaje, exista o no el correo.
 import { FieldError, passwordError } from "./validation.js";
 import { $, bindForm, message, passwordChecklist } from "./ui.js";
 import { api } from "./api.js";
@@ -27,12 +28,13 @@ export async function init() {
       const correo = String(data.get("email") || "").trim();
       if (!correo) throw new FieldError("email", "Ingresá tu email.");
       const respuesta = await api.recuperar(correo);
-      const mail = respuesta.correoSimulado;
+      const mail = respuesta.modoDemo ? respuesta.correoSimulado : null;
       sessionStorage.removeItem(MAILBOX);
       if (mail) sessionStorage.setItem(MAILBOX, JSON.stringify(mail));
       showMail(mail);
       message(respuesta.mensaje);
-      $("#demo-empty").hidden = Boolean(mail);
+      $("#demo-note").hidden = !respuesta.modoDemo;
+      $("#demo-empty").hidden = !respuesta.modoDemo || Boolean(mail);
       if (mail) {
         $("#demo-mail").focus();
         $("#demo-mail").scrollIntoView({ block: "center" });

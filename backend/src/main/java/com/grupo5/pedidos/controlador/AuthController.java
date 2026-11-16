@@ -1,5 +1,6 @@
 package com.grupo5.pedidos.controlador;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +31,17 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    /** Respuesta de recuperar: siempre el mismo mensaje; el correo simulado solo si la cuenta existe. */
-    public record RecuperarRespuesta(String mensaje, CorreoSimulado correoSimulado) {
+    /** Mensaje de recuperar: es el mismo exista o no el correo, para no revelar qué cuentas hay. */
+    static final String MENSAJE_RECUPERAR =
+            "Si el email corresponde a una cuenta activa, se generó un enlace para cambiar la contraseña.";
+
+    /**
+     * Respuesta de recuperar.
+     *  - modoDemo = false (producción): solo el mensaje. El enlace se mandaría por mail, nunca en la respuesta.
+     *  - modoDemo = true  (demo de clase, sin servicio de email): además viaja el correo simulado
+     *    para mostrarlo en pantalla. Es una simulación DECLARADA y se apaga desde application.properties.
+     */
+    public record RecuperarRespuesta(String mensaje, boolean modoDemo, CorreoSimulado correoSimulado) {
     }
 
     public record Mensaje(String mensaje) {
@@ -39,10 +49,13 @@ public class AuthController {
 
     private final UsuarioService usuarioService;
     private final RecuperacionService recuperacionService;
+    private final boolean modoDemo;
 
-    public AuthController(UsuarioService usuarioService, RecuperacionService recuperacionService) {
+    public AuthController(UsuarioService usuarioService, RecuperacionService recuperacionService,
+                          @Value("${pedidos.recuperacion.modo-demo:false}") boolean modoDemo) {
         this.usuarioService = usuarioService;
         this.recuperacionService = recuperacionService;
+        this.modoDemo = modoDemo;
     }
 
     @PostMapping("/registro")
@@ -59,9 +72,10 @@ public class AuthController {
 
     @PostMapping("/recuperar")
     public RecuperarRespuesta recuperar(@Valid @RequestBody RecuperarRequest datos) {
-        return new RecuperarRespuesta(
-                "Si el email corresponde a una cuenta activa, se generó un enlace para cambiar la contraseña.",
-                recuperacionService.solicitar(datos.correo()));
+        CorreoSimulado correo = recuperacionService.solicitar(datos.correo());
+        // Fuera del modo demo la respuesta es idéntica exista o no la cuenta:
+        // no se filtra ni el token ni qué correos están registrados.
+        return new RecuperarRespuesta(MENSAJE_RECUPERAR, modoDemo, modoDemo ? correo : null);
     }
 
     @GetMapping("/recuperar/{token}")
